@@ -1,0 +1,5 @@
+/.bin
+/classes
+/lib/*_src.zip
+/lib/gwtjsonrpc.jar
+/config.mak
