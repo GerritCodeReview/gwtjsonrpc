@@ -321,6 +321,7 @@ public abstract class JsonServlet extends HttpServlet {
     return Collections.unmodifiableMap(r);
   }
 
+  @SuppressWarnings("unchecked")
   private static Class<? extends RemoteJsonService> findInterface(Class<?> c) {
     while (c != null) {
       if (c.isInterface() && RemoteJsonService.class.isAssignableFrom(c)) {
