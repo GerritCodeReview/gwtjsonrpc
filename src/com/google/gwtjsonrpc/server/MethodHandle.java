@@ -15,15 +15,16 @@
 package com.google.gwtjsonrpc.server;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwtjsonrpc.client.RemoteJsonService;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Pairing of a specific {@link JsonServlet} implementation and method.
+ * Pairing of a specific {@link RemoteJsonService} implementation and method.
  */
 public class MethodHandle {
-  private final JsonServlet imp;
+  private final RemoteJsonService imp;
   private final Method method;
   private final Class<?>[] parameterTypes;
 
@@ -35,7 +36,7 @@ public class MethodHandle {
    *        of the method must accept an {@link AsyncCallback} and the method
    *        must return void.
    */
-  MethodHandle(final JsonServlet imp, final Method method) {
+  MethodHandle(final RemoteJsonService imp, final Method method) {
     this.imp = imp;
     this.method = method;
 

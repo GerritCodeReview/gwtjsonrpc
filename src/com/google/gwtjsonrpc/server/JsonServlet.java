@@ -40,7 +40,9 @@ import java.io.Writer;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -68,12 +70,8 @@ public abstract class JsonServlet extends HttpServlet {
   static final String RPC_VERSION = "1.1";
   private static final String ENC = "UTF-8";
 
-  private final HashMap<String, MethodHandle> myMethods;
+  private Map<String, MethodHandle> myMethods;
   private XsrfUtil xsrf;
-
-  protected JsonServlet() {
-    myMethods = methods(this);
-  }
 
   @Override
   public void init(final ServletConfig config) throws ServletException {
@@ -83,6 +81,21 @@ public abstract class JsonServlet extends HttpServlet {
     } catch (XsrfException e) {
       throw new ServletException("Cannot initialize XSRF", e);
     }
+
+    myMethods = methods((RemoteJsonService) serviceHandle());
+    if (myMethods.isEmpty()) {
+      throw new ServletException("No service methods declared");
+    }
+  }
+
+  /**
+   * Get the object which provides the RemoteJsonService implementation.
+   * 
+   * @return by default <code>this</code>, but any object which implements a
+   *         RemoteJsonService interface.
+   */
+  protected Object serviceHandle() {
+    return this;
   }
 
   /**
@@ -277,9 +290,14 @@ public abstract class JsonServlet extends HttpServlet {
     }
   }
 
-  private static HashMap<String, MethodHandle> methods(final JsonServlet impl) {
-    final HashMap<String, MethodHandle> r = new HashMap<String, MethodHandle>();
-    for (final Method m : impl.getClass().getMethods()) {
+  private static Map<String, MethodHandle> methods(final RemoteJsonService impl) {
+    final Class<? extends RemoteJsonService> d = findInterface(impl.getClass());
+    if (d == null) {
+      return Collections.<String, MethodHandle> emptyMap();
+    }
+
+    final Map<String, MethodHandle> r = new HashMap<String, MethodHandle>();
+    for (final Method m : d.getMethods()) {
       if (!Modifier.isPublic(m.getModifiers())) {
         continue;
       }
@@ -300,6 +318,22 @@ public abstract class JsonServlet extends HttpServlet {
       final MethodHandle h = new MethodHandle(impl, m);
       r.put(h.getName(), h);
     }
-    return r;
+    return Collections.unmodifiableMap(r);
+  }
+
+  private static Class<? extends RemoteJsonService> findInterface(Class<?> c) {
+    while (c != null) {
+      if (c.isInterface() && RemoteJsonService.class.isAssignableFrom(c)) {
+        return (Class<RemoteJsonService>) c;
+      }
+      for (final Class<?> i : c.getInterfaces()) {
+        final Class<? extends RemoteJsonService> r = findInterface(i);
+        if (r != null) {
+          return r;
+        }
+      }
+      c = c.getSuperclass();
+    }
+    return null;
   }
 }
