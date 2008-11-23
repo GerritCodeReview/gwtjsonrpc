@@ -14,8 +14,11 @@
 
 package com.google.gwtjsonrpc.client;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.ServiceDefTarget;
+
 /** Shared constants between client and server implementations. */
-public class Shared {
+public class JsonUtil {
   /** Proper Content-Type header value for JSON encoded data. */
   public static final String JSON_TYPE = "application/json";
 
@@ -30,6 +33,23 @@ public class Shared {
   /** Complete content when the XSRF token is missing or invalid. */
   public static final String SM_INVALID_XSRF = "INVALID_XSRF";
 
-  private Shared() {
+  /**
+   * Bind a RemoteJsonService proxy to its server URL.
+   * 
+   * @param <T> type of the service interface.
+   * @param imp the service instance, returned by <code>GWT.create</code>.
+   * @param path the path of the service, relative to the GWT module.
+   * @return always <code>imp</code>.
+   */
+  public static <T extends RemoteJsonService> T bind(final T imp,
+      final String path) {
+    assert GWT.isClient();
+    assert imp instanceof ServiceDefTarget;
+    final String base = GWT.getModuleBaseURL();
+    ((ServiceDefTarget) imp).setServiceEntryPoint(base + path);
+    return imp;
+  }
+
+  private JsonUtil() {
   }
 }

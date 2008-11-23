@@ -14,7 +14,7 @@
 
 package com.google.gwtjsonrpc.server;
 
-import static com.google.gwtjsonrpc.client.Shared.XSRF_HEADER;
+import static com.google.gwtjsonrpc.client.JsonUtil.XSRF_HEADER;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
@@ -29,7 +29,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RPCServletUtils;
 import com.google.gwtjsonrpc.client.CookieAccess;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
-import com.google.gwtjsonrpc.client.Shared;
+import com.google.gwtjsonrpc.client.JsonUtil;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -205,12 +205,12 @@ public abstract class JsonServlet extends HttpServlet {
       UnsupportedEncodingException {
     noCache(resp);
 
-    if (!Shared.JSON_TYPE.equals(req.getContentType())) {
+    if (!JsonUtil.JSON_TYPE.equals(req.getContentType())) {
       error(resp, SC_BAD_REQUEST, "Invalid request Content-Type");
       return;
     }
-    if (!Shared.JSON_TYPE.equals(req.getHeader("Accept"))) {
-      error(resp, SC_BAD_REQUEST, "Must accept " + Shared.JSON_TYPE);
+    if (!JsonUtil.JSON_TYPE.equals(req.getHeader("Accept"))) {
+      error(resp, SC_BAD_REQUEST, "Must accept " + JsonUtil.JSON_TYPE);
       return;
     }
     if (req.getContentLength() == 0) {
@@ -232,11 +232,11 @@ public abstract class JsonServlet extends HttpServlet {
 
       try {
         if (!xsrfValidate(call)) {
-          error(resp, Shared.SC_INVALID_XSRF, Shared.SM_INVALID_XSRF);
+          error(resp, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
           return;
         }
       } catch (XsrfException e) {
-        error(resp, Shared.SC_INVALID_XSRF, Shared.SM_INVALID_XSRF);
+        error(resp, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
         return;
       }
 

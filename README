@@ -136,11 +136,18 @@ Implement the service in Java as a servlet:
     }
   }
 
-Call the service from the browser:
+Create the service in the browser:
 
   StringService cs = GWT.create(StringService.class);
   ((ServiceDefTarget) cs).setServiceEntryPoint(
     GWT.getModuleBaseURL() + "StringService");
+
+or alternatively use the bind utility:
+
+  StringService cs = GWT.create(StringService.class);
+  JsonUtil.bind(cs, "StringService");
+
+and finally invoke the service:
 
   cs.append("foo", "bar", new AsyncCallback<String>() {
     public void onSuccess(String result) {

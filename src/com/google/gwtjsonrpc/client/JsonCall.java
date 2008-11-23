@@ -43,12 +43,12 @@ class JsonCall<T> implements RequestCallback {
     final RequestBuilder rb;
 
     rb = new RequestBuilder(RequestBuilder.POST, proxy.url);
-    rb.setHeader("Content-Type", Shared.JSON_TYPE);
-    rb.setHeader("Accept", Shared.JSON_TYPE);
+    rb.setHeader("Content-Type", JsonUtil.JSON_TYPE);
+    rb.setHeader("Accept", JsonUtil.JSON_TYPE);
     rb.setRequestData(requestData);
     rb.setCallback(this);
     if (proxy.xsrfKey != null) {
-      rb.setHeader(Shared.XSRF_HEADER, proxy.xsrfKey);
+      rb.setHeader(JsonUtil.XSRF_HEADER, proxy.xsrfKey);
     }
 
     try {
@@ -64,8 +64,8 @@ class JsonCall<T> implements RequestCallback {
 
     rememberXsrfKey(rsp);
 
-    if (sc == Shared.SC_INVALID_XSRF
-        && Shared.SM_INVALID_XSRF.equals(rsp.getText())) {
+    if (sc == JsonUtil.SC_INVALID_XSRF
+        && JsonUtil.SM_INVALID_XSRF.equals(rsp.getText())) {
       // The XSRF cookie was invalidated (or didn't exist) and the
       // service demands we have one in place to make calls to it.
       // A new token was returned to us, so start the request over.
@@ -103,7 +103,7 @@ class JsonCall<T> implements RequestCallback {
   }
 
   private void rememberXsrfKey(final Response rsp) {
-    final String v = rsp.getHeader(Shared.XSRF_HEADER);
+    final String v = rsp.getHeader(JsonUtil.XSRF_HEADER);
     if (v != null) {
       proxy.xsrfKey = v;
     }
@@ -118,7 +118,7 @@ class JsonCall<T> implements RequestCallback {
     if (semi >= 0) {
       type = type.substring(0, semi).trim();
     }
-    return Shared.JSON_TYPE.equals(type);
+    return JsonUtil.JSON_TYPE.equals(type);
   }
 
   private static final native RpcResult parse(String json)/*-{ return eval('('+json+')'); }-*/;
