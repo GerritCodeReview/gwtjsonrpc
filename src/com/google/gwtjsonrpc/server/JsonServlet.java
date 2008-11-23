@@ -96,15 +96,23 @@ public abstract class JsonServlet extends HttpServlet {
   @Override
   public void init(final ServletConfig config) throws ServletException {
     super.init(config);
+
+    final RemoteJsonService impl;
     try {
-      xsrf = xsrfInit();
-    } catch (XsrfException e) {
-      throw new ServletException("Cannot initialize XSRF", e);
+      impl = (RemoteJsonService) createServiceHandle();
+    } catch (Exception e) {
+      throw new ServletException("Service handle not available", e);
     }
 
-    myMethods = methods((RemoteJsonService) serviceHandle());
+    myMethods = methods(impl);
     if (myMethods.isEmpty()) {
       throw new ServletException("No service methods declared");
+    }
+
+    try {
+      xsrf = createXsrfSignedToken();
+    } catch (XsrfException e) {
+      throw new ServletException("Cannot initialize XSRF", e);
     }
   }
 
@@ -113,8 +121,9 @@ public abstract class JsonServlet extends HttpServlet {
    * 
    * @return by default <code>this</code>, but any object which implements a
    *         RemoteJsonService interface.
+   * @throws Exception any error indicating the service is not configured.
    */
-  protected Object serviceHandle() {
+  protected Object createServiceHandle() throws Exception {
     return this;
   }
 
@@ -130,7 +139,7 @@ public abstract class JsonServlet extends HttpServlet {
    *         algorithm.
    * @throws XsrfException the XSRF utility could not be created.
    */
-  protected SignedToken xsrfInit() throws XsrfException {
+  protected SignedToken createXsrfSignedToken() throws XsrfException {
     return new SignedToken(4 * 60 * 60 /* seconds */);
   }
 
