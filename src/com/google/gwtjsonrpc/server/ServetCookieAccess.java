@@ -31,4 +31,11 @@ final class ServetCookieAccess extends CookieAccess {
     }
     return null;
   }
+
+  @Override
+  protected void removeCookie(final String name) {
+    final Cookie c = new Cookie(name, "");
+    c.setMaxAge(0);
+    JsonServlet.getCurrentResponse().addCookie(c);
+  }
 }

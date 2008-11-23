@@ -36,6 +36,19 @@ public abstract class CookieAccess {
   }
 
   /**
+   * Removes the cookie associated with the given name.
+   * 
+   * @param name the name of the cookie to be removed
+   */
+  public static void remove(final String name) {
+    if (GWT.isClient()) {
+      Cookies.removeCookie(name);
+    } else {
+      impl.removeCookie(name);
+    }
+  }
+
+  /**
    * Get the text of a signed token which is stored in a cookie.
    * <p>
    * <b>Warning: This method does not validate the token.</b>
@@ -69,4 +82,6 @@ public abstract class CookieAccess {
   }
 
   protected abstract String getCookie(String name);
+
+  protected abstract void removeCookie(String name);
 }
