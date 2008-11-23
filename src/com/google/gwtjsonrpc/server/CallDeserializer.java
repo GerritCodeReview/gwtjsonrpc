@@ -14,6 +14,7 @@
 
 package com.google.gwtjsonrpc.server;
 
+import com.google.gson.InstanceCreator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
@@ -23,12 +24,19 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-final class RpcRequestDeserializer implements JsonDeserializer<ActiveCall> {
+final class CallDeserializer implements JsonDeserializer<ActiveCall>,
+    InstanceCreator<ActiveCall> {
   private static final String RPC_VERSION = JsonServlet.RPC_VERSION;
+  private final ActiveCall req;
   private final JsonServlet server;
 
-  RpcRequestDeserializer(final JsonServlet jsonServlet) {
+  CallDeserializer(final ActiveCall call, final JsonServlet jsonServlet) {
+    req = call;
     server = jsonServlet;
+  }
+
+  public ActiveCall createInstance(final Type type) {
+    return req;
   }
 
   public ActiveCall deserialize(final JsonElement json, final Type typeOfT,
@@ -39,7 +47,6 @@ final class RpcRequestDeserializer implements JsonDeserializer<ActiveCall> {
     }
 
     final JsonObject in = json.getAsJsonObject();
-    final ActiveCall req = new ActiveCall();
     req.id = in.get("id");
 
     final JsonElement version = in.get("version");
@@ -49,7 +56,7 @@ final class RpcRequestDeserializer implements JsonDeserializer<ActiveCall> {
 
     final JsonElement method = in.get("method");
     if (!isString(method)) {
-      throw new JsonParseException("Exepected method name as string");
+      throw new JsonParseException("Expected method name as string");
     }
 
     req.method = server.lookupMethod(method.getAsString());

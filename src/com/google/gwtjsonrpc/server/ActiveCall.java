@@ -16,18 +16,32 @@ package com.google.gwtjsonrpc.server;
 
 import com.google.gson.JsonElement;
 
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** An active RPC call. */
 public class ActiveCall {
-  HttpServletRequest httpRequest;
-  HttpServletResponse httpResponse;
+  protected final HttpServletRequest httpRequest;
+  protected final HttpServletResponse httpResponse;
   JsonElement id;
   MethodHandle method;
   Object[] params;
   Object result;
   Throwable error;
+  Map<String, String> cookies;
+
+  /**
+   * Create a new call.
+   * 
+   * @param req the request.
+   * @param resp the response.
+   */
+  public ActiveCall(final HttpServletRequest req, final HttpServletResponse resp) {
+    httpRequest = req;
+    httpResponse = resp;
+  }
 
   /**
    * Get the HTTP request that is attempting this RPC call.
@@ -64,5 +78,11 @@ public class ActiveCall {
    */
   public Object[] getParams() {
     return params;
+  }
+
+  /** Mark the response to be uncached by proxies and browsers. */
+  public void noCache() {
+    httpResponse.setHeader("Cache-Control", "no-cache");
+    httpResponse.setDateHeader("Expires", System.currentTimeMillis());
   }
 }

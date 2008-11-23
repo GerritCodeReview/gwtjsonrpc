@@ -71,23 +71,16 @@ import javax.servlet.http.HttpServletResponse;
  * the resulting JSON, reducing transfer time for the response data.
  */
 public abstract class JsonServlet extends HttpServlet {
-  private static final ThreadLocal<HttpServletRequest> perThreadRequest;
-  private static final ThreadLocal<HttpServletResponse> perThreadResponse;
+  private static final ThreadLocal<ActiveCall> perThreadCall;
 
   static {
-    perThreadRequest = new ThreadLocal<HttpServletRequest>();
-    perThreadResponse = new ThreadLocal<HttpServletResponse>();
+    perThreadCall = new ThreadLocal<ActiveCall>();
     CookieAccess.setImplementation(new ServetCookieAccess());
   }
 
-  /** Get the <code>HttpServletRequest</code> object for the current call. */
-  public static final HttpServletRequest getCurrentRequest() {
-    return perThreadRequest.get();
-  }
-
-  /** Get the <code>HttpServletResponse</code> object for the current call */
-  public static final HttpServletResponse getCurrentResponse() {
-    return perThreadResponse.get();
+  /** Get the <code>ActiveCall</code> object for the current call. */
+  public static final ActiveCall getCurrentCall() {
+    return perThreadCall.get();
   }
 
   static final Object[] NO_PARAMS = {};
@@ -191,56 +184,62 @@ public abstract class JsonServlet extends HttpServlet {
     return myMethods.get(methodName);
   }
 
+  /**
+   * Create a new call structure for the active HTTP request.
+   * 
+   * @param req the incoming request.
+   * @param resp the response to return to the client.
+   * @return the new call wrapping both.
+   */
+  protected ActiveCall createActiveCall(final HttpServletRequest req,
+      final HttpServletResponse resp) {
+    return new ActiveCall(req, resp);
+  }
+
   @Override
   protected void doPost(final HttpServletRequest req,
       final HttpServletResponse resp) throws IOException {
     try {
-      perThreadRequest.set(req);
-      perThreadResponse.set(resp);
-      doService(req, resp);
+      final ActiveCall c = createActiveCall(req, resp);
+      perThreadCall.set(c);
+      doService(c);
     } finally {
-      perThreadRequest.set(null);
-      perThreadResponse.set(null);
+      perThreadCall.set(null);
     }
   }
 
-  private void doService(final HttpServletRequest req,
-      final HttpServletResponse resp) throws IOException,
+  private void doService(final ActiveCall call) throws IOException,
       UnsupportedEncodingException {
-    noCache(resp);
+    call.noCache();
 
-    if (!JsonUtil.JSON_TYPE.equals(req.getContentType())) {
-      error(resp, SC_BAD_REQUEST, "Invalid request Content-Type");
+    if (!JsonUtil.JSON_TYPE.equals(call.httpRequest.getContentType())) {
+      error(call, SC_BAD_REQUEST, "Invalid request Content-Type");
       return;
     }
-    if (!JsonUtil.JSON_TYPE.equals(req.getHeader("Accept"))) {
-      error(resp, SC_BAD_REQUEST, "Must accept " + JsonUtil.JSON_TYPE);
+    if (!JsonUtil.JSON_TYPE.equals(call.httpRequest.getHeader("Accept"))) {
+      error(call, SC_BAD_REQUEST, "Must accept " + JsonUtil.JSON_TYPE);
       return;
     }
-    if (req.getContentLength() == 0) {
-      error(resp, SC_BAD_REQUEST, "POST body required");
+    if (call.httpRequest.getContentLength() == 0) {
+      error(call, SC_BAD_REQUEST, "POST body required");
       return;
     }
 
-    final ActiveCall call;
     try {
-      call = parseRequest(req);
+      parseRequest(call);
     } catch (NoSuchRemoteMethodException err) {
-      error(resp, SC_NOT_FOUND, "Not Found");
+      error(call, SC_NOT_FOUND, "Not Found");
       return;
     }
 
     if (call.method != null) {
-      call.httpRequest = req;
-      call.httpResponse = resp;
-
       try {
         if (!xsrfValidate(call)) {
-          error(resp, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
+          error(call, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
           return;
         }
       } catch (XsrfException e) {
-        error(resp, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
+        error(call, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
         return;
       }
 
@@ -257,35 +256,31 @@ public abstract class JsonServlet extends HttpServlet {
 
     final String out = formatResult(call);
     if (call.error != null) {
-      resp.setStatus(SC_INTERNAL_SERVER_ERROR);
+      call.httpResponse.setStatus(SC_INTERNAL_SERVER_ERROR);
     }
-    RPCServletUtils.writeResponse(getServletContext(), resp, out,
-        RPCServletUtils.acceptsGzipEncoding(req)
+    RPCServletUtils.writeResponse(getServletContext(), call.httpResponse, out,
+        RPCServletUtils.acceptsGzipEncoding(call.httpRequest)
             && RPCServletUtils.exceedsUncompressedContentLengthLimit(out));
   }
 
-  private static void noCache(final HttpServletResponse resp) {
-    resp.setHeader("Cache-Control", "no-cache");
-    resp.addDateHeader("Expires", System.currentTimeMillis());
-  }
-
-  private ActiveCall parseRequest(final HttpServletRequest req)
+  private void parseRequest(final ActiveCall call)
       throws UnsupportedEncodingException, IOException {
+    final HttpServletRequest req = call.httpRequest;
     final Reader in = new InputStreamReader(req.getInputStream(), ENC);
     try {
       try {
-        return parseRequest(in);
+        parseRequest(call, in);
       } catch (JsonParseException err) {
-        final ActiveCall call = new ActiveCall();
+        call.method = null;
+        call.params = null;
         call.error = err;
-        return call;
       }
     } finally {
       in.close();
     }
   }
 
-  private ActiveCall parseRequest(final Reader in) {
+  private void parseRequest(final ActiveCall call, final Reader in) {
     final GsonBuilder gb = new GsonBuilder();
     gb.registerTypeAdapter(java.sql.Date.class,
         new JsonDeserializer<java.sql.Date>() {
@@ -331,8 +326,8 @@ public abstract class JsonServlet extends HttpServlet {
             }
           }
         });
-    gb.registerTypeAdapter(ActiveCall.class, new RpcRequestDeserializer(this));
-    return gb.create().fromJson(in, ActiveCall.class);
+    gb.registerTypeAdapter(ActiveCall.class, new CallDeserializer(call, this));
+    gb.create().fromJson(in, ActiveCall.class);
   }
 
   private String formatResult(final ActiveCall result)
@@ -365,7 +360,7 @@ public abstract class JsonServlet extends HttpServlet {
             return new JsonPrimitive(src.toString());
           }
         });
-    gb.registerTypeAdapter(ActiveCall.class, new JsonSerializer<ActiveCall>() {
+    gb.registerTypeAdapter(result.getClass(), new JsonSerializer<ActiveCall>() {
       public JsonElement serialize(final ActiveCall src, final Type typeOfSrc,
           final JsonSerializationContext context) {
         final JsonObject r = new JsonObject();
@@ -388,12 +383,13 @@ public abstract class JsonServlet extends HttpServlet {
     gb.create().toJson(result, o);
   }
 
-  private static void error(final HttpServletResponse resp, final int status,
+  private static void error(final ActiveCall call, final int status,
       final String message) throws IOException {
-    resp.setStatus(status);
-    resp.setContentType("text/plain; charset=" + ENC);
+    final HttpServletResponse r = call.httpResponse;
+    r.setStatus(status);
+    r.setContentType("text/plain; charset=" + ENC);
 
-    final Writer w = new OutputStreamWriter(resp.getOutputStream(), ENC);
+    final Writer w = new OutputStreamWriter(r.getOutputStream(), ENC);
     try {
       w.write(message);
     } finally {
