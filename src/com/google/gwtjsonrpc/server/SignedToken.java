@@ -14,6 +14,7 @@
 
 package com.google.gwtjsonrpc.server;
 
+import com.google.gwtjsonrpc.client.CookieAccess;
 import com.google.gwtjsonrpc.client.Shared;
 
 import org.apache.commons.codec.binary.Base64;
@@ -81,6 +82,24 @@ public class SignedToken {
     key = new SecretKeySpec(decodeBase64(keyBase64), MAC_ALG);
     rng = new SecureRandom();
     tokenLength = 2 * INT_SZ + newMac().getMacLength();
+  }
+
+  /**
+   * Get the text of a signed token which is stored in a cookie.
+   * 
+   * @param cookieName the name of the cookie to get the text from.
+   * @return the signed text; null if the cookie is not set or the cookie's
+   *         token was forged.
+   */
+  public String getCookieText(final String cookieName) {
+    final String val = CookieAccess.get(cookieName);
+    boolean ok;
+    try {
+      ok = checkToken(val, null);
+    } catch (XsrfException e) {
+      ok = false;
+    }
+    return ok ? CookieAccess.getTokenText(cookieName) : null;
   }
 
   /**

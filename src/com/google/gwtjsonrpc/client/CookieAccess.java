@@ -36,6 +36,25 @@ public abstract class CookieAccess {
   }
 
   /**
+   * Get the text of a signed token which is stored in a cookie.
+   * <p>
+   * <b>Warning: This method does not validate the token.</b>
+   * <p>
+   * To validate the cookie hasn't been forged, use SignedToken.getCookieText.
+   * 
+   * @param cookieName the name of the cookie to get the text from.
+   * @return the signed text; null if the cookie is not set.
+   */
+  public static String getTokenText(final String cookieName) {
+    final String v = get(cookieName);
+    if (v == null) {
+      return null;
+    }
+    final int s = v.indexOf('$');
+    return s >= 0 ? v.substring(s + 1) : null;
+  }
+
+  /**
    * Install the server side implementation.
    * <p>
    * This is invoked by <code>JsonServlet</code>'s static class constructor to
