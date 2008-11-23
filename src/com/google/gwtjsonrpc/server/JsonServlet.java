@@ -20,16 +20,20 @@ import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RPCServletUtils;
 import com.google.gwtjsonrpc.client.CookieAccess;
-import com.google.gwtjsonrpc.client.RemoteJsonService;
 import com.google.gwtjsonrpc.client.JsonUtil;
+import com.google.gwtjsonrpc.client.RemoteJsonService;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -283,6 +287,50 @@ public abstract class JsonServlet extends HttpServlet {
 
   private ActiveCall parseRequest(final Reader in) {
     final GsonBuilder gb = new GsonBuilder();
+    gb.registerTypeAdapter(java.sql.Date.class,
+        new JsonDeserializer<java.sql.Date>() {
+          public java.sql.Date deserialize(final JsonElement json,
+              final Type typeOfT, final JsonDeserializationContext context)
+              throws JsonParseException {
+            if (json.isJsonNull()) {
+              return null;
+            }
+            if (!json.isJsonPrimitive()) {
+              throw new JsonParseException("Expected string for date type");
+            }
+            final JsonPrimitive p = (JsonPrimitive) json;
+            if (!p.isString()) {
+              throw new JsonParseException("Expected string for date type");
+            }
+            try {
+              return java.sql.Date.valueOf(p.getAsString());
+            } catch (IllegalArgumentException e) {
+              throw new JsonParseException("Not a date string");
+            }
+          }
+        });
+    gb.registerTypeAdapter(java.sql.Timestamp.class,
+        new JsonDeserializer<java.sql.Timestamp>() {
+          public java.sql.Timestamp deserialize(final JsonElement json,
+              final Type typeOfT, final JsonDeserializationContext context)
+              throws JsonParseException {
+            if (json.isJsonNull()) {
+              return null;
+            }
+            if (!json.isJsonPrimitive()) {
+              throw new JsonParseException("Expected string for timestamp type");
+            }
+            final JsonPrimitive p = (JsonPrimitive) json;
+            if (!p.isString()) {
+              throw new JsonParseException("Expected string for timestamp type");
+            }
+            try {
+              return java.sql.Timestamp.valueOf(p.getAsString());
+            } catch (IllegalArgumentException e) {
+              throw new JsonParseException("Not a timestamp string");
+            }
+          }
+        });
     gb.registerTypeAdapter(ActiveCall.class, new RpcRequestDeserializer(this));
     return gb.create().fromJson(in, ActiveCall.class);
   }
@@ -297,6 +345,26 @@ public abstract class JsonServlet extends HttpServlet {
 
   private void formatResult(final ActiveCall result, final Writer o) {
     final GsonBuilder gb = new GsonBuilder();
+    gb.registerTypeAdapter(java.sql.Date.class,
+        new JsonSerializer<java.sql.Date>() {
+          public JsonElement serialize(final java.sql.Date src,
+              final Type typeOfSrc, final JsonSerializationContext context) {
+            if (src == null) {
+              return new JsonNull();
+            }
+            return new JsonPrimitive(src.toString());
+          }
+        });
+    gb.registerTypeAdapter(java.sql.Timestamp.class,
+        new JsonSerializer<java.sql.Timestamp>() {
+          public JsonElement serialize(final java.sql.Timestamp src,
+              final Type typeOfSrc, final JsonSerializationContext context) {
+            if (src == null) {
+              return new JsonNull();
+            }
+            return new JsonPrimitive(src.toString());
+          }
+        });
     gb.registerTypeAdapter(ActiveCall.class, new JsonSerializer<ActiveCall>() {
       public JsonElement serialize(final ActiveCall src, final Type typeOfSrc,
           final JsonSerializationContext context) {

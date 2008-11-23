@@ -29,6 +29,8 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwtjsonrpc.client.ArraySerializer;
 import com.google.gwtjsonrpc.client.JavaLangString_JsonSerializer;
+import com.google.gwtjsonrpc.client.JavaSqlDate_JsonSerializer;
+import com.google.gwtjsonrpc.client.JavaSqlTimestamp_JsonSerializer;
 import com.google.gwtjsonrpc.client.JavaUtilDate_JsonSerializer;
 import com.google.gwtjsonrpc.client.JsonSerializer;
 import com.google.gwtjsonrpc.client.ListSerializer;
@@ -59,6 +61,10 @@ class SerializerCreator {
         JavaLangString_JsonSerializer.class.getCanonicalName());
     defaultSerializers.put(java.util.Date.class.getCanonicalName(),
         JavaUtilDate_JsonSerializer.class.getCanonicalName());
+    defaultSerializers.put(java.sql.Date.class.getCanonicalName(),
+        JavaSqlDate_JsonSerializer.class.getCanonicalName());
+    defaultSerializers.put(java.sql.Timestamp.class.getCanonicalName(),
+        JavaSqlTimestamp_JsonSerializer.class.getCanonicalName());
 
     parameterizedSerializers.put(java.util.List.class.getCanonicalName(),
         ListSerializer.class.getCanonicalName());
