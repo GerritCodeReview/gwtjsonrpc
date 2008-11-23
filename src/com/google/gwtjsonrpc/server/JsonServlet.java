@@ -27,8 +27,9 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RPCServletUtils;
-import com.google.gwtjsonrpc.client.RemoteJsonService;
+import com.google.gwtjsonrpc.client.CookieAccess;
 import com.google.gwtjsonrpc.client.Shared;
+import com.google.gwtjsonrpc.client.RemoteJsonService;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -66,6 +67,25 @@ import javax.servlet.http.HttpServletResponse;
  * the resulting JSON, reducing transfer time for the response data.
  */
 public abstract class JsonServlet extends HttpServlet {
+  private static final ThreadLocal<HttpServletRequest> perThreadRequest;
+  private static final ThreadLocal<HttpServletResponse> perThreadResponse;
+
+  static {
+    perThreadRequest = new ThreadLocal<HttpServletRequest>();
+    perThreadResponse = new ThreadLocal<HttpServletResponse>();
+    CookieAccess.setImplementation(new ServetCookieAccess());
+  }
+
+  /** Get the <code>HttpServletRequest</code> object for the current call. */
+  public static final HttpServletRequest getCurrentRequest() {
+    return perThreadRequest.get();
+  }
+
+  /** Get the <code>HttpServletResponse</code> object for the current call */
+  public static final HttpServletResponse getCurrentResponse() {
+    return perThreadResponse.get();
+  }
+
   static final Object[] NO_PARAMS = {};
   static final String RPC_VERSION = "1.1";
   private static final String ENC = "UTF-8";
@@ -160,6 +180,19 @@ public abstract class JsonServlet extends HttpServlet {
   @Override
   protected void doPost(final HttpServletRequest req,
       final HttpServletResponse resp) throws IOException {
+    try {
+      perThreadRequest.set(req);
+      perThreadResponse.set(resp);
+      doService(req, resp);
+    } finally {
+      perThreadRequest.set(null);
+      perThreadResponse.set(null);
+    }
+  }
+
+  private void doService(final HttpServletRequest req,
+      final HttpServletResponse resp) throws IOException,
+      UnsupportedEncodingException {
     noCache(resp);
 
     if (!Shared.JSON_TYPE.equals(req.getContentType())) {
