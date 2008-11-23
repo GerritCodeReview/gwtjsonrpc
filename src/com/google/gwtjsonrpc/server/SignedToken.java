@@ -96,7 +96,7 @@ public class SignedToken {
     final String val = CookieAccess.get(cookieName);
     boolean ok;
     try {
-      ok = checkToken(val, null);
+      ok = checkToken(val, null) != null;
     } catch (XsrfException e) {
       ok = false;
     }
@@ -136,40 +136,43 @@ public class SignedToken {
    * @throws XsrfException the JVM doesn't support the necessary algorithms to
    *         generate a token. XSRF services are simply not available.
    */
-  public boolean checkToken(final String tokenString, String text)
+  public ValidToken checkToken(final String tokenString, final String text)
       throws XsrfException {
     if (tokenString == null || tokenString.length() == 0) {
-      return false;
+      return null;
     }
 
     final int s = tokenString.indexOf('$');
     if (s <= 0) {
-      return false;
-    }
-    if (text == null) {
-      text = tokenString.substring(s + 1);
+      return null;
     }
 
+    final String recvText = tokenString.substring(s + 1);
     final byte[] in;
     try {
       in = decodeBase64(tokenString.substring(0, s));
     } catch (RuntimeException e) {
-      return false;
+      return null;
     }
     if (in.length != tokenLength) {
-      return false;
+      return null;
     }
 
     final int q = decodeInt(in, 0);
-    final int n = decodeInt(in, INT_SZ) ^ q;
-    if (Math.abs(n - now()) > maxAge) {
-      return false;
+    final int c = decodeInt(in, INT_SZ) ^ q;
+    final int n = now();
+    if (Math.abs(c - n) > maxAge) {
+      return null;
     }
 
     final byte[] gen = new byte[tokenLength];
     System.arraycopy(in, 0, gen, 0, 2 * INT_SZ);
-    computeToken(gen, text);
-    return Arrays.equals(gen, in);
+    computeToken(gen, text != null ? text : recvText);
+    if (!Arrays.equals(gen, in)) {
+      return null;
+    }
+
+    return new ValidToken(c + (maxAge >> 1) <= n, recvText);
   }
 
   private void computeToken(final byte[] buf, final String text)

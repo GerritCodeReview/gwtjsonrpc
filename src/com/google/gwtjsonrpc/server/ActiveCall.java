@@ -62,6 +62,19 @@ public class ActiveCall {
   }
 
   /**
+   * Get the user specific token to protect per-user XSRF keys.
+   * <p>
+   * By default this method uses <code>getRemoteUser()</code>. Services may
+   * override this method to acquire a different property of the request, such
+   * as data from an HTTP cookie or an extended HTTP header.
+   * 
+   * @return the user identity; null if the user is anonymous.
+   */
+  public String getUser() {
+    return httpRequest.getRemoteUser();
+  }
+
+  /**
    * Get the method this request is asking to invoke.
    * 
    * @return the requested method handle.

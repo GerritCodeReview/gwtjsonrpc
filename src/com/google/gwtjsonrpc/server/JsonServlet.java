@@ -141,20 +141,6 @@ public abstract class JsonServlet extends HttpServlet {
   }
 
   /**
-   * Get the user specific token to protect per-user XSRF keys.
-   * <p>
-   * By default this method uses <code>getRemoteUser()</code>. Services may
-   * override this method to acquire a different property of the request, such
-   * as data from an HTTP cookie or an extended HTTP header.
-   * 
-   * @param call current RPC being processed.
-   * @return the user identity; null if the user is anonymous.
-   */
-  protected String xsrfUser(final ActiveCall call) {
-    return call.httpRequest.getRemoteUser();
-  }
-
-  /**
    * Verify the XSRF token submitted is valid.
    * <p>
    * By default this method validates the token, and refreshes it with a new
@@ -167,11 +153,22 @@ public abstract class JsonServlet extends HttpServlet {
    */
   protected boolean xsrfValidate(final ActiveCall call) throws XsrfException {
     final HttpServletRequest req = call.httpRequest;
-    final String user = xsrfUser(call);
-    final String path = req.getServletPath();
-    final String userpath = ":" + user + ":" + path;
-    call.httpResponse.addHeader(XSRF_HEADER, xsrf.newToken(userpath));
-    return xsrf.checkToken(req.getHeader(XSRF_HEADER), userpath);
+    final String username = call.getUser();
+    final StringBuilder b = new StringBuilder();
+    if (username != null) {
+      b.append("user/");
+      b.append(username);
+    } else {
+      b.append("anonymous");
+    }
+    b.append('$');
+    b.append(req.getServletPath());
+    final String userpath = b.toString();
+    final ValidToken t = xsrf.checkToken(req.getHeader(XSRF_HEADER), userpath);
+    if (t == null || t.needsRefresh()) {
+      call.httpResponse.addHeader(XSRF_HEADER, xsrf.newToken(userpath));
+    }
+    return t != null;
   }
 
   /**
