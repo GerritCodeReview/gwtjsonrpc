@@ -28,8 +28,8 @@ import com.google.gson.JsonSerializer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RPCServletUtils;
 import com.google.gwtjsonrpc.client.CookieAccess;
-import com.google.gwtjsonrpc.client.Shared;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
+import com.google.gwtjsonrpc.client.Shared;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -91,7 +91,7 @@ public abstract class JsonServlet extends HttpServlet {
   private static final String ENC = "UTF-8";
 
   private Map<String, MethodHandle> myMethods;
-  private XsrfUtil xsrf;
+  private SignedToken xsrf;
 
   @Override
   public void init(final ServletConfig config) throws ServletException {
@@ -130,8 +130,8 @@ public abstract class JsonServlet extends HttpServlet {
    *         algorithm.
    * @throws XsrfException the XSRF utility could not be created.
    */
-  protected XsrfUtil xsrfInit() throws XsrfException {
-    return new XsrfUtil();
+  protected SignedToken xsrfInit() throws XsrfException {
+    return new SignedToken(4 * 60 * 60 /* seconds */);
   }
 
   /**
@@ -163,8 +163,9 @@ public abstract class JsonServlet extends HttpServlet {
     final HttpServletRequest req = call.httpRequest;
     final String user = xsrfUser(call);
     final String path = req.getServletPath();
-    call.httpResponse.addHeader(XSRF_HEADER, xsrf.newToken(user, path));
-    return xsrf.checkToken(req.getHeader(XSRF_HEADER), user, path);
+    final String userpath = ":" + user + ":" + path;
+    call.httpResponse.addHeader(XSRF_HEADER, xsrf.newToken(userpath));
+    return xsrf.checkToken(req.getHeader(XSRF_HEADER), userpath);
   }
 
   /**

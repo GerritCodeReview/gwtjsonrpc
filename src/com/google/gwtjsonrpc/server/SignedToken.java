@@ -38,9 +38,8 @@ import javax.crypto.spec.SecretKeySpec;
  * asking the client to return them to us, the client script must have had read
  * access to the token at some point and is therefore also from our server.
  */
-public class XsrfUtil {
+public class SignedToken {
   private static final int INT_SZ = 4;
-  private static final int MAX_XSRF_WINDOW = 4 * 60 * 60; // seconds
   private static final String MAC_ALG = "HmacSHA1";
 
   /**
@@ -54,97 +53,112 @@ public class XsrfUtil {
     return encodeBase64(r);
   }
 
+  private final int maxAge;
   private final SecretKeySpec key;
+  private final SecureRandom rng;
   private final int tokenLength;
 
   /**
    * Create a new utility, using a randomly generated key.
    * 
+   * @param age the number of seconds a token may remain valid.
    * @throws XsrfException the JVM doesn't support the necessary algorithms.
    */
-  public XsrfUtil() throws XsrfException {
-    this(generateRandomKey());
+  public SignedToken(final int age) throws XsrfException {
+    this(age, generateRandomKey());
   }
 
   /**
    * Create a new utility, using the specific key.
    * 
+   * @param age the number of seconds a token may remain valid.
    * @param keyBase64 base 64 encoded representation of the key.
    * @throws XsrfException the JVM doesn't support the necessary algorithms.
    */
-  public XsrfUtil(final String keyBase64) throws XsrfException {
+  public SignedToken(final int age, final String keyBase64)
+      throws XsrfException {
+    maxAge = age;
     key = new SecretKeySpec(decodeBase64(keyBase64), MAC_ALG);
-    tokenLength = INT_SZ + newMac().getMacLength();
+    rng = new SecureRandom();
+    tokenLength = 2 * INT_SZ + newMac().getMacLength();
   }
 
   /**
-   * Create a new token for the user and the resource.
+   * Generate a new signed token.
    * 
-   * @param user name or other unique identification of the user.
-   * @param resource resource (e.g. servlet path) the token protects.
-   * @return a new token string, typically base 64 encoded.
-   * @throws XsrfException the JVM doesn't support the necessary algorithms to
-   *         generate a token. XSRF services are simply not available.
+   * @param text the text string to sign. Typically this should be some
+   *        user-specific string, to prevent replay attacks. The text must be
+   *        safe to appear in whatever context the token itself will appear, as
+   *        the text is included on the end of the token.
+   * @return the signed token. The text passed in <code>text</code> will appear
+   *         after the first ',' in the returned token string.
+   * @throws XsrfException the JVM doesn't support the necessary algorithms.
    */
-  public String newToken(final String user, final String resource)
-      throws XsrfException {
+  public String newToken(final String text) throws XsrfException {
+    final int q = rng.nextInt();
     final byte[] buf = new byte[tokenLength];
-    encodeInt(buf, now());
-    computeToken(buf, user, resource);
-    return encodeBase64(buf);
+    encodeInt(buf, 0, q);
+    encodeInt(buf, INT_SZ, now() ^ q);
+    computeToken(buf, text);
+    return encodeBase64(buf) + '$' + text;
   }
 
   /**
    * Validate a returned token.
    * 
    * @param tokenString a token string previously created by this class.
-   * @param user name or other unique identification of the user.
-   * @param resource resource (e.g. servlet path) the token protects.
+   * @param text text that must have been used during {@link #newToken(String)}
+   *        in order for the token to be valid. If null the text will be taken
+   *        from the token string itself.
    * @return true if the token is valid; false if the token is null, the empty
-   *         string, has expired, does not match the user and resource
-   *         combination supplied, or is a forged token.
+   *         string, has expired, does not match the text supplied, or is a
+   *         forged token.
    * @throws XsrfException the JVM doesn't support the necessary algorithms to
    *         generate a token. XSRF services are simply not available.
    */
-  public boolean checkToken(final String tokenString, final String user,
-      final String resource) throws XsrfException {
+  public boolean checkToken(final String tokenString, String text)
+      throws XsrfException {
     if (tokenString == null || tokenString.length() == 0) {
       return false;
     }
 
-    final byte[] in = decodeBase64(tokenString);
+    final int s = tokenString.indexOf('$');
+    if (s <= 0) {
+      return false;
+    }
+    if (text == null) {
+      text = tokenString.substring(s + 1);
+    }
+
+    final byte[] in;
+    try {
+      in = decodeBase64(tokenString.substring(0, s));
+    } catch (RuntimeException e) {
+      return false;
+    }
     if (in.length != tokenLength) {
       return false;
     }
 
-    if (Math.abs(decodeInt(in) - now()) > MAX_XSRF_WINDOW) {
+    final int q = decodeInt(in, 0);
+    final int n = decodeInt(in, INT_SZ) ^ q;
+    if (Math.abs(n - now()) > maxAge) {
       return false;
     }
 
     final byte[] gen = new byte[tokenLength];
-    System.arraycopy(in, 0, gen, 0, INT_SZ);
-    computeToken(gen, user, resource);
+    System.arraycopy(in, 0, gen, 0, 2 * INT_SZ);
+    computeToken(gen, text);
     return Arrays.equals(gen, in);
   }
 
-  private void computeToken(final byte[] buf, final String user,
-      final String resource) throws XsrfException {
+  private void computeToken(final byte[] buf, final String text)
+      throws XsrfException {
     final Mac m = newMac();
-
-    m.update(buf, 0, INT_SZ);
-
-    m.update((byte) ':');
-    if (user != null) {
-      m.update(toBytes(user));
-    }
-
-    m.update((byte) ':');
-    if (resource != null) {
-      m.update(toBytes(resource));
-    }
-
+    m.update(buf, 0, 2 * INT_SZ);
+    m.update(toBytes(text));
     try {
-      m.doFinal(buf, INT_SZ);
+      m.doFinal(buf, 2 * INT_SZ);
     } catch (ShortBufferException e) {
       throw new XsrfException("Unexpected token overflow", e);
     }
@@ -174,27 +188,27 @@ public class XsrfUtil {
     return toString(Base64.encodeBase64(buf));
   }
 
-  private static void encodeInt(final byte[] buf, int v) {
-    buf[3] = (byte) v;
+  private static void encodeInt(final byte[] buf, final int o, int v) {
+    buf[o + 3] = (byte) v;
     v >>>= 8;
 
-    buf[2] = (byte) v;
+    buf[o + 2] = (byte) v;
     v >>>= 8;
 
-    buf[1] = (byte) v;
+    buf[o + 1] = (byte) v;
     v >>>= 8;
 
-    buf[0] = (byte) v;
+    buf[o] = (byte) v;
   }
 
-  private static int decodeInt(final byte[] buf) {
-    int r = buf[0] << 8;
+  private static int decodeInt(final byte[] buf, final int o) {
+    int r = buf[o] << 8;
 
-    r |= buf[1] & 0xff;
+    r |= buf[o + 1] & 0xff;
     r <<= 8;
 
-    r |= buf[2] & 0xff;
-    return (r << 8) | (buf[3] & 0xff);
+    r |= buf[o + 2] & 0xff;
+    return (r << 8) | (buf[o + 3] & 0xff);
   }
 
   private static byte[] toBytes(final String s) {
