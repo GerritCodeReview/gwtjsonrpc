@@ -79,7 +79,7 @@ public class SignedToken {
    */
   public SignedToken(final int age, final String keyBase64)
       throws XsrfException {
-    maxAge = age;
+    maxAge = age / 5;
     key = new SecretKeySpec(decodeBase64(keyBase64), MAC_ALG);
     rng = new SecureRandom();
     tokenLength = 2 * INT_SZ + newMac().getMacLength();
@@ -197,7 +197,7 @@ public class SignedToken {
   }
 
   private static int now() {
-    return (int) (System.currentTimeMillis() / 1000L);
+    return (int) (System.currentTimeMillis() / 5000L);
   }
 
   private static byte[] decodeBase64(final String s) {
