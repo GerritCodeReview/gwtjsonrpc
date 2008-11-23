@@ -75,7 +75,7 @@ public abstract class JsonServlet extends HttpServlet {
 
   static {
     perThreadCall = new ThreadLocal<ActiveCall>();
-    CookieAccess.setImplementation(new ServetCookieAccess());
+    CookieAccess.setImplementation(new ServletCookieAccess());
   }
 
   /** Get the <code>ActiveCall</code> object for the current call. */

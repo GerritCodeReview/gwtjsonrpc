@@ -21,7 +21,7 @@ import java.util.Map;
 
 import javax.servlet.http.Cookie;
 
-final class ServetCookieAccess extends CookieAccess {
+final class ServletCookieAccess extends CookieAccess {
   @Override
   protected String getCookie(final String name) {
     final ActiveCall call = JsonServlet.getCurrentCall();
