@@ -212,6 +212,8 @@ class ProxyCreator {
             && !SerializerCreator.isJsonString(pType)) {
           w.println(reqData + ".append(" + pName + ");");
         } else {
+          w.println("if (" + pName + " != null) {");
+          w.indent();
           if (pType.isParameterized() != null) {
             serializerCreator.generateSerializerReference(pType
                 .isParameterized(), w);
@@ -220,6 +222,13 @@ class ProxyCreator {
                 + ".INSTANCE");
           }
           w.println(".printJson(" + reqData + ", " + pName + ");");
+          w.outdent();
+          w.println("} else {");
+          w.indent();
+          w.println(reqData + ".append(" + JsonSerializer.class.getName()
+              + ".JS_NULL);");
+          w.outdent();
+          w.println("}");
         }
       }
       w.println(reqData + ".append(\"]}\");");

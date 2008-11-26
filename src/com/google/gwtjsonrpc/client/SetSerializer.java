@@ -33,21 +33,21 @@ public class SetSerializer<T> extends JsonSerializer<java.util.Set<T>> {
 
   @Override
   public void printJson(final StringBuffer sb, final java.util.Set<T> o) {
-    if (o != null) {
-      sb.append('[');
-      boolean first = true;
-      for (final T item : o) {
-        if (first) {
-          first = false;
-        } else {
-          sb.append(',');
-        }
-        serializer.printJson(sb, item);
+    sb.append('[');
+    boolean first = true;
+    for (final T item : o) {
+      if (first) {
+        first = false;
+      } else {
+        sb.append(',');
       }
-      sb.append(']');
-    } else {
-      sb.append(JS_NULL);
+      if (item != null) {
+        serializer.printJson(sb, item);
+      } else {
+        sb.append(JS_NULL);
+      }
     }
+    sb.append(']');
   }
 
   @Override

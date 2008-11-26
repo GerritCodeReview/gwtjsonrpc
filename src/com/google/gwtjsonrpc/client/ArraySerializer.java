@@ -30,18 +30,19 @@ public class ArraySerializer<T> extends JsonSerializer<T[]> {
 
   @Override
   public void printJson(final StringBuffer sb, final T[] o) {
-    if (o != null) {
-      sb.append('[');
-      for (int i = 0, n = o.length; i < n; i++) {
-        if (i > 0) {
-          sb.append(',');
-        }
-        serializer.printJson(sb, o[i]);
+    sb.append('[');
+    for (int i = 0, n = o.length; i < n; i++) {
+      if (i > 0) {
+        sb.append(',');
       }
-      sb.append(']');
-    } else {
-      sb.append(JS_NULL);
+      final T v = o[i];
+      if (v != null) {
+        serializer.printJson(sb, v);
+      } else {
+        sb.append(JS_NULL);
+      }
     }
+    sb.append(']');
   }
 
   @Override

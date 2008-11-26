@@ -79,7 +79,10 @@ final class CallDeserializer implements JsonDeserializer<ActiveCall>,
 
       final Object[] r = new Object[paramTypes.length];
       for (int i = 0; i < r.length; i++) {
-        r[i] = context.deserialize(paramsArray.get(i), paramTypes[i]);
+        final JsonElement v = paramsArray.get(i);
+        if (v != null) {
+          r[i] = context.deserialize(v, paramTypes[i]);
+        }
       }
       req.params = r;
     } else {

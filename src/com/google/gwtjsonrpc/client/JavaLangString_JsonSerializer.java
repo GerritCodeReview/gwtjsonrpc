@@ -27,10 +27,6 @@ public final class JavaLangString_JsonSerializer extends
 
   @Override
   public void printJson(final StringBuffer sb, final java.lang.String o) {
-    if (o != null) {
-      sb.append(escapeString(o));
-    } else {
-      sb.append(JS_NULL);
-    }
+    sb.append(escapeString(o));
   }
 }

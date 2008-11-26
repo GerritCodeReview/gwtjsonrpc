@@ -37,8 +37,7 @@ public abstract class JsonSerializer<T> {
    * 
    * @param sb the output string buffer the JSON text should be appended onto
    *        the end of.
-   * @param o the Java instance being converted. May be null, in which case
-   *        {@link #JS_NULL} should be appended instead.
+   * @param o the Java instance being converted. Never null.
    */
   public abstract void printJson(StringBuffer sb, T o);
 
