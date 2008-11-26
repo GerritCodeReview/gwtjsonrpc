@@ -346,17 +346,23 @@ class SerializerCreator {
   }
 
   private void generatePrintJson(final SourceWriter w) {
+    final JField[] fieldList = sortFields(targetType);
     w.print("public void printJson(StringBuffer sb, ");
     w.print(targetType.getQualifiedSourceName());
     w.println(" src) {");
     w.indent();
 
-    w.println("int fieldCount = -1;");
-    final String docomma = "if (++fieldCount > 0) sb.append(\",\");";
+    final String docomma;
+    if (fieldList.length > 1) {
+      w.println("int fieldCount = -1;");
+      docomma = "if (++fieldCount > 0) sb.append(\",\");";
+    } else {
+      docomma = "";
+    }
 
     w.println("sb.append(\"{\");");
 
-    for (final JField f : sortFields(targetType)) {
+    for (final JField f : fieldList) {
       final String doget;
       if (f.isPrivate()) {
         doget = "objectGet_" + f.getName() + "(src)";
