@@ -28,6 +28,7 @@ import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwtjsonrpc.client.ArraySerializer;
+import com.google.gwtjsonrpc.client.EnumSerializer;
 import com.google.gwtjsonrpc.client.JavaLangString_JsonSerializer;
 import com.google.gwtjsonrpc.client.JavaSqlDate_JsonSerializer;
 import com.google.gwtjsonrpc.client.JavaSqlTimestamp_JsonSerializer;
@@ -94,21 +95,27 @@ class SerializerCreator {
     this.targetType = targetType;
     final TypeOracle typeOracle = context.getTypeOracle();
     final SourceWriter srcWriter = getSourceWriter(logger, context);
+    final String sn = getSerializerQualifiedName(targetType);
+    if (!generatedSerializers.containsKey(targetType.getQualifiedSourceName())) {
+      generatedSerializers.put(targetType.getQualifiedSourceName(), sn);
+    }
     if (srcWriter == null) {
-      return getSerializerQualifiedName();
+      return sn;
     }
 
     if (targetType.isParameterized() == null) {
       generateSingleton(srcWriter);
     }
-    generateInstanceMembers(srcWriter);
-    generatePrintJson(srcWriter);
-    generateFromJson(srcWriter);
-    generateGetSets(srcWriter);
+    if (targetType.isEnum() != null) {
+      generateEnumFromJson(srcWriter);
+    } else {
+      generateInstanceMembers(srcWriter);
+      generatePrintJson(srcWriter);
+      generateFromJson(srcWriter);
+      generateGetSets(srcWriter);
+    }
 
     srcWriter.commit(logger);
-    final String sn = getSerializerQualifiedName();
-    generatedSerializers.put(targetType.getQualifiedSourceName(), sn);
     return sn;
   }
 
@@ -162,9 +169,7 @@ class SerializerCreator {
 
     final String qsn = type.getQualifiedSourceName();
     if (type.isEnum() != null) {
-      logger.log(TreeLogger.ERROR, "Java enum " + qsn
-          + " not supported in JSON encoding", null);
-      throw new UnableToCompleteException();
+      return;
     }
 
     if (isJsonPrimitive(type)) {
@@ -345,6 +350,21 @@ class SerializerCreator {
     }
   }
 
+  private void generateEnumFromJson(final SourceWriter w) {
+    w.print("public ");
+    w.print(targetType.getQualifiedSourceName());
+    w.println(" fromJson(Object in) {");
+    w.indent();
+    w.print("return in != null");
+    w.print(" ? " + targetType.getQualifiedSourceName()
+        + ".valueOf((String)in)");
+    w.print(" : null");
+    w.println(";");
+    w.outdent();
+    w.println("}");
+    w.println();
+  }
+
   private void generatePrintJson(final SourceWriter w) {
     final JField[] fieldList = sortFields(targetType);
     w.print("public void printJson(StringBuffer sb, ");
@@ -481,12 +501,18 @@ class SerializerCreator {
     cf = new ClassSourceFileComposerFactory(pkgName, getSerializerSimpleName());
     cf.addImport(JavaScriptObject.class.getCanonicalName());
     cf.addImport(JsonSerializer.class.getCanonicalName());
-    cf.setSuperclass(JsonSerializer.class.getSimpleName() + "<"
-        + targetType.getQualifiedSourceName() + ">");
+    if (targetType.isEnum() != null) {
+      cf.addImport(EnumSerializer.class.getCanonicalName());
+      cf.setSuperclass(EnumSerializer.class.getSimpleName() + "<"
+          + targetType.getQualifiedSourceName() + ">");
+    } else {
+      cf.setSuperclass(JsonSerializer.class.getSimpleName() + "<"
+          + targetType.getQualifiedSourceName() + ">");
+    }
     return cf.createSourceWriter(ctx, pw);
   }
 
-  private String getSerializerQualifiedName() {
+  private String getSerializerQualifiedName(final JClassType targetType) {
     final String[] name;
     name = ProxyCreator.synthesizeTopLevelClassName(targetType, SER_SUFFIX);
     return name[0].length() == 0 ? name[1] : name[0] + "." + name[1];
