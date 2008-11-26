@@ -410,7 +410,7 @@ class SerializerCreator {
     w.indent();
 
     w.println("if (in == null) return null;");
-    w.print("final JavaScriptObject jso = (JavaScriptObject)in;");
+    w.println("final JavaScriptObject jso = (JavaScriptObject)in;");
     w.print("final ");
     w.print(targetType.getQualifiedSourceName());
     w.print(" dst = new ");
