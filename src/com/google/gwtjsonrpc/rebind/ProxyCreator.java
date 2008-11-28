@@ -237,7 +237,13 @@ class ProxyCreator {
 
     w.print("doInvoke(");
     w.print(reqDataStr);
-    w.print(", " + serializerCreator.create(resultType, logger) + ".INSTANCE");
+    w.print(", ");
+    if (resultType.isParameterized() != null) {
+      serializerCreator.generateSerializerReference(resultType
+          .isParameterized(), w);
+    } else {
+      w.print(serializerCreator.create(resultType, logger) + ".INSTANCE");
+    }
     w.print(", " + callback.getName());
     w.println(");");
 
