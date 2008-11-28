@@ -39,6 +39,10 @@ Call approximation is not supported.  The 'params' member must
 Error codes sent by the Java server are always 999 as the JSON RPC
 specification does not call out specific errors.
 
+The HTTP header "X-RPC-XSRF-Token" must be populated on requests
+with a value previously supplied by the same header in a prior
+HTTP response.
+
 
 Differences from GWT-RPC
 ------------------------
@@ -67,6 +71,13 @@ Benefits:
   When using the Java based server implementation in this package
   automatic XSRF protection is enabled for every RPC.
 
+- Only one interface must be declared:
+
+  The Java server implementation implements the "async" variant of the
+  service interface and calls the AsyncCallback to provide its response.
+  This permits the Java server to (in some cases) also be compiled into
+  the client to directly implement the interface, such as for an offline
+  Google Gears/HTML 5 mode.
 
 Drawbacks:
 
@@ -99,6 +110,44 @@ Drawbacks:
   A simple (but annoying) work around is to add a unique suffix to
   each method name.
 
+
+Other Features
+--------------
+
+- Separate servlet vs. service implementation classes
+
+  The service implementation can be implemented in a plain old Java
+  object, and be constructed in a JsonServlet's createServiceHandle()
+  method override.
+
+  This strategy permits the service implementation to be complied as part of
+  the GWT client side code for an offline mode.  As the service implementation
+  implements the async interface directly an instance can be used anywhere the
+  async interface is used.
+
+- Selectable unique user string
+
+  The string used to tie the XSRF token to a specific user can be set
+  by overriding JsonServlet's createActiveCall(), returning a custom
+  subclass of the ActiveCall object.  Within the ActiveCall subclass
+  override getUser().
+
+  This strategy was used because if you need to supply a custom user
+  string you probably need that (and more) data in your own service
+  implementations.  Extending ActiveCall permits caching data into a
+  per-request instance, speeding up multiple lookups.
+
+- Configurable token encryption key, timeout
+
+  The token encryption key and/or timeout can be changed by overriding
+  JsonServlet's createXsrfSignedToken() method.
+
+- RpcStatusListener to show "Loading ..." widgets
+
+  Applications can implement RpcStatusListener and register it to get updates
+  during all RPC events.  This can be useful to automatically show/hide some
+  sort of "Loading ..." or "Busy ..." widget when an RPC is taking place.  UI
+  is left to the application.
 
 
 Example
