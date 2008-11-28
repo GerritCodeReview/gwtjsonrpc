@@ -79,6 +79,10 @@ Benefits:
   the client to directly implement the interface, such as for an offline
   Google Gears/HTML 5 mode.
 
+- Automatic JSON callback support:
+
+  Managing JSON callbacks, including conversion to Java objects, is easier. 
+
 Drawbacks:
 
 - Object field names are exposed verbatim on the wire:
@@ -114,7 +118,7 @@ Drawbacks:
 Other Features
 --------------
 
-- Separate servlet vs. service implementation classes
+- Separate servlet vs. service implementation classes:
 
   The service implementation can be implemented in a plain old Java
   object, and be constructed in a JsonServlet's createServiceHandle()
@@ -125,7 +129,7 @@ Other Features
   implements the async interface directly an instance can be used anywhere the
   async interface is used.
 
-- Selectable unique user string
+- Selectable unique user string:
 
   The string used to tie the XSRF token to a specific user can be set
   by overriding JsonServlet's createActiveCall(), returning a custom
@@ -137,17 +141,25 @@ Other Features
   implementations.  Extending ActiveCall permits caching data into a
   per-request instance, speeding up multiple lookups.
 
-- Configurable token encryption key, timeout
+- Configurable token encryption key, timeout:
 
   The token encryption key and/or timeout can be changed by overriding
   JsonServlet's createXsrfSignedToken() method.
 
-- RpcStatusListener to show "Loading ..." widgets
+- RpcStatusListener to show "Loading ..." widgets:
 
   Applications can implement RpcStatusListener and register it to get updates
   during all RPC events.  This can be useful to automatically show/hide some
   sort of "Loading ..." or "Busy ..." widget when an RPC is taking place.  UI
   is left to the application.
+
+- JSON callbacks:
+
+  Declaring a service method to return CallbackHandle allows the developer to
+  construct a unique JavaScript function to obtain results from a remote JSON
+  service, and automatically convert the JSON object into a Java object, just
+  like any other RPC method result.  Encoding parameters is left as an exercise
+  to the reader. 
 
 
 Example

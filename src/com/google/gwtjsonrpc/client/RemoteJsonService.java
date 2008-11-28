@@ -46,6 +46,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * Calling conventions match the JSON-RPC 1.1 working draft from 7 August 2006
  * (<a href="http://json-rpc.org/wd/JSON-RPC-1-1-WD-20060807.html">draft</a>).
  * Only positional parameters are supported.
+ * <p>
+ * JSON service callbacks may also be declared; see {@link CallbackHandle}.
  */
 public interface RemoteJsonService {
 }

@@ -31,6 +31,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwtjsonrpc.client.AbstractJsonProxy;
+import com.google.gwtjsonrpc.client.CallbackHandle;
 import com.google.gwtjsonrpc.client.JsonSerializer;
 
 import java.io.PrintWriter;
@@ -80,8 +81,9 @@ class ProxyCreator {
         invalid(logger, "Overloading method " + m.getName() + " not supported");
       }
 
-      if (m.getReturnType() != JPrimitiveType.VOID) {
-        invalid(logger, "Method " + m.getName() + " must return void");
+      if (m.getReturnType() != JPrimitiveType.VOID && !returnsCallbackHandle(m)) {
+        invalid(logger, "Method " + m.getName() + " must return void or "
+            + CallbackHandle.class);
       }
 
       final JParameter[] params = m.getParameters();
@@ -101,6 +103,27 @@ class ProxyCreator {
             + " must have a type parameter");
       }
 
+      final JClassType resultType =
+          callback.getType().isParameterized().getTypeArgs()[0];
+
+      if (returnsCallbackHandle(m)) {
+        if (params.length != 1) {
+          invalid(logger, "Method " + m.getName()
+              + " must not accept parameters");
+        }
+
+        final JClassType rt = m.getReturnType().isClass();
+        if (rt.isParameterized() == null) {
+          invalid(logger, "CallbackHandle return value of " + m.getName()
+              + " must have a type parameter");
+        }
+        if (!resultType.getQualifiedSourceName().equals(
+            rt.isParameterized().getTypeArgs()[0].getQualifiedSourceName())) {
+          invalid(logger, "CallbackHandle return value of " + m.getName()
+              + " must match type with AsyncCallback parameter");
+        }
+      }
+
       for (int i = 0; i < params.length - 1; i++) {
         final JParameter p = params[i];
         final TreeLogger branch =
@@ -112,14 +135,17 @@ class ProxyCreator {
         }
       }
 
-      final JClassType resultType =
-          callback.getType().isParameterized().getTypeArgs()[0];
       final TreeLogger branch =
           logger.branch(TreeLogger.DEBUG, m.getName() + ", result "
               + resultType.getQualifiedSourceName());
       serializerCreator.checkCanSerialize(branch, resultType);
       serializerCreator.create(resultType, branch);
     }
+  }
+
+  private boolean returnsCallbackHandle(final JMethod m) {
+    return m.getReturnType().getErasedType().getQualifiedSourceName().equals(
+        CallbackHandle.class.getName());
   }
 
   private void invalid(final TreeLogger logger, final String what)
@@ -192,7 +218,11 @@ class ProxyCreator {
       w.println(";");
     }
 
-    w.print("public void " + method.getName() + "(");
+    w.print("public ");
+    w.print(method.getReturnType().getQualifiedSourceName());
+    w.print(" ");
+    w.print(method.getName());
+    w.print("(");
     boolean needsComma = false;
     final NameFactory nameFactory = new NameFactory();
     for (int i = 0; i < params.length; i++) {
@@ -214,6 +244,22 @@ class ProxyCreator {
 
     w.println(") {");
     w.indent();
+
+    if (returnsCallbackHandle(method)) {
+      w.print("return new ");
+      w.print(CallbackHandle.class.getName());
+      w.print("(");
+      if (resultType.isParameterized() != null) {
+        w.print(serializerFields[params.length - 1]);
+      } else {
+        w.print(serializerCreator.create(resultType, logger) + ".INSTANCE");
+      }
+      w.print(", " + callback.getName());
+      w.println(");");
+      w.outdent();
+      w.println("}");
+      return;
+    }
 
     final String rVersion = "\\\"version\\\":\\\"1.1\\\"";
     final String rMethod = "\\\"method\\\":\\\"" + method.getName() + "\\\"";
