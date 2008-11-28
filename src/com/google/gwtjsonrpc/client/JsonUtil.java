@@ -17,6 +17,8 @@ package com.google.gwtjsonrpc.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
+import java.util.ArrayList;
+
 /** Shared constants between client and server implementations. */
 public class JsonUtil {
   /** Proper Content-Type header value for JSON encoded data. */
@@ -33,6 +35,9 @@ public class JsonUtil {
   /** Complete content when the XSRF token is missing or invalid. */
   public static final String SM_INVALID_XSRF = "INVALID_XSRF";
 
+  private static final ArrayList<RpcStatusListener> listeners =
+      new ArrayList<RpcStatusListener>();
+
   /**
    * Bind a RemoteJsonService proxy to its server URL.
    * 
@@ -48,6 +53,29 @@ public class JsonUtil {
     final String base = GWT.getModuleBaseURL();
     ((ServiceDefTarget) imp).setServiceEntryPoint(base + path);
     return imp;
+  }
+
+  /** Register a status listener. */
+  public static void addRpcStatusListener(final RpcStatusListener l) {
+    assert !listeners.contains(l);
+    listeners.add(l);
+  }
+
+  /** Remove a registered status listener. */
+  public static void removeRpcStatusListener(final RpcStatusListener l) {
+    listeners.remove(l);
+  }
+
+  static void fireOnCallStart() {
+    for (final RpcStatusListener l : listeners) {
+      l.onCallStart();
+    }
+  }
+
+  static void fireOnCallEnd() {
+    for (final RpcStatusListener l : listeners) {
+      l.onCallEnd();
+    }
   }
 
   private JsonUtil() {

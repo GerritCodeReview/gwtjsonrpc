@@ -56,6 +56,11 @@ class JsonCall<T> implements RequestCallback {
       rb.send();
     } catch (RequestException e) {
       callback.onFailure(e);
+      return;
+    }
+
+    if (attempts == 1) {
+      JsonUtil.fireOnCallStart();
     }
   }
 
@@ -73,6 +78,7 @@ class JsonCall<T> implements RequestCallback {
       if (attempts < 2) {
         send();
       } else {
+        JsonUtil.fireOnCallEnd();
         callback.onFailure(new InvocationException(rsp.getText()));
       }
       return;
@@ -81,24 +87,29 @@ class JsonCall<T> implements RequestCallback {
     if (isJsonBody(rsp)) {
       final RpcResult r = parse(rsp.getText());
       if (r.error() != null) {
+        JsonUtil.fireOnCallEnd();
         callback.onFailure(new InvocationException(r.error().message()));
         return;
       }
 
       if (sc == Response.SC_OK) {
+        JsonUtil.fireOnCallEnd();
         callback.onSuccess(resultSerializer.fromJson(r.result()));
         return;
       }
     }
 
     if (sc == Response.SC_OK) {
+      JsonUtil.fireOnCallEnd();
       callback.onFailure(new InvocationException("No JSON response"));
     } else {
+      JsonUtil.fireOnCallEnd();
       callback.onFailure(new StatusCodeException(sc, rsp.getStatusText()));
     }
   }
 
   public void onError(final Request request, final Throwable exception) {
+    JsonUtil.fireOnCallEnd();
     callback.onFailure(exception);
   }
 
