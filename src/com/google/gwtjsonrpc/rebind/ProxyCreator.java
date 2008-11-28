@@ -42,6 +42,7 @@ class ProxyCreator {
   private JClassType svcInf;
   private JClassType asyncCallbackClass;
   private SerializerCreator serializerCreator;
+  private int instanceField;
 
   ProxyCreator(final JClassType remoteService) {
     svcInf = remoteService;
@@ -158,15 +159,42 @@ class ProxyCreator {
   private void generateProxyMethod(final TreeLogger logger,
       final JMethod method, final SourceWriter w)
       throws UnableToCompleteException {
-    w.println();
-
-    w.print("public void " + method.getName() + "(");
-    boolean needsComma = false;
-    final NameFactory nameFactory = new NameFactory();
     final JParameter[] params = method.getParameters();
     final JParameter callback = params[params.length - 1];
     final JClassType resultType =
         callback.getType().isParameterized().getTypeArgs()[0];
+    final String[] serializerFields = new String[params.length];
+
+    w.println();
+    for (int i = 0; i < params.length - 1; i++) {
+      final JType pType = params[i].getType();
+      if (pType.isParameterized() != null) {
+        serializerFields[i] = "serializer_" + instanceField++;
+        w.print("private static final ");
+        w.print(JsonSerializer.class.getName());
+        w.print(" ");
+        w.print(serializerFields[i]);
+        w.print(" = ");
+        serializerCreator.generateSerializerReference(pType.isParameterized(),
+            w);
+        w.println(";");
+      }
+    }
+    if (resultType.isParameterized() != null) {
+      serializerFields[params.length - 1] = "serializer_" + instanceField++;
+      w.print("private static final ");
+      w.print(JsonSerializer.class.getName());
+      w.print(" ");
+      w.print(serializerFields[params.length - 1]);
+      w.print(" = ");
+      serializerCreator.generateSerializerReference(resultType
+          .isParameterized(), w);
+      w.println(";");
+    }
+
+    w.print("public void " + method.getName() + "(");
+    boolean needsComma = false;
+    final NameFactory nameFactory = new NameFactory();
     for (int i = 0; i < params.length; i++) {
       final JParameter param = params[i];
 
@@ -215,8 +243,7 @@ class ProxyCreator {
           w.println("if (" + pName + " != null) {");
           w.indent();
           if (pType.isParameterized() != null) {
-            serializerCreator.generateSerializerReference(pType
-                .isParameterized(), w);
+            w.print(serializerFields[i]);
           } else {
             w.print(serializerCreator.create((JClassType) pType, logger)
                 + ".INSTANCE");
@@ -239,8 +266,7 @@ class ProxyCreator {
     w.print(reqDataStr);
     w.print(", ");
     if (resultType.isParameterized() != null) {
-      serializerCreator.generateSerializerReference(resultType
-          .isParameterized(), w);
+      w.print(serializerFields[params.length - 1]);
     } else {
       w.print(serializerCreator.create(resultType, logger) + ".INSTANCE");
     }
