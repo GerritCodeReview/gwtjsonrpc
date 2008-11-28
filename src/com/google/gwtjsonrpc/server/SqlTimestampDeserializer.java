@@ -52,6 +52,19 @@ public class SqlTimestampDeserializer implements
     if (src == null) {
       return new JsonNull();
     }
-    return new JsonPrimitive(src.toString());
+    String s = src.toString();
+    if (s.length() < 29) {
+      // The JRE leaves off trailing 0's, but GWT's Timestamp parser wants
+      // to see them in the nanos field. If our string is too short, add
+      // on trailing 0's to fit the format.
+      //
+      final StringBuffer r = new StringBuffer(29);
+      r.append(s);
+      while (r.length() < 29) {
+        r.append('0');
+      }
+      s = r.toString();
+    }
+    return new JsonPrimitive(s);
   }
 }
