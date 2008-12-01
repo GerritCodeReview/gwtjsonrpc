@@ -32,7 +32,6 @@ import com.google.gwtjsonrpc.client.JsonUtil;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringWriter;
@@ -219,7 +218,7 @@ public abstract class JsonServlet extends HttpServlet {
       UnsupportedEncodingException {
     call.noCache();
 
-    if (!JsonUtil.JSON_TYPE.equals(call.httpRequest.getContentType())) {
+    if (!isJsonBody(call)) {
       error(call, SC_BAD_REQUEST, "Invalid request Content-Type");
       return;
     }
@@ -270,10 +269,22 @@ public abstract class JsonServlet extends HttpServlet {
             && RPCServletUtils.exceedsUncompressedContentLengthLimit(out));
   }
 
+  private static boolean isJsonBody(final ActiveCall call) {
+    String type = call.httpRequest.getContentType();
+    if (type == null) {
+      return false;
+    }
+    int semi = type.indexOf(';');
+    if (semi >= 0) {
+      type = type.substring(0, semi).trim();
+    }
+    return JsonUtil.JSON_TYPE.equals(type);
+  }
+
   private void parseRequest(final ActiveCall call)
       throws UnsupportedEncodingException, IOException {
     final HttpServletRequest req = call.httpRequest;
-    final Reader in = new InputStreamReader(req.getInputStream(), ENC);
+    final Reader in = req.getReader();
     try {
       try {
         parseRequest(call, in);
