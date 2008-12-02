@@ -39,12 +39,12 @@ public abstract class AbstractJsonProxy implements ServiceDefTarget {
     url = address;
   }
 
-  protected <T> void doInvoke(final String requestData,
-      final JsonSerializer<T> resultSerializer, final AsyncCallback<T> callback)
+  protected <T> void doInvoke(final boolean allowXsrf, final String reqData,
+      final JsonSerializer<T> ser, final AsyncCallback<T> cb)
       throws InvocationException {
     if (url == null) {
       throw new NoServiceEntryPointSpecifiedException();
     }
-    new JsonCall<T>(this, requestData, resultSerializer, callback).send();
+    new JsonCall<T>(this, allowXsrf, reqData, ser, cb).send();
   }
 }

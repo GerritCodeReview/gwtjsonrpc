@@ -31,6 +31,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwtjsonrpc.client.AbstractJsonProxy;
+import com.google.gwtjsonrpc.client.AllowCrossSiteRequest;
 import com.google.gwtjsonrpc.client.CallbackHandle;
 import com.google.gwtjsonrpc.client.JsonSerializer;
 
@@ -309,6 +310,9 @@ class ProxyCreator {
     }
 
     w.print("doInvoke(");
+    w.print(String
+        .valueOf(method.getAnnotation(AllowCrossSiteRequest.class) != null));
+    w.print(", ");
     w.print(reqDataStr);
     w.print(", ");
     if (resultType.isParameterized() != null) {

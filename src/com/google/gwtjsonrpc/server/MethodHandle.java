@@ -15,6 +15,7 @@
 package com.google.gwtjsonrpc.server;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwtjsonrpc.client.AllowCrossSiteRequest;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
 
 import java.lang.reflect.InvocationTargetException;
@@ -27,6 +28,7 @@ public class MethodHandle {
   private final RemoteJsonService imp;
   private final Method method;
   private final Class<?>[] parameterTypes;
+  private final boolean allowXsrf;
 
   /**
    * Create a new handle for a specific service implementation and method.
@@ -39,6 +41,7 @@ public class MethodHandle {
   MethodHandle(final RemoteJsonService imp, final Method method) {
     this.imp = imp;
     this.method = method;
+    this.allowXsrf = method.getAnnotation(AllowCrossSiteRequest.class) != null;
 
     final Class<?>[] args = method.getParameterTypes();
     parameterTypes = new Class<?>[args.length - 1];
@@ -57,6 +60,11 @@ public class MethodHandle {
    */
   public Class<?>[] getParamTypes() {
     return parameterTypes;
+  }
+
+  /** @return true if the method can be called cross-site. */
+  public boolean allowCrossSiteRequest() {
+    return allowXsrf;
   }
 
   /**

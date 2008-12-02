@@ -26,14 +26,17 @@ import com.google.gwt.user.client.rpc.StatusCodeException;
 
 class JsonCall<T> implements RequestCallback {
   private final AbstractJsonProxy proxy;
+  private final boolean allowCrossSiteRequest;
   private final String requestData;
   private final JsonSerializer<T> resultSerializer;
   private final AsyncCallback<T> callback;
   private int attempts;
 
-  JsonCall(final AbstractJsonProxy abstractJsonProxy, final String requestData,
-      final JsonSerializer<T> resultSerializer, final AsyncCallback<T> callback) {
+  JsonCall(final AbstractJsonProxy abstractJsonProxy, final boolean allowXsrf,
+      final String requestData, final JsonSerializer<T> resultSerializer,
+      final AsyncCallback<T> callback) {
     this.proxy = abstractJsonProxy;
+    this.allowCrossSiteRequest = allowXsrf;
     this.requestData = requestData;
     this.resultSerializer = resultSerializer;
     this.callback = callback;
@@ -47,7 +50,7 @@ class JsonCall<T> implements RequestCallback {
     rb.setHeader("Accept", JsonUtil.JSON_TYPE);
     rb.setRequestData(requestData);
     rb.setCallback(this);
-    if (proxy.xsrfKey != null) {
+    if (!allowCrossSiteRequest && proxy.xsrfKey != null) {
       rb.setHeader(JsonUtil.XSRF_HEADER, proxy.xsrfKey);
     }
 
@@ -71,11 +74,16 @@ class JsonCall<T> implements RequestCallback {
 
     if (sc == JsonUtil.SC_INVALID_XSRF
         && JsonUtil.SM_INVALID_XSRF.equals(rsp.getText())) {
-      // The XSRF cookie was invalidated (or didn't exist) and the
-      // service demands we have one in place to make calls to it.
-      // A new token was returned to us, so start the request over.
-      //
-      if (attempts < 2) {
+      if (allowCrossSiteRequest) {
+        // This wasn't supposed to happen.
+        //
+        JsonUtil.fireOnCallEnd();
+        callback.onFailure(new InvocationException(rsp.getText()));
+      } else if (attempts < 2) {
+        // The XSRF cookie was invalidated (or didn't exist) and the
+        // service demands we have one in place to make calls to it.
+        // A new token was returned to us, so start the request over.
+        //
         send();
       } else {
         JsonUtil.fireOnCallEnd();

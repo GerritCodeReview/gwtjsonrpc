@@ -146,6 +146,12 @@ Other Features
   The token encryption key and/or timeout can be changed by overriding
   JsonServlet's createXsrfSignedToken() method.
 
+- XSRF protection disabled on a per-method basis:
+
+  Methods which do not require XSRF protection (for example read-only methods
+  exposing public information) can be marked @AllowCrossSiteRequest to disable
+  the automatic XSRF protection check code path in JsonServlet.
+
 - RpcStatusListener to show "Loading ..." widgets:
 
   Applications can implement RpcStatusListener and register it to get updates

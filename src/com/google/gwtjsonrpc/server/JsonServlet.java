@@ -239,14 +239,16 @@ public abstract class JsonServlet extends HttpServlet {
     }
 
     if (call.method != null) {
-      try {
-        if (!xsrfValidate(call)) {
+      if (!call.method.allowCrossSiteRequest()) {
+        try {
+          if (!xsrfValidate(call)) {
+            error(call, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
+            return;
+          }
+        } catch (XsrfException e) {
           error(call, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
           return;
         }
-      } catch (XsrfException e) {
-        error(call, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
-        return;
       }
 
       call.method.invoke(call.params, new AsyncCallback<Object>() {
