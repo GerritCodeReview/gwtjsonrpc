@@ -96,7 +96,7 @@ class JsonCall<T> implements RequestCallback {
       final RpcResult r = parse(rsp.getText());
       if (r.error() != null) {
         JsonUtil.fireOnCallEnd();
-        callback.onFailure(new InvocationException(r.error().message()));
+        callback.onFailure(new RemoteJsonException(r.error().message()));
         return;
       }
 
