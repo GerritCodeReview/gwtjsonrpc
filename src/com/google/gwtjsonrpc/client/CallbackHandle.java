@@ -49,10 +49,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * response is received will never be invoked.
  */
 public class CallbackHandle<R> {
+  private static final int cbgen = (int) (System.currentTimeMillis() / 1000L);
   private static int callbackId;
 
   private static String nextFunction() {
-    return "__gwtjsonrpc_callback" + callbackId++;
+    return "__gwtjsonrpc_callback" + cbgen + callbackId++;
   }
 
   private final JsonSerializer<R> serializer;
