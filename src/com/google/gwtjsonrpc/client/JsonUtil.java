@@ -15,6 +15,8 @@
 package com.google.gwtjsonrpc.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
 import java.util.ArrayList;
@@ -76,6 +78,18 @@ public class JsonUtil {
     for (final RpcStatusListener l : listeners) {
       l.onCallEnd();
     }
+  }
+
+  static <T> void invoke(final JsonSerializer<T> resultSerializer,
+      final AsyncCallback<T> callback, final Object encoded) {
+    final T resobj;
+    try {
+      resobj = encoded != null ? resultSerializer.fromJson(encoded) : null;
+    } catch (RuntimeException e) {
+      callback.onFailure(new InvocationException("Invalid JSON response", e));
+      return;
+    }
+    callback.onSuccess(resobj);
   }
 
   private JsonUtil() {

@@ -127,14 +127,7 @@ public class CallbackHandle<R> {
 
   final void onResult(final Object result) {
     cancel();
-    final R obj;
-    try {
-      obj = serializer.fromJson(result);
-    } catch (RuntimeException e) {
-      callback.onFailure(e);
-      return;
-    }
-    callback.onSuccess(obj);
+    JsonUtil.invoke(serializer, callback, result);
   }
 
   private static final native void nativeDelete(String name)/*-{ delete $wnd[name]; }-*/;

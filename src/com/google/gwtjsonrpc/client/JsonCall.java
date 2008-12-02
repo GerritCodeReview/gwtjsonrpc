@@ -102,7 +102,7 @@ class JsonCall<T> implements RequestCallback {
 
       if (sc == Response.SC_OK) {
         JsonUtil.fireOnCallEnd();
-        callback.onSuccess(resultSerializer.fromJson(r.result()));
+        JsonUtil.invoke(resultSerializer, callback, r.result());
         return;
       }
     }
