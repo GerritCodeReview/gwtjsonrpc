@@ -19,8 +19,10 @@ import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
@@ -43,6 +45,7 @@ import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -66,6 +69,10 @@ import javax.servlet.http.HttpServletResponse;
  * the resulting JSON, reducing transfer time for the response data.
  */
 public abstract class JsonServlet extends HttpServlet {
+  /** Pattern that any safe JSON-in-script callback conforms to. */
+  public static final Pattern SAFE_CALLBACK =
+      Pattern.compile("^([A-Za-z0-9_$.]|\\[|\\])+$");
+
   private static final ThreadLocal<ActiveCall> perThreadCall;
 
   static {
@@ -203,7 +210,7 @@ public abstract class JsonServlet extends HttpServlet {
   }
 
   @Override
-  protected void doPost(final HttpServletRequest req,
+  protected void service(final HttpServletRequest req,
       final HttpServletResponse resp) throws IOException {
     try {
       final ActiveCall c = createActiveCall(req, resp);
@@ -218,57 +225,91 @@ public abstract class JsonServlet extends HttpServlet {
       UnsupportedEncodingException {
     call.noCache();
 
-    if (!isJsonBody(call)) {
-      error(call, SC_BAD_REQUEST, "Invalid request Content-Type");
-      return;
-    }
     if (!JsonUtil.JSON_TYPE.equals(call.httpRequest.getHeader("Accept"))) {
-      error(call, SC_BAD_REQUEST, "Must accept " + JsonUtil.JSON_TYPE);
-      return;
-    }
-    if (call.httpRequest.getContentLength() == 0) {
-      error(call, SC_BAD_REQUEST, "POST body required");
+      error(call, SC_BAD_REQUEST, "Must Accept " + JsonUtil.JSON_TYPE);
       return;
     }
 
     try {
-      parseRequest(call);
+      if ("GET".equals(call.httpRequest.getMethod())) {
+        parseGetRequest(call);
+      } else if ("POST".equals(call.httpRequest.getMethod())) {
+        parsePostRequest(call);
+      } else {
+        error(call, SC_BAD_REQUEST, "Unsupported HTTP Method");
+        return;
+      }
     } catch (NoSuchRemoteMethodException err) {
-      error(call, SC_NOT_FOUND, "Not Found");
+      error(call, SC_NOT_FOUND, "Method Not Found");
+      return;
+    } catch (JsonParseException err) {
+      error(call, SC_BAD_REQUEST, "Invalid JSON Request");
       return;
     }
 
-    if (call.method != null) {
-      if (!call.method.allowCrossSiteRequest()) {
-        try {
-          if (!xsrfValidate(call)) {
-            error(call, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
-            return;
-          }
-        } catch (XsrfException e) {
+    if (call.callback != null
+        && !SAFE_CALLBACK.matcher(call.callback).matches()) {
+      error(call, SC_BAD_REQUEST, "Unsafe callback");
+      return;
+    }
+
+    if (!call.method.allowCrossSiteRequest()) {
+      try {
+        if (!xsrfValidate(call)) {
           error(call, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
           return;
         }
+      } catch (XsrfException e) {
+        error(call, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
+        return;
       }
+    }
 
-      call.method.invoke(call.params, new AsyncCallback<Object>() {
-        public void onFailure(final Throwable c) {
-          call.error = c;
-        }
+    call.method.invoke(call.params, call);
 
-        public void onSuccess(final Object r) {
-          call.result = r;
-        }
-      });
+    if (call.internalFailure != null) {
+      final String msg = "Error in " + call.method.getName();
+      getServletContext().log(msg, call.internalFailure);
+      error(call, SC_INTERNAL_SERVER_ERROR, "Internal Server Error");
+      return;
     }
 
     final String out = formatResult(call);
-    if (call.error != null) {
-      call.httpResponse.setStatus(SC_INTERNAL_SERVER_ERROR);
-    }
     RPCServletUtils.writeResponse(getServletContext(), call.httpResponse, out,
-        RPCServletUtils.acceptsGzipEncoding(call.httpRequest)
+        call.callback == null
+            && RPCServletUtils.acceptsGzipEncoding(call.httpRequest)
             && RPCServletUtils.exceedsUncompressedContentLengthLimit(out));
+  }
+
+  private void parseGetRequest(final ActiveCall call) {
+    final Gson gs = createGsonBuilder().create();
+    final HttpServletRequest req = call.httpRequest;
+    call.method = lookupMethod(req.getParameter("method"));
+    if (call.method == null) {
+      throw new NoSuchRemoteMethodException();
+    }
+
+    final Class<?>[] paramTypes = call.method.getParamTypes();
+    final Object[] r = new Object[paramTypes.length];
+    for (int i = 0; i < r.length; i++) {
+      final String v = req.getParameter("param" + i);
+      if (v == null) {
+        r[i] = null;
+      } else if (paramTypes[i] == String.class) {
+        r[i] = v;
+      } else if (paramTypes[i].getName().startsWith("java.lang.")) {
+        // Primitive type, use the JSON representation of that type.
+        //
+        r[i] = gs.fromJson(v, paramTypes[i]);
+      } else {
+        // Assume it is like a java.sql.Timestamp or something and treat
+        // the value as JSON string.
+        //
+        r[i] = gs.fromJson(gs.toJson(v), paramTypes[i]);
+      }
+    }
+    call.params = r;
+    call.callback = req.getParameter("callback");
   }
 
   private static boolean isJsonBody(final ActiveCall call) {
@@ -283,52 +324,58 @@ public abstract class JsonServlet extends HttpServlet {
     return JsonUtil.JSON_TYPE.equals(type);
   }
 
-  private void parseRequest(final ActiveCall call)
+  private void parsePostRequest(final ActiveCall call)
       throws UnsupportedEncodingException, IOException {
     final HttpServletRequest req = call.httpRequest;
+    if (!isJsonBody(call)) {
+      throw new JsonParseException("Invalid Request Content-Type");
+    }
+    if (call.httpRequest.getContentLength() == 0) {
+      throw new JsonParseException("POST Body Required");
+    }
     final Reader in = req.getReader();
     try {
       try {
-        parseRequest(call, in);
+        parsePostRequest(call, in);
       } catch (JsonParseException err) {
         call.method = null;
         call.params = null;
-        call.error = err;
+        throw err;
       }
     } finally {
       in.close();
     }
   }
 
-  private void parseRequest(final ActiveCall call, final Reader in) {
+  private void parsePostRequest(final ActiveCall call, final Reader in) {
     final GsonBuilder gb = createGsonBuilder();
     gb.registerTypeAdapter(ActiveCall.class, new CallDeserializer(call, this));
     gb.create().fromJson(in, ActiveCall.class);
   }
 
-  private String formatResult(final ActiveCall result)
+  private String formatResult(final ActiveCall call)
       throws UnsupportedEncodingException, IOException {
-    final StringWriter o = new StringWriter();
-    formatResult(result, o);
-    o.close();
-    return o.toString();
-  }
-
-  private void formatResult(final ActiveCall result, final Writer o) {
     final GsonBuilder gb = createGsonBuilder();
-    gb.registerTypeAdapter(result.getClass(), new JsonSerializer<ActiveCall>() {
+    gb.registerTypeAdapter(call.getClass(), new JsonSerializer<ActiveCall>() {
       public JsonElement serialize(final ActiveCall src, final Type typeOfSrc,
           final JsonSerializationContext context) {
+        if (call.callback != null) {
+          if (src.externalFailure != null) {
+            return new JsonNull();
+          }
+          return context.serialize(src.result);
+        }
+
         final JsonObject r = new JsonObject();
         r.addProperty("version", RPC_VERSION);
         if (src.id != null) {
           r.add("id", src.id);
         }
-        if (src.error != null) {
+        if (src.externalFailure != null) {
           final JsonObject error = new JsonObject();
           error.addProperty("name", "JSONRPCError");
           error.addProperty("code", 999);
-          error.addProperty("message", src.error.getMessage());
+          error.addProperty("message", src.externalFailure.getMessage());
           r.add("error", error);
         } else {
           r.add("result", context.serialize(src.result));
@@ -336,7 +383,18 @@ public abstract class JsonServlet extends HttpServlet {
         return r;
       }
     });
-    gb.create().toJson(result, o);
+
+    final StringWriter o = new StringWriter();
+    if (call.callback != null) {
+      o.write(call.callback);
+      o.write("(");
+    }
+    gb.create().toJson(call, o);
+    if (call.callback != null) {
+      o.write(");");
+    }
+    o.close();
+    return o.toString();
   }
 
   private static void error(final ActiveCall call, final int status,

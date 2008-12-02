@@ -77,21 +77,25 @@ public class MethodHandle {
    *        onFailure on as it performs its work. Only the last onSuccess or
    *        onFailure invocation matters.
    */
-  public void invoke(final Object[] arguments,
-      final AsyncCallback<Object> callback) {
+  public void invoke(final Object[] arguments, final ActiveCall callback) {
     try {
       final Object[] p = new Object[arguments.length + 1];
       System.arraycopy(arguments, 0, p, 0, arguments.length);
       p[p.length - 1] = callback;
       method.invoke(imp, p);
-    } catch (IllegalAccessException e) {
-      callback.onFailure(e);
     } catch (InvocationTargetException e) {
-      callback.onFailure(e);
+      final Throwable c = e.getCause();
+      if (c != null) {
+        callback.onInternalFailure(c);
+      } else {
+        callback.onInternalFailure(e);
+      }
+    } catch (IllegalAccessException e) {
+      callback.onInternalFailure(e);
     } catch (RuntimeException e) {
-      callback.onFailure(e);
+      callback.onInternalFailure(e);
     } catch (Error e) {
-      callback.onFailure(e);
+      callback.onInternalFailure(e);
     }
   }
 }

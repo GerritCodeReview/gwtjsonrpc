@@ -15,6 +15,7 @@
 package com.google.gwtjsonrpc.server;
 
 import com.google.gson.JsonElement;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import java.util.Map;
 
@@ -22,14 +23,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** An active RPC call. */
-public class ActiveCall {
+public class ActiveCall implements AsyncCallback<Object> {
   protected final HttpServletRequest httpRequest;
   protected final HttpServletResponse httpResponse;
   JsonElement id;
   MethodHandle method;
+  String callback;
   Object[] params;
   Object result;
-  Throwable error;
+  Throwable externalFailure;
+  Throwable internalFailure;
   Map<String, String> cookies;
 
   /**
@@ -91,6 +94,24 @@ public class ActiveCall {
    */
   public Object[] getParams() {
     return params;
+  }
+
+  public final void onSuccess(final Object result) {
+    this.result = result;
+    this.externalFailure = null;
+    this.internalFailure = null;
+  }
+
+  public void onFailure(final Throwable error) {
+    this.result = null;
+    this.externalFailure = error;
+    this.internalFailure = null;
+  }
+
+  public final void onInternalFailure(final Throwable error) {
+    this.result = null;
+    this.externalFailure = null;
+    this.internalFailure = error;
   }
 
   /** Mark the response to be uncached by proxies and browsers. */

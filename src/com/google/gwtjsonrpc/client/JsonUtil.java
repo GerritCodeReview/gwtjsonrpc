@@ -35,7 +35,8 @@ public class JsonUtil {
   public static final int SC_INVALID_XSRF = 400; // aka SC_BAD_REQUEST
 
   /** Complete content when the XSRF token is missing or invalid. */
-  public static final String SM_INVALID_XSRF = "INVALID_XSRF";
+  public static final String SM_INVALID_XSRF =
+      "Invalid " + XSRF_HEADER + " Header";
 
   private static final ArrayList<RpcStatusListener> listeners =
       new ArrayList<RpcStatusListener>();
@@ -86,7 +87,7 @@ public class JsonUtil {
     try {
       resobj = encoded != null ? resultSerializer.fromJson(encoded) : null;
     } catch (RuntimeException e) {
-      callback.onFailure(new InvocationException("Invalid JSON response", e));
+      callback.onFailure(new InvocationException("Invalid JSON Response", e));
       return;
     }
     callback.onSuccess(resobj);

@@ -43,6 +43,15 @@ The HTTP header "X-RPC-XSRF-Token" must be populated on requests
 with a value previously supplied by the same header in a prior
 HTTP response.
 
+GET requests must specify the method name in the 'method' request
+parameter, and the method parameters in 'param0' .. 'paramN'.
+
+An optional 'callback' parameter in either the GET request parameters
+or the POSTed JSON request block can be used to obtain a JSON-in-script
+style response, facilitating the creation of "mash-ups".  The callback
+function will be invoked with the 'result' instance, or null if there
+was an error.  No error details are supplied. 
+
 
 Differences from GWT-RPC
 ------------------------

@@ -64,6 +64,14 @@ final class CallDeserializer implements JsonDeserializer<ActiveCall>,
       throw new NoSuchRemoteMethodException();
     }
 
+    final JsonElement callback = in.get("callback");
+    if (callback != null) {
+      if (!isString(callback)) {
+        throw new JsonParseException("Expected callback as string");
+      }
+      req.callback = callback.getAsString();
+    }
+
     final Class<?>[] paramTypes = req.method.getParamTypes();
     final JsonElement params = in.get("params");
     if (params != null) {
