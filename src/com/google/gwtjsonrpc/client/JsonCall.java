@@ -78,7 +78,7 @@ class JsonCall<T> implements RequestCallback {
         // This wasn't supposed to happen.
         //
         JsonUtil.fireOnCallEnd();
-        callback.onFailure(new InvocationException(rsp.getText()));
+        callback.onFailure(new InvocationException(JsonUtil.SM_INVALID_XSRF));
       } else if (attempts < 2) {
         // The XSRF cookie was invalidated (or didn't exist) and the
         // service demands we have one in place to make calls to it.
