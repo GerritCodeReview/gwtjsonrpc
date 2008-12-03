@@ -18,6 +18,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtjsonrpc.client.AllowCrossSiteRequest;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -55,6 +56,11 @@ public class MethodHandle {
     return method.getName();
   }
 
+  /** @return an annotation attached to the method's description. */
+  public <T extends Annotation> T getAnnotation(final Class<T> t){
+    return method.getAnnotation(t);
+  }
+  
   /**
    * @return true if this method requires positional arguments.
    */
