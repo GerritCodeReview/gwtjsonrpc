@@ -118,7 +118,16 @@ class JsonCall<T> implements RequestCallback {
 
   public void onError(final Request request, final Throwable exception) {
     JsonUtil.fireOnCallEnd();
-    callback.onFailure(exception);
+    if (exception.getClass() == RuntimeException.class
+        && exception.getMessage().contains("XmlHttpRequest.status")) {
+      // GWT's XMLHTTPRequest class gives us RuntimeException when the
+      // status code is unreadable from the browser. This occurs when
+      // the connection has failed, e.g. the host is down.
+      //
+      callback.onFailure(new ServerUnavailableException());
+    } else {
+      callback.onFailure(exception);
+    }
   }
 
   private void rememberXsrfKey(final Response rsp) {
