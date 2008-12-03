@@ -68,7 +68,8 @@ import javax.servlet.http.HttpServletResponse;
  * When supported by the browser/client, the "gzip" encoding is used to compress
  * the resulting JSON, reducing transfer time for the response data.
  */
-public abstract class JsonServlet extends HttpServlet {
+public abstract class JsonServlet<CallType extends ActiveCall> extends
+    HttpServlet {
   /** Pattern that any safe JSON-in-script callback conforms to. */
   public static final Pattern SAFE_CALLBACK =
       Pattern.compile("^([A-Za-z0-9_$.]|\\[|\\])+$");
@@ -81,8 +82,9 @@ public abstract class JsonServlet extends HttpServlet {
   }
 
   /** Get the <code>ActiveCall</code> object for the current call. */
-  public static final ActiveCall getCurrentCall() {
-    return perThreadCall.get();
+  @SuppressWarnings("unchecked")
+  public static <CallType extends ActiveCall> CallType getCurrentCall() {
+    return (CallType) perThreadCall.get();
   }
 
   /** Create a default GsonBuilder with some extra types defined. */
@@ -167,7 +169,7 @@ public abstract class JsonServlet extends HttpServlet {
    * @throws XsrfException the token could not be validated due to an error that
    *         the client cannot recover from.
    */
-  protected boolean xsrfValidate(final ActiveCall call) throws XsrfException {
+  protected boolean xsrfValidate(final CallType call) throws XsrfException {
     final HttpServletRequest req = call.httpRequest;
     final String username = call.getUser();
     final StringBuilder b = new StringBuilder();
@@ -204,16 +206,28 @@ public abstract class JsonServlet extends HttpServlet {
    * @param resp the response to return to the client.
    * @return the new call wrapping both.
    */
-  protected ActiveCall createActiveCall(final HttpServletRequest req,
+  @SuppressWarnings("unchecked")
+  protected CallType createActiveCall(final HttpServletRequest req,
       final HttpServletResponse resp) {
-    return new ActiveCall(req, resp);
+    return (CallType) new ActiveCall(req, resp);
   }
 
   /**
    * Invoked just before the service method is invoked.
    * <p>
    * Subclasses may override this method to perform additional checks, such as
-   * per-method application level security validation.
+   * per-method application level security validation. An override of this
+   * method should take the following form:
+   * 
+   * <pre>
+   * protected void preInvoke(final CallType call) {
+   *   super.preInvoke(call);
+   *   if (call.isComplete()) {
+   *     return;
+   *   }
+   *   // your logic here
+   * }
+   * </pre>
    * <p>
    * If either the {@link ActiveCall#onFailure(Throwable)} or
    * {@link ActiveCall#onInternalFailure(Throwable)} method is invoked with a
@@ -222,14 +236,14 @@ public abstract class JsonServlet extends HttpServlet {
    * 
    * @param call the current call information.
    */
-  protected void preInvoke(final ActiveCall call) {
+  protected void preInvoke(final CallType call) {
   }
 
   @Override
   protected void service(final HttpServletRequest req,
       final HttpServletResponse resp) throws IOException {
     try {
-      final ActiveCall c = createActiveCall(req, resp);
+      final CallType c = createActiveCall(req, resp);
       perThreadCall.set(c);
       doService(c);
     } finally {
@@ -237,7 +251,7 @@ public abstract class JsonServlet extends HttpServlet {
     }
   }
 
-  private void doService(final ActiveCall call) throws IOException,
+  private void doService(final CallType call) throws IOException,
       UnsupportedEncodingException {
     call.noCache();
 
@@ -282,7 +296,7 @@ public abstract class JsonServlet extends HttpServlet {
     }
 
     preInvoke(call);
-    if (call.internalFailure == null && call.externalFailure == null) {
+    if (!call.isComplete()) {
       call.method.invoke(call.params, call);
     }
 

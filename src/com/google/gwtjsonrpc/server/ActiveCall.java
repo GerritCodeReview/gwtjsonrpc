@@ -96,6 +96,15 @@ public class ActiveCall implements AsyncCallback<Object> {
     return params;
   }
 
+  /**
+   * @return true if this call has something to send to the client; false if the
+   *         call still needs to be computed further in order to come up with a
+   *         success return value or a failure
+   */
+  public final boolean isComplete() {
+    return result != null || externalFailure != null || internalFailure != null;
+  }
+
   public final void onSuccess(final Object result) {
     this.result = result;
     this.externalFailure = null;
