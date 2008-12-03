@@ -65,4 +65,9 @@ public abstract class JsonSerializer<T> {
    * @return a JSON literal text value, surrounded with double quotes.
    */
   public static final native String escapeString(String val)/*-{ return @com.google.gwt.json.client.JSONString::escapeValue(Ljava/lang/String;)(val); }-*/;
+
+  /** Return the first character of a string, or '\0' if the string is empty. */
+  public static final char toChar(final String val) {
+    return val.length() > 0 ? val.charAt(0) : '\0';
+  }
 }

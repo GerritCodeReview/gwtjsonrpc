@@ -328,23 +328,49 @@ class SerializerCreator {
         w.println("}-*/;");
       }
 
-      w.print("private static final native ");
-      if (isJsonPrimitive(f.getType())) {
-        w.print(f.getType().getQualifiedSourceName());
+      if (f.getType() == JPrimitiveType.CHAR) {
+        w.print("private static final native String");
+        w.print(" jsonGet0_" + f.getName());
+        w.print("(final JavaScriptObject instance)");
+        w.println("/*-{ ");
+        w.indent();
+        w.print("return instance.");
+        w.print(f.getName());
+        w.println(";");
+        w.outdent();
+        w.println("}-*/;");
+
+        w.print("private static final char");
+        w.print(" jsonGet_" + f.getName());
+        w.print("(JavaScriptObject instance)");
+        w.println(" {");
+        w.indent();
+        w.print("return ");
+        w.print(JsonSerializer.class.getName());
+        w.print(".toChar(");
+        w.print("jsonGet0_" + f.getName());
+        w.println("(instance));");
+        w.outdent();
+        w.println("}");
       } else {
-        w.print("Object");
+        w.print("private static final native ");
+        if (isJsonPrimitive(f.getType())) {
+          w.print(f.getType().getQualifiedSourceName());
+        } else {
+          w.print("Object");
+        }
+        w.print(" jsonGet_" + f.getName());
+        w.print("(JavaScriptObject instance)");
+        w.println("/*-{ ");
+        w.indent();
+
+        w.print("return instance.");
+        w.print(f.getName());
+        w.println(";");
+
+        w.outdent();
+        w.println("}-*/;");
       }
-      w.print(" jsonGet_" + f.getName());
-      w.print("(JavaScriptObject instance)");
-      w.println("/*-{ ");
-      w.indent();
-
-      w.print("return instance.");
-      w.print(f.getName());
-      w.println(";");
-
-      w.outdent();
-      w.println("}-*/;");
 
       w.println();
     }
