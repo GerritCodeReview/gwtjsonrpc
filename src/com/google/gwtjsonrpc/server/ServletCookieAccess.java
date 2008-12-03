@@ -16,33 +16,14 @@ package com.google.gwtjsonrpc.server;
 
 import com.google.gwtjsonrpc.client.CookieAccess;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.Cookie;
-
 final class ServletCookieAccess extends CookieAccess {
   @Override
   protected String getCookie(final String name) {
-    final ActiveCall call = JsonServlet.getCurrentCall();
-    Map<String, String> cookies = call.cookies;
-    if (cookies == null) {
-      cookies = new HashMap<String, String>();
-      final Cookie[] all = call.httpRequest.getCookies();
-      if (all != null) {
-        for (final Cookie c : all) {
-          cookies.put(c.getName(), c.getValue());
-        }
-      }
-      call.cookies = cookies;
-    }
-    return cookies.get(name);
+    return JsonServlet.getCurrentCall().getCookie(name);
   }
 
   @Override
   protected void removeCookie(final String name) {
-    final Cookie c = new Cookie(name, "");
-    c.setMaxAge(0);
-    JsonServlet.getCurrentCall().httpResponse.addCookie(c);
+    JsonServlet.getCurrentCall().removeCookie(name);
   }
 }

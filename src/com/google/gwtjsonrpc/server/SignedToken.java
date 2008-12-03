@@ -85,6 +85,11 @@ public class SignedToken {
     tokenLength = 2 * INT_SZ + newMac().getMacLength();
   }
 
+  /** @return maximum age of a signed token, in seconds. */
+  public int getMaxAge() {
+    return maxAge * 5;
+  }
+
   /**
    * Get the text of a signed token which is stored in a cookie.
    * 
