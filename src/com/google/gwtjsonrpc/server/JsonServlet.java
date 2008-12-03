@@ -209,6 +209,22 @@ public abstract class JsonServlet extends HttpServlet {
     return new ActiveCall(req, resp);
   }
 
+  /**
+   * Invoked just before the service method is invoked.
+   * <p>
+   * Subclasses may override this method to perform additional checks, such as
+   * per-method application level security validation.
+   * <p>
+   * If either the {@link ActiveCall#onFailure(Throwable)} or
+   * {@link ActiveCall#onInternalFailure(Throwable)} method is invoked with a
+   * non-null exception argument the method call itself will be bypassed and the
+   * error response will be returned to the client instead.
+   * 
+   * @param call the current call information.
+   */
+  protected void preInvoke(final ActiveCall call) {
+  }
+
   @Override
   protected void service(final HttpServletRequest req,
       final HttpServletResponse resp) throws IOException {
@@ -265,7 +281,10 @@ public abstract class JsonServlet extends HttpServlet {
       }
     }
 
-    call.method.invoke(call.params, call);
+    preInvoke(call);
+    if (call.internalFailure == null && call.externalFailure == null) {
+      call.method.invoke(call.params, call);
+    }
 
     if (call.internalFailure != null) {
       final String msg = "Error in " + call.method.getName();
