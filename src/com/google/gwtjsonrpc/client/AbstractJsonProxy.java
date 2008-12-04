@@ -47,4 +47,8 @@ public abstract class AbstractJsonProxy implements ServiceDefTarget {
     }
     new JsonCall<T>(this, allowXsrf, reqData, ser, cb).send();
   }
+
+  protected static native Object hostPageCacheGetOnce(String name)/*-{ var r = $wnd[name];delete $wnd[name];return r; }-*/;
+
+  protected static native Object hostPageCacheGetMany(String name)/*-{ return $wnd[name]; }-*/;
 }

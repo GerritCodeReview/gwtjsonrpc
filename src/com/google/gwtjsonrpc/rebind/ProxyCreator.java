@@ -33,7 +33,9 @@ import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwtjsonrpc.client.AbstractJsonProxy;
 import com.google.gwtjsonrpc.client.AllowCrossSiteRequest;
 import com.google.gwtjsonrpc.client.CallbackHandle;
+import com.google.gwtjsonrpc.client.HostPageCache;
 import com.google.gwtjsonrpc.client.JsonSerializer;
+import com.google.gwtjsonrpc.client.JsonUtil;
 
 import java.io.PrintWriter;
 import java.util.HashSet;
@@ -125,6 +127,17 @@ class ProxyCreator {
         }
       }
 
+      if (m.getAnnotation(HostPageCache.class) != null) {
+        if (m.getReturnType() != JPrimitiveType.VOID) {
+          invalid(logger, "Method " + m.getName()
+              + " must return void if using " + HostPageCache.class.getName());
+        }
+        if (params.length != 1) {
+          invalid(logger, "Method " + m.getName()
+              + " must not accept parameters");
+        }
+      }
+
       for (int i = 0; i < params.length - 1; i++) {
         final JParameter p = params[i];
         final TreeLogger branch =
@@ -191,6 +204,7 @@ class ProxyCreator {
     final JClassType resultType =
         callback.getType().isParameterized().getTypeArgs()[0];
     final String[] serializerFields = new String[params.length];
+    final HostPageCache hpc = method.getAnnotation(HostPageCache.class);
 
     w.println();
     for (int i = 0; i < params.length - 1; i++) {
@@ -217,6 +231,13 @@ class ProxyCreator {
       serializerCreator.generateSerializerReference(resultType
           .isParameterized(), w);
       w.println(";");
+    }
+
+    final String resultSerRef;
+    if (resultType.isParameterized() != null) {
+      resultSerRef = serializerFields[params.length - 1];
+    } else {
+      resultSerRef = serializerCreator.create(resultType, logger) + ".INSTANCE";
     }
 
     w.print("public ");
@@ -250,16 +271,32 @@ class ProxyCreator {
       w.print("return new ");
       w.print(CallbackHandle.class.getName());
       w.print("(");
-      if (resultType.isParameterized() != null) {
-        w.print(serializerFields[params.length - 1]);
-      } else {
-        w.print(serializerCreator.create(resultType, logger) + ".INSTANCE");
-      }
+      w.print(resultSerRef);
       w.print(", " + callback.getName());
       w.println(");");
       w.outdent();
       w.println("}");
       return;
+    }
+
+    if (hpc != null) {
+      final String objName = nameFactory.createName("cached");
+      w.print("final Object " + objName + " = ");
+      w.print(AbstractJsonProxy.class.getName());
+      w.print(".");
+      w.print(hpc.once() ? "hostPageCacheGetOnce" : "hostPageCacheGetMany");
+      w.println("(\"" + hpc.name() + "\");");
+      w.println("if (" + objName + " != null) {");
+      w.indent();
+      w.print(JsonUtil.class.getName());
+      w.print(".invoke(");
+      w.print(resultSerRef);
+      w.print(", " + callback.getName());
+      w.print(", " + objName);
+      w.println(");");
+      w.println("return;");
+      w.outdent();
+      w.println("}");
     }
 
     final String rVersion = "\\\"version\\\":\\\"1.1\\\"";
@@ -312,14 +349,8 @@ class ProxyCreator {
     w.print("doInvoke(");
     w.print(String
         .valueOf(method.getAnnotation(AllowCrossSiteRequest.class) != null));
-    w.print(", ");
-    w.print(reqDataStr);
-    w.print(", ");
-    if (resultType.isParameterized() != null) {
-      w.print(serializerFields[params.length - 1]);
-    } else {
-      w.print(serializerCreator.create(resultType, logger) + ".INSTANCE");
-    }
+    w.print(", " + reqDataStr);
+    w.print(", " + resultSerRef);
     w.print(", " + callback.getName());
     w.println(");");
 

@@ -81,7 +81,7 @@ public class JsonUtil {
     }
   }
 
-  static <T> void invoke(final JsonSerializer<T> resultSerializer,
+  public static <T> void invoke(final JsonSerializer<T> resultSerializer,
       final AsyncCallback<T> callback, final Object encoded) {
     final T resobj;
     try {
