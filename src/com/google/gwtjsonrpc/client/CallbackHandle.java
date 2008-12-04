@@ -112,7 +112,7 @@ public class CallbackHandle<R> {
   /**
    * Delete this function from the browser so it can't be called.
    * <p>
-   * Does nothing if the callback has already been cancelled.
+   * Does nothing if the callback has already been canceled.
    * <p>
    * This method deletes the function, permitting <code>this</code> and the
    * application callback to be garbage collected. Automatically invoked when a
