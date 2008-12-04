@@ -357,7 +357,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     return JsonUtil.JSON_TYPE.equals(type);
   }
 
-  private void parsePostRequest(final ActiveCall call)
+  private void parsePostRequest(final CallType call)
       throws UnsupportedEncodingException, IOException {
     final HttpServletRequest req = call.httpRequest;
     if (!isJsonBody(call)) {
@@ -380,9 +380,10 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     }
   }
 
-  private void parsePostRequest(final ActiveCall call, final Reader in) {
+  private void parsePostRequest(final CallType call, final Reader in) {
     final GsonBuilder gb = createGsonBuilder();
-    gb.registerTypeAdapter(ActiveCall.class, new CallDeserializer(call, this));
+    gb.registerTypeAdapter(ActiveCall.class, new CallDeserializer<CallType>(
+        call, this));
     gb.create().fromJson(in, ActiveCall.class);
   }
 

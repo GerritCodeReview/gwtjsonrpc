@@ -24,22 +24,22 @@ import com.google.gson.JsonParseException;
 
 import java.lang.reflect.Type;
 
-final class CallDeserializer implements JsonDeserializer<ActiveCall>,
-    InstanceCreator<ActiveCall> {
+final class CallDeserializer<CallType extends ActiveCall> implements
+    JsonDeserializer<CallType>, InstanceCreator<CallType> {
   private static final String RPC_VERSION = JsonServlet.RPC_VERSION;
-  private final ActiveCall req;
-  private final JsonServlet server;
+  private final CallType req;
+  private final JsonServlet<? extends ActiveCall> server;
 
-  CallDeserializer(final ActiveCall call, final JsonServlet jsonServlet) {
+  CallDeserializer(final CallType call, final JsonServlet<CallType> jsonServlet) {
     req = call;
     server = jsonServlet;
   }
 
-  public ActiveCall createInstance(final Type type) {
+  public CallType createInstance(final Type type) {
     return req;
   }
 
-  public ActiveCall deserialize(final JsonElement json, final Type typeOfT,
+  public CallType deserialize(final JsonElement json, final Type typeOfT,
       final JsonDeserializationContext context) throws JsonParseException,
       NoSuchRemoteMethodException {
     if (!json.isJsonObject()) {
