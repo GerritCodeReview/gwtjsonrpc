@@ -21,7 +21,7 @@ import java.util.HashSet;
 /**
  * Serialization for a {@link java.util.Set}.
  * <p>
- * When deserialized from JSON the List implementation is always a
+ * When deserialized from JSON the Set implementation is always a
  * {@link HashSet}. When serializing to JSON any Set is permitted.
  */
 public class SetSerializer<T> extends JsonSerializer<java.util.Set<T>> {
