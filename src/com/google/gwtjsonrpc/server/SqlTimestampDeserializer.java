@@ -58,7 +58,7 @@ public class SqlTimestampDeserializer implements
       // to see them in the nanos field. If our string is too short, add
       // on trailing 0's to fit the format.
       //
-      final StringBuffer r = new StringBuffer(29);
+      final StringBuilder r = new StringBuilder(29);
       r.append(s);
       while (r.length() < 29) {
         r.append('0');

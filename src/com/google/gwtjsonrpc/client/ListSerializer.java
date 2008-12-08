@@ -32,7 +32,7 @@ public class ListSerializer<T> extends JsonSerializer<java.util.List<T>> {
   }
 
   @Override
-  public void printJson(final StringBuffer sb, final java.util.List<T> o) {
+  public void printJson(final StringBuilder sb, final java.util.List<T> o) {
     sb.append('[');
     boolean first = true;
     for (final T item : o) {

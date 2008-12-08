@@ -32,7 +32,7 @@ public class SetSerializer<T> extends JsonSerializer<java.util.Set<T>> {
   }
 
   @Override
-  public void printJson(final StringBuffer sb, final java.util.Set<T> o) {
+  public void printJson(final StringBuilder sb, final java.util.Set<T> o) {
     sb.append('[');
     boolean first = true;
     for (final T item : o) {

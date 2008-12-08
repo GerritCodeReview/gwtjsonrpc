@@ -29,7 +29,7 @@ public final class JavaSqlTimestamp_JsonSerializer extends
   }
 
   @Override
-  public void printJson(final StringBuffer sb, final java.sql.Timestamp o) {
+  public void printJson(final StringBuilder sb, final java.sql.Timestamp o) {
     sb.append('"');
     sb.append(o);
     sb.append('"');

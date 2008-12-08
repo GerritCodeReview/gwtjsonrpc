@@ -304,7 +304,7 @@ class ProxyCreator {
       reqDataStr = "\"{" + rVersion + "," + rMethod + "}\"";
     } else {
       final String reqData = nameFactory.createName("reqData");
-      w.println("final StringBuffer " + reqData + " = new StringBuffer();");
+      w.println("final StringBuilder " + reqData + " = new StringBuilder();");
       w.println(reqData + ".append(\"{" + rVersion + "," + rMethod
           + ",\\\"params\\\":[\");");
 

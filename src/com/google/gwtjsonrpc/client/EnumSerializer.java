@@ -17,7 +17,7 @@ package com.google.gwtjsonrpc.client;
 /** Base serializer for Enum types. */
 public abstract class EnumSerializer<T extends Enum<?>> extends JsonSerializer<T> {
   @Override
-  public void printJson(final StringBuffer sb, final T o) {
+  public void printJson(final StringBuilder sb, final T o) {
     sb.append('"');
     sb.append(o.name());
     sb.append('"');

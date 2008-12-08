@@ -29,7 +29,7 @@ public final class JavaSqlDate_JsonSerializer extends
   }
 
   @Override
-  public void printJson(final StringBuffer sb, final java.sql.Date o) {
+  public void printJson(final StringBuilder sb, final java.sql.Date o) {
     sb.append('"');
     sb.append(o);
     sb.append('"');

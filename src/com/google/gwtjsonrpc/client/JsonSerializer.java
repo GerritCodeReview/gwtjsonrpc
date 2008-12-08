@@ -39,7 +39,7 @@ public abstract class JsonSerializer<T> {
    *        the end of.
    * @param o the Java instance being converted. Never null.
    */
-  public abstract void printJson(StringBuffer sb, T o);
+  public abstract void printJson(StringBuilder sb, T o);
 
   /**
    * Convert from JSON (stored as a JavaScriptObject) into a new Java instance.
@@ -58,7 +58,7 @@ public abstract class JsonSerializer<T> {
    * For example, if <code>val = "b\nb"</code> this method returns the value
    * <code>"\"b\\nb\""</code>.
    * <p>
-   * Typically called by {@link #printJson(StringBuffer, Object)}, or through
+   * Typically called by {@link #printJson(StringBuilder, Object)}, or through
    * {@link JavaLangString_JsonSerializer}.
    * 
    * @param val string text requiring escaping support. Must not be null.

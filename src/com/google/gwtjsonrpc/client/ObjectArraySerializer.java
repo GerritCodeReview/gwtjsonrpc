@@ -28,7 +28,7 @@ public class ObjectArraySerializer<T> {
     serializer = s;
   }
 
-  public void printJson(final StringBuffer sb, final T[] o) {
+  public void printJson(final StringBuilder sb, final T[] o) {
     sb.append('[');
     for (int i = 0, n = o.length; i < n; i++) {
       if (i > 0) {

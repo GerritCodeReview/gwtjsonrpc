@@ -31,7 +31,7 @@ public final class JavaUtilDate_JsonSerializer extends
   }
 
   @Override
-  public void printJson(final StringBuffer sb, final java.util.Date o) {
+  public void printJson(final StringBuilder sb, final java.util.Date o) {
     sb.append('"');
     sb.append(o);
     sb.append('"');

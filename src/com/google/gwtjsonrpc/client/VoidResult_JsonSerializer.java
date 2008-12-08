@@ -22,7 +22,7 @@ public class VoidResult_JsonSerializer extends JsonSerializer<VoidResult> {
   }
 
   @Override
-  public void printJson(final StringBuffer sb, final VoidResult o) {
+  public void printJson(final StringBuilder sb, final VoidResult o) {
     sb.append("{}");
   }
 

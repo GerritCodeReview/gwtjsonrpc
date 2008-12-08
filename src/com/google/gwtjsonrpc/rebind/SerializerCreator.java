@@ -397,7 +397,7 @@ class SerializerCreator {
 
   private void generatePrintJson(final SourceWriter w) {
     final JField[] fieldList = sortFields(targetType);
-    w.print("public void printJson(StringBuffer sb, ");
+    w.print("public void printJson(StringBuilder sb, ");
     w.print(targetType.getQualifiedSourceName());
     w.println(" src) {");
     w.indent();
