@@ -421,7 +421,14 @@ class SerializerCreator {
       }
 
       final String doname = "sb.append(\"\\\"" + f.getName() + "\\\":\");";
-      if (isJsonString(f.getType())) {
+      if (f.getType() == JPrimitiveType.CHAR) {
+        w.println(docomma);
+        w.println(doname);
+        w.println("sb.append(\"\\\"\");");
+        w.println("sb.append(" + JsonSerializer.class.getSimpleName()
+            + ".escapeChar(" + doget + "));");
+        w.println("sb.append(\"\\\"\");");
+      } else if (isJsonString(f.getType())) {
         w.println("if (" + doget + " != null) {");
         w.indent();
         w.println(docomma);

@@ -318,7 +318,12 @@ class ProxyCreator {
 
         final JType pType = params[i].getType();
         final String pName = params[i].getName();
-        if (SerializerCreator.isJsonPrimitive(pType)
+        if (pType == JPrimitiveType.CHAR) {
+          w.println(reqData + ".append(\"\\\"\");");
+          w.println(reqData + ".append(" + JsonSerializer.class.getSimpleName()
+              + ".escapeChar(" + pName + "));");
+          w.println(reqData + ".append(\"\\\"\");");
+        } else if (SerializerCreator.isJsonPrimitive(pType)
             && !SerializerCreator.isJsonString(pType)) {
           w.println(reqData + ".append(" + pName + ");");
         } else {
