@@ -21,13 +21,12 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JPackage;
-import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.google.gwtjsonrpc.client.ArraySerializer;
+import com.google.gwtjsonrpc.client.ObjectArraySerializer;
 import com.google.gwtjsonrpc.client.EnumSerializer;
 import com.google.gwtjsonrpc.client.JavaLangString_JsonSerializer;
 import com.google.gwtjsonrpc.client.JavaSqlDate_JsonSerializer;
@@ -103,7 +102,7 @@ class SerializerCreator {
       return sn;
     }
 
-    if (targetType.isParameterized() == null) {
+    if (!needsTypeParameter(targetType)) {
       generateSingleton(srcWriter);
     }
     if (targetType.isEnum() != null) {
@@ -223,9 +222,10 @@ class SerializerCreator {
     }
   }
 
-  String serializerFor(final JClassType t) {
+  String serializerFor(final JType t) {
     if (t.isArray() != null) {
-      return ArraySerializer.class.getCanonicalName();
+      return ObjectArraySerializer.class.getCanonicalName() + "<"
+          + t.isArray().getComponentType().getQualifiedSourceName() + ">";
     }
 
     final String qsn = t.getQualifiedSourceName();
@@ -251,41 +251,43 @@ class SerializerCreator {
 
   private void generateInstanceMembers(final SourceWriter w) {
     for (final JField f : sortFields(targetType)) {
-      final JParameterizedType pt = f.getType().isParameterized();
-      if (pt == null) {
-        continue;
+      final JType ft = f.getType();
+      if (needsTypeParameter(ft)) {
+        final String serType = serializerFor(ft);
+        w.print("private final ");
+        w.print(serType);
+        w.print(" ");
+        w.print("ser_" + f.getName());
+        w.print(" = ");
+        generateSerializerReference(ft, w);
+        w.println(";");
       }
-
-      final String serType = serializerFor(pt);
-      w.print("private final ");
-      w.print(serType);
-      w.print(" ");
-      w.print("ser_" + f.getName());
-      w.print(" = ");
-      generateSerializerReference(pt, w);
-      w.println(";");
     }
     w.println();
   }
 
-  void generateSerializerReference(final JParameterizedType type,
-      final SourceWriter w) {
-    w.print("new " + serializerFor(type) + "(");
-    boolean first = true;
-    for (final JClassType t : type.isParameterized().getTypeArgs()) {
-      if (first) {
-        first = false;
-      } else {
-        w.print(", ");
-      }
+  void generateSerializerReference(final JType type, final SourceWriter w) {
+    if (type.isArray() != null) {
+      w.print("new " + serializerFor(type) + "(");
+      generateSerializerReference(type.isArray().getComponentType(), w);
+      w.print(")");
 
-      if (t.isParameterized() == null) {
-        w.print(serializerFor(t) + ".INSTANCE");
-      } else {
-        generateSerializerReference(t.isParameterized(), w);
+    } else if (type.isParameterized() != null) {
+      w.print("new " + serializerFor(type) + "(");
+      boolean first = true;
+      for (final JClassType t : type.isParameterized().getTypeArgs()) {
+        if (first) {
+          first = false;
+        } else {
+          w.print(", ");
+        }
+        generateSerializerReference(t, w);
       }
+      w.print(")");
+
+    } else {
+      w.print(serializerFor(type) + ".INSTANCE");
     }
-    w.print(")");
   }
 
   private void generateGetSets(final SourceWriter w) {
@@ -354,7 +356,9 @@ class SerializerCreator {
         w.println("}");
       } else {
         w.print("private static final native ");
-        if (isJsonPrimitive(f.getType())) {
+        if (f.getType().isArray() != null) {
+          w.print("JavaScriptObject");
+        } else if (isJsonPrimitive(f.getType())) {
           w.print(f.getType().getQualifiedSourceName());
         } else {
           w.print("Object");
@@ -437,10 +441,10 @@ class SerializerCreator {
         w.indent();
         w.println(docomma);
         w.println(doname);
-        if (f.getType().isParameterized() != null) {
+        if (needsTypeParameter(f.getType())) {
           w.print("ser_" + f.getName());
         } else {
-          w.print(serializerFor((JClassType) f.getType()) + ".INSTANCE");
+          w.print(serializerFor(f.getType()) + ".INSTANCE");
         }
         w.println(".printJson(sb, " + doget + ");");
         w.outdent();
@@ -480,17 +484,42 @@ class SerializerCreator {
         doset1 = "";
       }
 
-      if (isJsonPrimitive(f.getType())) {
+      if (f.getType().isArray() != null) {
+        final JType ct = f.getType().isArray().getComponentType();
+        w.println("if (" + doget + " != null) {");
+        w.indent();
+
+        w.print("final ");
+        w.print(ct.getQualifiedSourceName());
+        w.print("[] tmp = new ");
+        w.print(ct.getQualifiedSourceName());
+        w.print("[");
+        w.print(ObjectArraySerializer.class.getName());
+        w.print(".size(" + doget + ")");
+        w.println("];");
+
+        w.println("ser_" + f.getName() + ".fromJson(" + doget + ", tmp);");
+
+        w.print(doset0);
+        w.print("tmp");
+        w.print(doset1);
+        w.println(";");
+
+        w.outdent();
+        w.println("}");
+
+      } else if (isJsonPrimitive(f.getType())) {
         w.print(doset0);
         w.print(doget);
         w.print(doset1);
         w.println(";");
+
       } else {
         w.print(doset0);
-        if (f.getType().isParameterized() != null) {
+        if (needsTypeParameter(f.getType())) {
           w.print("ser_" + f.getName());
         } else {
-          w.print(serializerFor((JClassType) f.getType()) + ".INSTANCE");
+          w.print(serializerFor(f.getType()) + ".INSTANCE");
         }
         w.print(".fromJson(" + doget + ")");
         w.print(doset1);
@@ -546,6 +575,10 @@ class SerializerCreator {
 
   private String getSerializerSimpleName() {
     return ProxyCreator.synthesizeTopLevelClassName(targetType, SER_SUFFIX)[1];
+  }
+
+  static boolean needsTypeParameter(final JType ft) {
+    return ft.isArray() != null || ft.isParameterized() != null;
   }
 
   private static JField[] sortFields(final JClassType targetType) {

@@ -21,14 +21,13 @@ import com.google.gwt.core.client.JavaScriptObject;
  * <p>
  * Primitive array types (like <code>int[]</code>) are not supported.
  */
-public class ArraySerializer<T> extends JsonSerializer<T[]> {
+public class ObjectArraySerializer<T> {
   private final JsonSerializer<T> serializer;
 
-  public ArraySerializer(final JsonSerializer<T> s) {
+  public ObjectArraySerializer(final JsonSerializer<T> s) {
     serializer = s;
   }
 
-  @Override
   public void printJson(final StringBuffer sb, final T[] o) {
     sb.append('[');
     for (int i = 0, n = o.length; i < n; i++) {
@@ -39,33 +38,19 @@ public class ArraySerializer<T> extends JsonSerializer<T[]> {
       if (v != null) {
         serializer.printJson(sb, v);
       } else {
-        sb.append(JS_NULL);
+        sb.append(JsonSerializer.JS_NULL);
       }
     }
     sb.append(']');
   }
 
-  @Override
-  public T[] fromJson(final Object o) {
-    if (o == null) {
-      return null;
-    }
-
-    final JavaScriptObject jso = (JavaScriptObject) o;
-    final int n = size(jso);
-    final T[] r = ArraySerializer.<T> newArray(n);
-    for (int i = 0; i < n; i++) {
+  public void fromJson(final JavaScriptObject jso, final T[] r) {
+    for (int i = 0; i < r.length; i++) {
       r[i] = serializer.fromJson(get(jso, i));
     }
-    return r;
   }
 
-  @SuppressWarnings("unchecked")
-  private static final <T> T[] newArray(final int sz) {
-    return (T[]) new Object[sz];
-  }
-
-  private static final native int size(JavaScriptObject o)/*-{ return o.length; }-*/;
+  public static native int size(JavaScriptObject o)/*-{ return o.length; }-*/;
 
   private static final native JavaScriptObject get(JavaScriptObject o, int i)/*-{ return o[i]; }-*/;
 }

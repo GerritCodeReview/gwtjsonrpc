@@ -189,7 +189,7 @@ class ProxyCreator {
   }
 
   private void generateProxyMethods(final TreeLogger logger,
-      final SourceWriter srcWriter) throws UnableToCompleteException {
+      final SourceWriter srcWriter) {
     final JMethod[] methodList = svcInf.getOverridableMethods();
     for (final JMethod m : methodList) {
       generateProxyMethod(logger, m, srcWriter);
@@ -197,8 +197,7 @@ class ProxyCreator {
   }
 
   private void generateProxyMethod(final TreeLogger logger,
-      final JMethod method, final SourceWriter w)
-      throws UnableToCompleteException {
+      final JMethod method, final SourceWriter w) {
     final JParameter[] params = method.getParameters();
     final JParameter callback = params[params.length - 1];
     final JClassType resultType =
@@ -209,35 +208,26 @@ class ProxyCreator {
     w.println();
     for (int i = 0; i < params.length - 1; i++) {
       final JType pType = params[i].getType();
-      if (pType.isParameterized() != null) {
+      if (SerializerCreator.needsTypeParameter(pType)) {
         serializerFields[i] = "serializer_" + instanceField++;
         w.print("private static final ");
         w.print(JsonSerializer.class.getName());
         w.print(" ");
         w.print(serializerFields[i]);
         w.print(" = ");
-        serializerCreator.generateSerializerReference(pType.isParameterized(),
-            w);
+        serializerCreator.generateSerializerReference(pType, w);
         w.println(";");
       }
     }
-    if (resultType.isParameterized() != null) {
+    if (SerializerCreator.needsTypeParameter(resultType)) {
       serializerFields[params.length - 1] = "serializer_" + instanceField++;
       w.print("private static final ");
       w.print(JsonSerializer.class.getName());
       w.print(" ");
       w.print(serializerFields[params.length - 1]);
       w.print(" = ");
-      serializerCreator.generateSerializerReference(resultType
-          .isParameterized(), w);
+      serializerCreator.generateSerializerReference(resultType, w);
       w.println(";");
-    }
-
-    final String resultSerRef;
-    if (resultType.isParameterized() != null) {
-      resultSerRef = serializerFields[params.length - 1];
-    } else {
-      resultSerRef = serializerCreator.create(resultType, logger) + ".INSTANCE";
     }
 
     w.print("public ");
@@ -271,7 +261,11 @@ class ProxyCreator {
       w.print("return new ");
       w.print(CallbackHandle.class.getName());
       w.print("(");
-      w.print(resultSerRef);
+      if (SerializerCreator.needsTypeParameter(resultType)) {
+        w.print(serializerFields[params.length - 1]);
+      } else {
+        serializerCreator.generateSerializerReference(resultType, w);
+      }
       w.print(", " + callback.getName());
       w.println(");");
       w.outdent();
@@ -290,7 +284,11 @@ class ProxyCreator {
       w.indent();
       w.print(JsonUtil.class.getName());
       w.print(".invoke(");
-      w.print(resultSerRef);
+      if (SerializerCreator.needsTypeParameter(resultType)) {
+        w.print(serializerFields[params.length - 1]);
+      } else {
+        serializerCreator.generateSerializerReference(resultType, w);
+      }
       w.print(", " + callback.getName());
       w.print(", " + objName);
       w.println(");");
@@ -326,11 +324,10 @@ class ProxyCreator {
         } else {
           w.println("if (" + pName + " != null) {");
           w.indent();
-          if (pType.isParameterized() != null) {
+          if (SerializerCreator.needsTypeParameter(pType)) {
             w.print(serializerFields[i]);
           } else {
-            w.print(serializerCreator.create((JClassType) pType, logger)
-                + ".INSTANCE");
+            serializerCreator.generateSerializerReference(pType, w);
           }
           w.println(".printJson(" + reqData + ", " + pName + ");");
           w.outdent();
@@ -350,7 +347,12 @@ class ProxyCreator {
     w.print(String
         .valueOf(method.getAnnotation(AllowCrossSiteRequest.class) != null));
     w.print(", " + reqDataStr);
-    w.print(", " + resultSerRef);
+    w.print(", ");
+    if (SerializerCreator.needsTypeParameter(resultType)) {
+      w.print(serializerFields[params.length - 1]);
+    } else {
+      serializerCreator.generateSerializerReference(resultType, w);
+    }
     w.print(", " + callback.getName());
     w.println(");");
 
