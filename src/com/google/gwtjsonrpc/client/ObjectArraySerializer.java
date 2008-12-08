@@ -52,5 +52,5 @@ public class ObjectArraySerializer<T> {
 
   public static native int size(JavaScriptObject o)/*-{ return o.length; }-*/;
 
-  private static final native JavaScriptObject get(JavaScriptObject o, int i)/*-{ return o[i]; }-*/;
+  private static final native Object get(JavaScriptObject o, int i)/*-{ return o[i]; }-*/;
 }

@@ -67,5 +67,5 @@ public class ListSerializer<T> extends JsonSerializer<java.util.List<T>> {
 
   private static final native int size(JavaScriptObject o)/*-{ return o.length; }-*/;
 
-  private static final native JavaScriptObject get(JavaScriptObject o, int i)/*-{ return o[i]; }-*/;
+  private static final native Object get(JavaScriptObject o, int i)/*-{ return o[i]; }-*/;
 }
