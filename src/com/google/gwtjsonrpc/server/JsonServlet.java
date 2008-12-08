@@ -90,6 +90,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
   /** Create a default GsonBuilder with some extra types defined. */
   public static GsonBuilder defaultGsonBuilder() {
     final GsonBuilder gb = new GsonBuilder();
+    gb.registerTypeAdapter(java.util.Map.class, new MapDeserializer());
     gb.registerTypeAdapter(java.sql.Date.class, new SqlDateDeserializer());
     gb.registerTypeAdapter(java.sql.Timestamp.class,
         new SqlTimestampDeserializer());

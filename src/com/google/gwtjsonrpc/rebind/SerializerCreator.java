@@ -26,7 +26,6 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.google.gwtjsonrpc.client.ObjectArraySerializer;
 import com.google.gwtjsonrpc.client.EnumSerializer;
 import com.google.gwtjsonrpc.client.JavaLangString_JsonSerializer;
 import com.google.gwtjsonrpc.client.JavaSqlDate_JsonSerializer;
@@ -34,13 +33,17 @@ import com.google.gwtjsonrpc.client.JavaSqlTimestamp_JsonSerializer;
 import com.google.gwtjsonrpc.client.JavaUtilDate_JsonSerializer;
 import com.google.gwtjsonrpc.client.JsonSerializer;
 import com.google.gwtjsonrpc.client.ListSerializer;
+import com.google.gwtjsonrpc.client.ObjectMapSerializer;
+import com.google.gwtjsonrpc.client.ObjectArraySerializer;
 import com.google.gwtjsonrpc.client.SetSerializer;
+import com.google.gwtjsonrpc.client.StringMapSerializer;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Map;
 
 class SerializerCreator {
   private static final String SER_SUFFIX = "_JsonSerializer";
@@ -68,6 +71,8 @@ class SerializerCreator {
 
     parameterizedSerializers.put(java.util.List.class.getCanonicalName(),
         ListSerializer.class.getCanonicalName());
+    parameterizedSerializers.put(java.util.Map.class.getCanonicalName(),
+        ObjectMapSerializer.class.getCanonicalName());
     parameterizedSerializers.put(java.util.Set.class.getCanonicalName(),
         SetSerializer.class.getCanonicalName());
   }
@@ -228,6 +233,10 @@ class SerializerCreator {
           + t.isArray().getComponentType().getQualifiedSourceName() + ">";
     }
 
+    if (isStringMap(t)) {
+      return StringMapSerializer.class.getName();
+    }
+
     final String qsn = t.getQualifiedSourceName();
     if (defaultSerializers.containsKey(qsn)) {
       return defaultSerializers.get(qsn);
@@ -238,6 +247,16 @@ class SerializerCreator {
     }
 
     return generatedSerializers.get(qsn);
+  }
+
+  private boolean isStringMap(final JType t) {
+    return t.isParameterized() != null
+        && t.getErasedType().isClassOrInterface() != null
+        && t.isParameterized().getTypeArgs().length > 0
+        && t.isParameterized().getTypeArgs()[0].getQualifiedSourceName()
+            .equals(String.class.getName())
+        && t.getErasedType().isClassOrInterface().isAssignableTo(
+            context.getTypeOracle().findType(Map.class.getName()));
   }
 
   private void generateSingleton(final SourceWriter w) {
@@ -274,14 +293,19 @@ class SerializerCreator {
 
     } else if (type.isParameterized() != null) {
       w.print("new " + serializerFor(type) + "(");
+      final JClassType[] typeArgs = type.isParameterized().getTypeArgs();
+      int n = 0;
+      if (isStringMap(type)) {
+        n++;
+      }
       boolean first = true;
-      for (final JClassType t : type.isParameterized().getTypeArgs()) {
+      for (; n < typeArgs.length; n++) {
         if (first) {
           first = false;
         } else {
           w.print(", ");
         }
-        generateSerializerReference(t, w);
+        generateSerializerReference(typeArgs[n], w);
       }
       w.print(")");
 
