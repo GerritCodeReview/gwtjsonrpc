@@ -15,7 +15,6 @@
 package com.google.gwtjsonrpc.server;
 
 import com.google.gwtjsonrpc.client.CookieAccess;
-import com.google.gwtjsonrpc.client.JsonUtil;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -32,7 +31,7 @@ import javax.crypto.spec.SecretKeySpec;
  * Utility function to compute and verify XSRF tokens.
  * <p>
  * {@link JsonServlet} uses this class to verify tokens appearing in the custom
- * {@link JsonUtil#XSRF_HEADER} HTTP header. The tokens protect against
+ * <code>xsrfKey</code> JSON request property. The tokens protect against
  * cross-site request forgery by depending upon the browser's security model.
  * The classic browser security model prohibits a script from site A from
  * reading any data received from site B. By sending unforgeable tokens from the
