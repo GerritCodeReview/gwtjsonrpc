@@ -29,6 +29,8 @@ public class ActiveCall implements AsyncCallback<Object> {
   protected final HttpServletRequest httpRequest;
   protected final HttpServletResponse httpResponse;
   JsonElement id;
+  String xsrfKeyIn;
+  String xsrfKeyOut;
   MethodHandle method;
   String callback;
   Object[] params;
@@ -172,6 +174,14 @@ public class ActiveCall implements AsyncCallback<Object> {
    */
   public Object[] getParams() {
     return params;
+  }
+
+  public final String getXsrfKeyIn() {
+    return xsrfKeyIn;
+  }
+
+  public final void setXsrfKeyOut(final String out) {
+    xsrfKeyOut = out;
   }
 
   /**

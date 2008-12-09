@@ -72,6 +72,14 @@ final class CallDeserializer<CallType extends ActiveCall> implements
       req.callback = callback.getAsString();
     }
 
+    final JsonElement xsrfKey = in.get("xsrfKey");
+    if (xsrfKey != null) {
+      if (!isString(xsrfKey)) {
+        throw new JsonParseException("Expected xsrfKey as string");
+      }
+      req.xsrfKeyIn = xsrfKey.getAsString();
+    }
+
     final Class<?>[] paramTypes = req.method.getParamTypes();
     final JsonElement params = in.get("params");
     if (params != null) {

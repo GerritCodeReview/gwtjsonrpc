@@ -14,9 +14,7 @@
 
 package com.google.gwtjsonrpc.server;
 
-import static com.google.gwtjsonrpc.client.JsonUtil.XSRF_HEADER;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 import com.google.gson.Gson;
@@ -183,9 +181,9 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     b.append('$');
     b.append(req.getServletPath());
     final String userpath = b.toString();
-    final ValidToken t = xsrf.checkToken(req.getHeader(XSRF_HEADER), userpath);
+    final ValidToken t = xsrf.checkToken(call.getXsrfKeyIn(), userpath);
     if (t == null || t.needsRefresh()) {
-      call.httpResponse.addHeader(XSRF_HEADER, xsrf.newToken(userpath));
+      call.setXsrfKeyOut(xsrf.newToken(userpath));
     }
     return t != null;
   }
@@ -244,54 +242,72 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
   protected void service(final HttpServletRequest req,
       final HttpServletResponse resp) throws IOException {
     try {
-      final CallType c = createActiveCall(req, resp);
-      perThreadCall.set(c);
-      doService(c);
+      final CallType call = createActiveCall(req, resp);
+
+      call.noCache();
+      if (!JsonUtil.JSON_TYPE.equals(call.httpRequest.getHeader("Accept"))) {
+        textError(call, SC_BAD_REQUEST, "Must Accept " + JsonUtil.JSON_TYPE);
+        return;
+      }
+
+      perThreadCall.set(call);
+      doService(call);
+
+      if (call.internalFailure != null) {
+        // Hide internal errors from the client.
+        //
+        final String msg = "Error in " + call.method.getName();
+        getServletContext().log(msg, call.internalFailure);
+        call.onFailure(new Exception("Internal Server Error"));
+      }
+
+      final String out = formatResult(call);
+      RPCServletUtils.writeResponse(getServletContext(), call.httpResponse,
+          out, call.callback == null
+              && RPCServletUtils.acceptsGzipEncoding(call.httpRequest)
+              && RPCServletUtils.exceedsUncompressedContentLengthLimit(out));
     } finally {
       perThreadCall.set(null);
     }
   }
 
-  private void doService(final CallType call) throws IOException,
-      UnsupportedEncodingException {
-    call.noCache();
-
-    if (!JsonUtil.JSON_TYPE.equals(call.httpRequest.getHeader("Accept"))) {
-      error(call, SC_BAD_REQUEST, "Must Accept " + JsonUtil.JSON_TYPE);
-      return;
-    }
-
+  private void doService(final CallType call) throws IOException {
     try {
       if ("GET".equals(call.httpRequest.getMethod())) {
         parseGetRequest(call);
       } else if ("POST".equals(call.httpRequest.getMethod())) {
         parsePostRequest(call);
       } else {
-        error(call, SC_BAD_REQUEST, "Unsupported HTTP Method");
+        call.httpResponse.setStatus(SC_BAD_REQUEST);
+        call.onFailure(new Exception("Unsupported HTTP method"));
         return;
       }
     } catch (NoSuchRemoteMethodException err) {
-      error(call, SC_NOT_FOUND, "Method Not Found");
+      call.httpResponse.setStatus(SC_NOT_FOUND);
+      call.onFailure(new Exception("No such service method"));
       return;
     } catch (JsonParseException err) {
-      error(call, SC_BAD_REQUEST, "Invalid JSON Request");
+      call.httpResponse.setStatus(SC_BAD_REQUEST);
+      call.onFailure(new Exception("Error parsing request"));
       return;
     }
 
     if (call.callback != null
         && !SAFE_CALLBACK.matcher(call.callback).matches()) {
-      error(call, SC_BAD_REQUEST, "Unsafe callback");
+      call.httpResponse.setStatus(SC_BAD_REQUEST);
+      call.onFailure(new Exception("Unsafe name in 'callback' property"));
       return;
     }
 
     if (!call.method.allowCrossSiteRequest()) {
       try {
         if (!xsrfValidate(call)) {
-          error(call, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
+          call.onFailure(new Exception(JsonUtil.ERROR_INVALID_XSRF));
           return;
         }
       } catch (XsrfException e) {
-        error(call, JsonUtil.SC_INVALID_XSRF, JsonUtil.SM_INVALID_XSRF);
+        getServletContext().log("Unexpected XSRF validation error", e);
+        call.onFailure(new Exception(JsonUtil.ERROR_INVALID_XSRF));
         return;
       }
     }
@@ -300,19 +316,6 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     if (!call.isComplete()) {
       call.method.invoke(call.params, call);
     }
-
-    if (call.internalFailure != null) {
-      final String msg = "Error in " + call.method.getName();
-      getServletContext().log(msg, call.internalFailure);
-      error(call, SC_INTERNAL_SERVER_ERROR, "Internal Server Error");
-      return;
-    }
-
-    final String out = formatResult(call);
-    RPCServletUtils.writeResponse(getServletContext(), call.httpResponse, out,
-        call.callback == null
-            && RPCServletUtils.acceptsGzipEncoding(call.httpRequest)
-            && RPCServletUtils.exceedsUncompressedContentLengthLimit(out));
   }
 
   private void parseGetRequest(final ActiveCall call) {
@@ -406,6 +409,9 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
         if (src.id != null) {
           r.add("id", src.id);
         }
+        if (src.xsrfKeyOut != null) {
+          r.addProperty("xsrfKey", src.xsrfKeyOut);
+        }
         if (src.externalFailure != null) {
           final JsonObject error = new JsonObject();
           error.addProperty("name", "JSONRPCError");
@@ -432,7 +438,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     return o.toString();
   }
 
-  private static void error(final ActiveCall call, final int status,
+  private static void textError(final ActiveCall call, final int status,
       final String message) throws IOException {
     final HttpServletResponse r = call.httpResponse;
     r.setStatus(status);

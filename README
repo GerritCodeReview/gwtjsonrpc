@@ -39,12 +39,16 @@ Call approximation is not supported.  The 'params' member must
 Error codes sent by the Java server are always 999 as the JSON RPC
 specification does not call out specific errors.
 
-The HTTP header "X-RPC-XSRF-Token" must be populated on requests
-with a value previously supplied by the same header in a prior
-HTTP response.
-
 GET requests must specify the method name in the 'method' request
 parameter, and the method parameters in 'param0' .. 'paramN'.
+
+The request property "xrfKey" must be populated by a value obtained
+from a prior response property, also named "xsrfKey".  The key is
+optional in a response; if it is not present then the client should
+assume the xsrfKey supplied in the request is still valid.  To get
+an initial xsrfKey issue a request, obtain the value, and send the
+same request again, but with the xsrfKey included.  The xsrfKey is
+not supported on GET requests.
 
 An optional 'callback' parameter in either the GET request parameters
 or the POSTed JSON request block can be used to obtain a JSON-in-script

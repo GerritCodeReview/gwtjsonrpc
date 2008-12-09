@@ -297,17 +297,12 @@ class ProxyCreator {
       w.println("}");
     }
 
-    final String rVersion = "\\\"version\\\":\\\"1.1\\\"";
-    final String rMethod = "\\\"method\\\":\\\"" + method.getName() + "\\\"";
     final String reqDataStr;
     if (params.length == 1) {
-      reqDataStr = "\"{" + rVersion + "," + rMethod + "}\"";
+      reqDataStr = "\"\"";
     } else {
       final String reqData = nameFactory.createName("reqData");
       w.println("final StringBuilder " + reqData + " = new StringBuilder();");
-      w.println(reqData + ".append(\"{" + rVersion + "," + rMethod
-          + ",\\\"params\\\":[\");");
-
       needsComma = false;
       for (int i = 0; i < params.length - 1; i++) {
         if (needsComma) {
@@ -344,11 +339,12 @@ class ProxyCreator {
           w.println("}");
         }
       }
-      w.println(reqData + ".append(\"]}\");");
       reqDataStr = reqData + ".toString()";
     }
 
     w.print("doInvoke(");
+    w.print("\"" + method.getName() + "\"");
+    w.print(", ");
     w.print(String
         .valueOf(method.getAnnotation(AllowCrossSiteRequest.class) != null));
     w.print(", " + reqDataStr);
