@@ -19,11 +19,11 @@ import com.google.gwtjsonrpc.client.CookieAccess;
 final class ServletCookieAccess extends CookieAccess {
   @Override
   protected String getCookie(final String name) {
-    return JsonServlet.getCurrentCall().getCookie(name);
+    return JsonServlet.<ActiveCall> getCurrentCall().getCookie(name);
   }
 
   @Override
   protected void removeCookie(final String name) {
-    JsonServlet.getCurrentCall().removeCookie(name);
+    JsonServlet.<ActiveCall> getCurrentCall().removeCookie(name);
   }
 }
