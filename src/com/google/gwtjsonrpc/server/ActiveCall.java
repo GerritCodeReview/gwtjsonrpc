@@ -213,7 +213,8 @@ public class ActiveCall implements AsyncCallback<Object> {
 
   /** Mark the response to be uncached by proxies and browsers. */
   public void noCache() {
-    httpResponse.setHeader("Cache-Control", "no-cache");
-    httpResponse.setDateHeader("Expires", System.currentTimeMillis());
+    httpResponse.setHeader("Expires", "Fri, 01 Jan 1980 00:00:00 GMT");
+    httpResponse.setHeader("Pragma", "no-cache");
+    httpResponse.setHeader("Cache-Control", "no-cache, must-revalidate");
   }
 }
