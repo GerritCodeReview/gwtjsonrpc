@@ -33,8 +33,9 @@ import com.google.gwtjsonrpc.client.JavaSqlTimestamp_JsonSerializer;
 import com.google.gwtjsonrpc.client.JavaUtilDate_JsonSerializer;
 import com.google.gwtjsonrpc.client.JsonSerializer;
 import com.google.gwtjsonrpc.client.ListSerializer;
-import com.google.gwtjsonrpc.client.ObjectMapSerializer;
 import com.google.gwtjsonrpc.client.ObjectArraySerializer;
+import com.google.gwtjsonrpc.client.ObjectMapSerializer;
+import com.google.gwtjsonrpc.client.ObjectSerializer;
 import com.google.gwtjsonrpc.client.SetSerializer;
 import com.google.gwtjsonrpc.client.StringMapSerializer;
 
@@ -107,7 +108,7 @@ class SerializerCreator {
       return sn;
     }
 
-    if (!needsTypeParameter(targetType)) {
+    if (!needsTypeParameter(targetType) && !targetType.isAbstract()) {
       generateSingleton(srcWriter);
     }
     if (targetType.isEnum() != null) {
@@ -129,7 +130,12 @@ class SerializerCreator {
       return;
     }
 
-    for (final JField f : sortFields((JClassType) targetType)) {
+    final JClassType targetClass = targetType.isClass();
+    if (needsSuperSerializer(targetClass)) {
+      create(targetClass.getSuperclass(), logger);
+    }
+
+    for (final JField f : sortFields(targetClass)) {
       final JType type = f.getType();
       if (isJsonPrimitive(type)) {
         continue;
@@ -421,21 +427,17 @@ class SerializerCreator {
 
   private void generatePrintJson(final SourceWriter w) {
     final JField[] fieldList = sortFields(targetType);
-    w.print("public void printJson(StringBuilder sb, ");
+    w.print("protected int printJsonImpl(int fieldCount, StringBuilder sb, ");
     w.print(targetType.getQualifiedSourceName());
     w.println(" src) {");
     w.indent();
-
-    final String docomma;
-    if (fieldList.length > 1) {
-      w.println("int fieldCount = -1;");
-      docomma = "if (++fieldCount > 0) sb.append(\",\");";
-    } else {
-      docomma = "";
+    if (needsSuperSerializer(targetType)) {
+      w.print("fieldCount = super.printJsonImpl(fieldCount, sb, (");
+      w.print(targetType.getSuperclass().getQualifiedSourceName());
+      w.println(")src);");
     }
 
-    w.println("sb.append(\"{\");");
-
+    final String docomma = "if (fieldCount++ > 0) sb.append(\",\");";
     for (final JField f : fieldList) {
       final String doget;
       if (f.isPrivate()) {
@@ -484,7 +486,7 @@ class SerializerCreator {
       }
     }
 
-    w.println("sb.append(\"}\");");
+    w.println("return fieldCount;");
     w.outdent();
     w.println("}");
     w.println();
@@ -495,13 +497,32 @@ class SerializerCreator {
     w.print(targetType.getQualifiedSourceName());
     w.println(" fromJson(Object in) {");
     w.indent();
+    if (targetType.isAbstract()) {
+      w.println("throw new UnsupportedOperationException();");
+    } else {
+      w.println("if (in == null) return null;");
+      w.println("final JavaScriptObject jso = (JavaScriptObject)in;");
+      w.print("final ");
+      w.print(targetType.getQualifiedSourceName());
+      w.print(" dst = new ");
+      w.println(targetType.getQualifiedSourceName() + "();");
+      w.println("fromJsonImpl(jso, dst);");
+      w.println("return dst;");
+    }
+    w.outdent();
+    w.println("}");
+    w.println();
 
-    w.println("if (in == null) return null;");
-    w.println("final JavaScriptObject jso = (JavaScriptObject)in;");
-    w.print("final ");
+    w.print("protected void fromJsonImpl(JavaScriptObject jso,");
     w.print(targetType.getQualifiedSourceName());
-    w.print(" dst = new ");
-    w.println(targetType.getQualifiedSourceName() + "();");
+    w.println(" dst) {");
+    w.indent();
+
+    if (needsSuperSerializer(targetType)) {
+      w.print("super.fromJsonImpl(jso, (");
+      w.print(targetType.getSuperclass().getQualifiedSourceName());
+      w.println(")dst);");
+    }
 
     for (final JField f : sortFields(targetType)) {
       final String doget = "jsonGet_" + f.getName() + "(jso)";
@@ -558,7 +579,6 @@ class SerializerCreator {
       }
     }
 
-    w.println("return dst;");
     w.outdent();
     w.println("}");
     w.println();
@@ -591,11 +611,25 @@ class SerializerCreator {
       cf.addImport(EnumSerializer.class.getCanonicalName());
       cf.setSuperclass(EnumSerializer.class.getSimpleName() + "<"
           + targetType.getQualifiedSourceName() + ">");
+    } else if (needsSuperSerializer(targetType)) {
+      cf.setSuperclass(getSerializerQualifiedName(targetType.getSuperclass()));
     } else {
-      cf.setSuperclass(JsonSerializer.class.getSimpleName() + "<"
+      cf.addImport(ObjectSerializer.class.getCanonicalName());
+      cf.setSuperclass(ObjectSerializer.class.getSimpleName() + "<"
           + targetType.getQualifiedSourceName() + ">");
     }
     return cf.createSourceWriter(ctx, pw);
+  }
+
+  private static boolean needsSuperSerializer(JClassType type) {
+    type = type.getSuperclass();
+    while (!Object.class.getName().equals(type.getQualifiedSourceName())) {
+      if (sortFields(type).length > 0) {
+        return true;
+      }
+      type = type.getSuperclass();
+    }
+    return false;
   }
 
   private String getSerializerQualifiedName(final JClassType targetType) {
