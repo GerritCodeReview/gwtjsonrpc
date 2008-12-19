@@ -30,9 +30,9 @@ import java.util.Map;
  */
 public class StringMapSerializer<V> extends
     JsonSerializer<java.util.Map<String, V>> {
-  private final JsonSerializer<V> valueSerializer;
+  private final JsonSerializer valueSerializer;
 
-  public StringMapSerializer(final JsonSerializer<V> v) {
+  public StringMapSerializer(final JsonSerializer v) {
     valueSerializer = v;
   }
 
@@ -81,6 +81,6 @@ public class StringMapSerializer<V> extends
   }-*/;
 
   void copyOne(final Map<String, V> r, final String k, final Object o) {
-    r.put(k, valueSerializer.fromJson(o));
+    r.put(k, (V) valueSerializer.fromJson(o));
   }
 }

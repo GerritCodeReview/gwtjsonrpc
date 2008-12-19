@@ -15,13 +15,13 @@
 package com.google.gwtjsonrpc.client;
 
 /** Base class for generated JsonSerializer implementations. */
-public abstract class ObjectSerializer<T> extends JsonSerializer<T> {
+public abstract class ObjectSerializer extends JsonSerializer<Object> {
   @Override
-  public void printJson(final StringBuilder sb, final T o) {
+  public void printJson(final StringBuilder sb, final Object o) {
     sb.append("{");
     printJsonImpl(0, sb, o);
     sb.append("}");
   }
 
-  protected abstract int printJsonImpl(int fieldCount, StringBuilder sb, T o);
+  protected abstract int printJsonImpl(int field, StringBuilder sb, Object o);
 }

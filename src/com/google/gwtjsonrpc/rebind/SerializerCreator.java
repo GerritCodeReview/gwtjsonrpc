@@ -136,31 +136,35 @@ class SerializerCreator {
     }
 
     for (final JField f : sortFields(targetClass)) {
-      final JType type = f.getType();
-      if (isJsonPrimitive(type)) {
-        continue;
-      }
-
-      if (type.isArray() != null) {
-        create((JClassType) type.isArray().getComponentType(), logger);
-        continue;
-      }
-
-      if (type.isParameterized() != null) {
-        final JClassType[] typeArgs = type.isParameterized().getTypeArgs();
-        for (final JClassType t : typeArgs) {
-          create(t, logger);
-        }
-      }
-
-      final String qsn = type.getQualifiedSourceName();
-      if (defaultSerializers.containsKey(qsn)
-          || parameterizedSerializers.containsKey(qsn)) {
-        continue;
-      }
-
-      create((JClassType) type, logger);
+      ensureSerializer(logger, f.getType());
     }
+  }
+
+  private void ensureSerializer(final TreeLogger logger, final JType type)
+      throws UnableToCompleteException {
+    if (isJsonPrimitive(type)) {
+      return;
+    }
+
+    if (type.isArray() != null) {
+      ensureSerializer(logger, type.isArray().getComponentType());
+      return;
+    }
+
+    if (type.isParameterized() != null) {
+      final JClassType[] typeArgs = type.isParameterized().getTypeArgs();
+      for (final JClassType t : typeArgs) {
+        ensureSerializer(logger, t);
+      }
+    }
+
+    final String qsn = type.getQualifiedSourceName();
+    if (defaultSerializers.containsKey(qsn)
+        || parameterizedSerializers.containsKey(qsn)) {
+      return;
+    }
+
+    create((JClassType) type, logger);
   }
 
   void checkCanSerialize(final TreeLogger logger, final JType type)
@@ -428,9 +432,15 @@ class SerializerCreator {
   private void generatePrintJson(final SourceWriter w) {
     final JField[] fieldList = sortFields(targetType);
     w.print("protected int printJsonImpl(int fieldCount, StringBuilder sb, ");
-    w.print(targetType.getQualifiedSourceName());
-    w.println(" src) {");
+    w.println("Object instance) {");
     w.indent();
+
+    w.print("final ");
+    w.print(targetType.getQualifiedSourceName());
+    w.print(" src = (");
+    w.print(targetType.getQualifiedSourceName());
+    w.println(")instance;");
+
     if (needsSuperSerializer(targetType)) {
       w.print("fieldCount = super.printJsonImpl(fieldCount, sb, (");
       w.print(targetType.getSuperclass().getQualifiedSourceName());
@@ -615,8 +625,7 @@ class SerializerCreator {
       cf.setSuperclass(getSerializerQualifiedName(targetType.getSuperclass()));
     } else {
       cf.addImport(ObjectSerializer.class.getCanonicalName());
-      cf.setSuperclass(ObjectSerializer.class.getSimpleName() + "<"
-          + targetType.getQualifiedSourceName() + ">");
+      cf.setSuperclass(ObjectSerializer.class.getSimpleName());
     }
     return cf.createSourceWriter(ctx, pw);
   }

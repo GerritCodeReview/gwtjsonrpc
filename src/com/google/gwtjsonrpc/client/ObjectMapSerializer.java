@@ -29,11 +29,12 @@ import java.util.Map;
  * When deserialized from JSON the Map implementation is always a
  * {@link HashMap}. When serializing to JSON any Map is permitted.
  */
-public class ObjectMapSerializer<K, V> extends JsonSerializer<java.util.Map<K, V>> {
-  private final JsonSerializer<K> keySerializer;
-  private final JsonSerializer<V> valueSerializer;
+public class ObjectMapSerializer<K, V> extends
+    JsonSerializer<java.util.Map<K, V>> {
+  private final JsonSerializer keySerializer;
+  private final JsonSerializer valueSerializer;
 
-  public ObjectMapSerializer(final JsonSerializer<K> k, final JsonSerializer<V> v) {
+  public ObjectMapSerializer(final JsonSerializer k, final JsonSerializer v) {
     keySerializer = k;
     valueSerializer = v;
   }
@@ -74,8 +75,8 @@ public class ObjectMapSerializer<K, V> extends JsonSerializer<java.util.Map<K, V
     final int n = size(jso);
     final HashMap<K, V> r = new HashMap<K, V>();
     for (int i = 0; i < n;) {
-      final K k = keySerializer.fromJson(get(jso, i++));
-      final V v = valueSerializer.fromJson(get(jso, i++));
+      final K k = (K) keySerializer.fromJson(get(jso, i++));
+      final V v = (V) valueSerializer.fromJson(get(jso, i++));
       r.put(k, v);
     }
     return r;
