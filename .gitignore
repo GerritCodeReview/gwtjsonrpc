@@ -1,5 +1,4 @@
-/.bin
-/classes
-/lib/*_src.zip
-/lib/gwtjsonrpc.jar
-/config.mak
+/target
+/.classpath
+/.project
+/.settings/org.maven.ide.eclipse.prefs
