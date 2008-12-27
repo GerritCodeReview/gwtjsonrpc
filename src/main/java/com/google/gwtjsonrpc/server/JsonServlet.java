@@ -19,6 +19,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.InstanceCreator;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
@@ -42,7 +43,9 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.servlet.ServletConfig;
@@ -88,6 +91,12 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
   /** Create a default GsonBuilder with some extra types defined. */
   public static GsonBuilder defaultGsonBuilder() {
     final GsonBuilder gb = new GsonBuilder();
+    gb.registerTypeAdapter(java.util.Set.class,
+        new InstanceCreator<java.util.Set<Object>>() {
+          public Set<Object> createInstance(final Type arg0) {
+            return new HashSet<Object>();
+          }
+        });
     gb.registerTypeAdapter(java.util.Map.class, new MapDeserializer());
     gb.registerTypeAdapter(java.sql.Date.class, new SqlDateDeserializer());
     gb.registerTypeAdapter(java.sql.Timestamp.class,
