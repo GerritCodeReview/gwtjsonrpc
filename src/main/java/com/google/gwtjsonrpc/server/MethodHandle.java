@@ -21,6 +21,7 @@ import com.google.gwtjsonrpc.client.RemoteJsonService;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 
 /**
  * Pairing of a specific {@link RemoteJsonService} implementation and method.
@@ -28,7 +29,7 @@ import java.lang.reflect.Method;
 public class MethodHandle {
   private final RemoteJsonService imp;
   private final Method method;
-  private final Class<?>[] parameterTypes;
+  private final Type[] parameterTypes;
   private final boolean allowXsrf;
 
   /**
@@ -44,8 +45,8 @@ public class MethodHandle {
     this.method = method;
     this.allowXsrf = method.getAnnotation(AllowCrossSiteRequest.class) != null;
 
-    final Class<?>[] args = method.getParameterTypes();
-    parameterTypes = new Class<?>[args.length - 1];
+    final Type[] args = method.getGenericParameterTypes();
+    parameterTypes = new Type[args.length - 1];
     System.arraycopy(args, 0, parameterTypes, 0, parameterTypes.length);
   }
 
@@ -57,14 +58,14 @@ public class MethodHandle {
   }
 
   /** @return an annotation attached to the method's description. */
-  public <T extends Annotation> T getAnnotation(final Class<T> t){
+  public <T extends Annotation> T getAnnotation(final Class<T> t) {
     return method.getAnnotation(t);
   }
-  
+
   /**
    * @return true if this method requires positional arguments.
    */
-  public Class<?>[] getParamTypes() {
+  public Type[] getParamTypes() {
     return parameterTypes;
   }
 

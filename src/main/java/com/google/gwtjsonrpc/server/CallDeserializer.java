@@ -80,7 +80,7 @@ final class CallDeserializer<CallType extends ActiveCall> implements
       req.xsrfKeyIn = xsrfKey.getAsString();
     }
 
-    final Class<?>[] paramTypes = req.method.getParamTypes();
+    final Type[] paramTypes = req.method.getParamTypes();
     final JsonElement params = in.get("params");
     if (params != null) {
       if (!params.isJsonArray()) {

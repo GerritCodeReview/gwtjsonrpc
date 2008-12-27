@@ -335,7 +335,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       throw new NoSuchRemoteMethodException();
     }
 
-    final Class<?>[] paramTypes = call.method.getParamTypes();
+    final Type[] paramTypes = call.method.getParamTypes();
     final Object[] r = new Object[paramTypes.length];
     for (int i = 0; i < r.length; i++) {
       final String v = req.getParameter("param" + i);
@@ -343,7 +343,8 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
         r[i] = null;
       } else if (paramTypes[i] == String.class) {
         r[i] = v;
-      } else if (paramTypes[i].getName().startsWith("java.lang.")) {
+      } else if (paramTypes[i] instanceof Class
+          && ((Class<?>) paramTypes[i]).isPrimitive()) {
         // Primitive type, use the JSON representation of that type.
         //
         r[i] = gs.fromJson(v, paramTypes[i]);
