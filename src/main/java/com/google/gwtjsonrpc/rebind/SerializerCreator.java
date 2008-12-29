@@ -89,6 +89,9 @@ class SerializerCreator {
 
   String create(final JClassType targetType, final TreeLogger logger)
       throws UnableToCompleteException {
+    if (targetType.isParameterized() != null || targetType.isArray() != null) {
+      ensureSerializer(logger, targetType);
+    }
     String sClassName = serializerFor(targetType);
     if (sClassName != null) {
       return sClassName;
