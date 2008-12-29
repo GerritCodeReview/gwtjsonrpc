@@ -282,22 +282,29 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
 
   private void doService(final CallType call) throws IOException {
     try {
-      if ("GET".equals(call.httpRequest.getMethod())) {
-        parseGetRequest(call);
-      } else if ("POST".equals(call.httpRequest.getMethod())) {
-        parsePostRequest(call);
-      } else {
+      try {
+        if ("GET".equals(call.httpRequest.getMethod())) {
+          parseGetRequest(call);
+        } else if ("POST".equals(call.httpRequest.getMethod())) {
+          parsePostRequest(call);
+        } else {
+          call.httpResponse.setStatus(SC_BAD_REQUEST);
+          call.onFailure(new Exception("Unsupported HTTP method"));
+          return;
+        }
+      } catch (JsonParseException err) {
+        if (err.getCause() instanceof NoSuchRemoteMethodException) {
+          // GSON seems to catch our own exception and wrap it...
+          //
+          throw (NoSuchRemoteMethodException) err.getCause();
+        }
         call.httpResponse.setStatus(SC_BAD_REQUEST);
-        call.onFailure(new Exception("Unsupported HTTP method"));
+        call.onFailure(new Exception("Error parsing request"));
         return;
       }
     } catch (NoSuchRemoteMethodException err) {
       call.httpResponse.setStatus(SC_NOT_FOUND);
       call.onFailure(new Exception("No such service method"));
-      return;
-    } catch (JsonParseException err) {
-      call.httpResponse.setStatus(SC_BAD_REQUEST);
-      call.onFailure(new Exception("Error parsing request"));
       return;
     }
 
