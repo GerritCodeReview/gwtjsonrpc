@@ -23,7 +23,7 @@ public final class JavaSqlTimestamp_JsonSerializer extends
   @Override
   public java.sql.Timestamp fromJson(final Object o) {
     if (o != null) {
-      return java.sql.Timestamp.valueOf((String) o);
+      return parseTimestamp((String) o);
     }
     return null;
   }
@@ -33,5 +33,56 @@ public final class JavaSqlTimestamp_JsonSerializer extends
     sb.append('"');
     sb.append(o);
     sb.append('"');
+  }
+
+  protected static java.sql.Timestamp parseTimestamp(final String s) {
+    final String[] components = s.split(" ");
+    if (components.length != 2) {
+      throw new IllegalArgumentException("Invalid escape format: " + s);
+    }
+
+    final String[] timeComponents = components[1].split("\\.");
+    if (timeComponents.length != 2) {
+      throw new IllegalArgumentException("Invalid escape format: " + s);
+    } else if (timeComponents[1].length() != 9) {
+      throw new IllegalArgumentException("Invalid escape format: " + s);
+    }
+
+    final java.sql.Date d = JavaSqlDate_JsonSerializer.parseDate(components[0]);
+    final java.sql.Time t = parseTime(timeComponents[0]);
+    if (timeComponents[1].startsWith("0")) {
+      timeComponents[1] = timeComponents[1].replaceFirst("^00*", "");
+    }
+
+    final int nanos;
+    try {
+      nanos = Integer.valueOf(timeComponents[1]);
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Invalid escape format: " + s);
+    }
+
+    return new java.sql.Timestamp(d.getYear(), d.getMonth(), d.getDate(), t
+        .getHours(), t.getMinutes(), t.getSeconds(), nanos);
+  }
+
+  private static java.sql.Time parseTime(final String s) {
+    final String[] split = s.split(":");
+    if (split.length != 3) {
+      throw new IllegalArgumentException("Invalid escape format: " + s);
+    }
+    for (int i = 0; i < 3; i++) {
+      if (split[i].startsWith("0")) {
+        split[i] = split[i].substring(1);
+      }
+    }
+    try {
+      int hh = Integer.parseInt(split[0]);
+      int mm = Integer.parseInt(split[1]);
+      int ss = Integer.parseInt(split[2]);
+
+      return new java.sql.Time(hh, mm, ss);
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Invalid escape format: " + s);
+    }
   }
 }

@@ -23,7 +23,7 @@ public final class JavaSqlDate_JsonSerializer extends
   @Override
   public java.sql.Date fromJson(final Object o) {
     if (o != null) {
-      return java.sql.Date.valueOf((String) o);
+      return parseDate((String) o);
     }
     return null;
   }
@@ -33,5 +33,31 @@ public final class JavaSqlDate_JsonSerializer extends
     sb.append('"');
     sb.append(o);
     sb.append('"');
+  }
+
+  protected static java.sql.Date parseDate(final String s) {
+    final String[] split = s.split("-");
+    if (split.length != 3) {
+      throw new IllegalArgumentException("Invalid escape format: " + s);
+    }
+
+    if (split[1].startsWith("0")) {
+      split[1] = split[1].substring(1);
+    }
+    if (split[2].startsWith("0")) {
+      split[2] = split[2].substring(1);
+    }
+    try {
+      // Years are relative to 1900
+      final int y = Integer.valueOf(split[0]) - 1900;
+
+      // Months are internally 0-based
+      final int m = Integer.decode(split[1]) - 1;
+      final int d = Integer.decode(split[2]);
+
+      return new java.sql.Date(y, m, d);
+    } catch (NumberFormatException e) {
+      throw new IllegalArgumentException("Invalid escape format: " + s);
+    }
   }
 }
