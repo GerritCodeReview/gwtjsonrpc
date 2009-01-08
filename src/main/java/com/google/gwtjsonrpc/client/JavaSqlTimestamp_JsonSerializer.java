@@ -50,10 +50,13 @@ public final class JavaSqlTimestamp_JsonSerializer extends
 
     final java.sql.Date d = JavaSqlDate_JsonSerializer.parseDate(components[0]);
     final java.sql.Time t = parseTime(timeComponents[0]);
+
     if (timeComponents[1].startsWith("0")) {
       timeComponents[1] = timeComponents[1].replaceFirst("^00*", "");
+      if (timeComponents[1].length() == 0) {
+        timeComponents[1] = "0";
+      }
     }
-
     final int nanos;
     try {
       nanos = Integer.valueOf(timeComponents[1]);
