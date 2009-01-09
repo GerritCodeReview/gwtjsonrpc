@@ -14,6 +14,8 @@
 
 package com.google.gwtjsonrpc.client;
 
+import java.util.Date;
+
 /** Default serialization for a {@link java.sql.Timestamp}. */
 public final class JavaSqlTimestamp_JsonSerializer extends
     JsonSerializer<java.sql.Timestamp> {
@@ -31,11 +33,42 @@ public final class JavaSqlTimestamp_JsonSerializer extends
   @Override
   public void printJson(final StringBuilder sb, final java.sql.Timestamp o) {
     sb.append('"');
-    sb.append(o);
+    sb.append(toString(o));
     sb.append('"');
   }
 
-  protected static java.sql.Timestamp parseTimestamp(final String s) {
+  protected static String padTwo(final int v) {
+    if (v < 10) {
+      return "0" + v;
+    } else {
+      return String.valueOf(v);
+    }
+  }
+
+  protected static String padThree(final int v) {
+    if (v < 10) {
+      return "00" + v;
+    } else if (v < 100) {
+      return "0" + v;
+    } else {
+      return String.valueOf(v);
+    }
+  }
+
+  private static native String toString(java.sql.Timestamp ts) /*-{
+      var d = ts.jsdate;
+      var p2 = @com.google.gwtjsonrpc.client.JavaSqlTimestamp_JsonSerializer::padTwo(I);
+      var p3 = @com.google.gwtjsonrpc.client.JavaSqlTimestamp_JsonSerializer::padThree(I);
+      return d.getUTCFullYear() + "-" +
+      p2(1 + d.getUTCMonth()) + "-" +
+      p2(d.getUTCDate())+ " " +
+      p2(d.getUTCHours()) + ":" +
+      p2(d.getUTCMinutes()) + ":" +
+      p2(d.getUTCSeconds()) + "." +
+      p3(d.getUTCMilliseconds()) + "000000";
+    }-*/;
+
+  private static java.sql.Timestamp parseTimestamp(final String s) {
     final String[] components = s.split(" ");
     if (components.length != 2) {
       throw new IllegalArgumentException("Invalid escape format: " + s);
@@ -48,8 +81,13 @@ public final class JavaSqlTimestamp_JsonSerializer extends
       throw new IllegalArgumentException("Invalid escape format: " + s);
     }
 
-    final java.sql.Date d = JavaSqlDate_JsonSerializer.parseDate(components[0]);
-    final java.sql.Time t = parseTime(timeComponents[0]);
+    final String[] dSplit = components[0].split("-");
+    final String[] tSplit = timeComponents[0].split(":");
+    if (dSplit.length != 3 || tSplit.length != 3) {
+      throw new IllegalArgumentException("Invalid escape format: " + s);
+    }
+    trimLeading0(dSplit);
+    trimLeading0(tSplit);
 
     if (timeComponents[1].startsWith("0")) {
       timeComponents[1] = timeComponents[1].replaceFirst("^00*", "");
@@ -57,35 +95,28 @@ public final class JavaSqlTimestamp_JsonSerializer extends
         timeComponents[1] = "0";
       }
     }
-    final int nanos;
+
     try {
-      nanos = Integer.valueOf(timeComponents[1]);
+      int yy = Integer.parseInt(dSplit[0]) - 1900;
+      int mm = Integer.parseInt(dSplit[1]) - 1;
+      int dd = Integer.parseInt(dSplit[2]);
+
+      int hh = Integer.parseInt(tSplit[0]);
+      int mi = Integer.parseInt(tSplit[1]);
+      int ss = Integer.parseInt(tSplit[2]);
+      int ms = Integer.valueOf(timeComponents[1]) / 1000000;
+
+      return new java.sql.Timestamp(Date.UTC(yy, mm, dd, hh, mi, ss) + ms);
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException("Invalid escape format: " + s);
     }
-
-    return new java.sql.Timestamp(d.getYear(), d.getMonth(), d.getDate(), t
-        .getHours(), t.getMinutes(), t.getSeconds(), nanos);
   }
 
-  private static java.sql.Time parseTime(final String s) {
-    final String[] split = s.split(":");
-    if (split.length != 3) {
-      throw new IllegalArgumentException("Invalid escape format: " + s);
-    }
+  private static void trimLeading0(final String[] dSplit) {
     for (int i = 0; i < 3; i++) {
-      if (split[i].startsWith("0")) {
-        split[i] = split[i].substring(1);
+      if (dSplit[i].startsWith("0")) {
+        dSplit[i] = dSplit[i].substring(1);
       }
-    }
-    try {
-      int hh = Integer.parseInt(split[0]);
-      int mm = Integer.parseInt(split[1]);
-      int ss = Integer.parseInt(split[2]);
-
-      return new java.sql.Time(hh, mm, ss);
-    } catch (NumberFormatException e) {
-      throw new IllegalArgumentException("Invalid escape format: " + s);
     }
   }
 }

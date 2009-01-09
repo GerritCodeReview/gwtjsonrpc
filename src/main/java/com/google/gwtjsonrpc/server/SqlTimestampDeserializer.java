@@ -24,9 +24,14 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 
 import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 public class SqlTimestampDeserializer implements
     JsonDeserializer<java.sql.Timestamp>, JsonSerializer<java.sql.Timestamp> {
+  private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
+
   public java.sql.Timestamp deserialize(final JsonElement json,
       final Type typeOfT, final JsonDeserializationContext context)
       throws JsonParseException {
@@ -41,8 +46,9 @@ public class SqlTimestampDeserializer implements
       throw new JsonParseException("Expected string for timestamp type");
     }
     try {
-      return java.sql.Timestamp.valueOf(p.getAsString());
-    } catch (IllegalArgumentException e) {
+      final long when = newFormat().parse(p.getAsString()).getTime();
+      return new java.sql.Timestamp(when);
+    } catch (ParseException e) {
       throw new JsonParseException("Not a timestamp string");
     }
   }
@@ -52,19 +58,13 @@ public class SqlTimestampDeserializer implements
     if (src == null) {
       return new JsonNull();
     }
-    String s = src.toString();
-    if (s.length() < 29) {
-      // The JRE leaves off trailing 0's, but GWT's Timestamp parser wants
-      // to see them in the nanos field. If our string is too short, add
-      // on trailing 0's to fit the format.
-      //
-      final StringBuilder r = new StringBuilder(29);
-      r.append(s);
-      while (r.length() < 29) {
-        r.append('0');
-      }
-      s = r.toString();
-    }
-    return new JsonPrimitive(s);
+    return new JsonPrimitive(newFormat().format(src) + "000000");
+  }
+
+  private static SimpleDateFormat newFormat() {
+    final SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    f.setTimeZone(UTC);
+    f.setLenient(true);
+    return f;
   }
 }
