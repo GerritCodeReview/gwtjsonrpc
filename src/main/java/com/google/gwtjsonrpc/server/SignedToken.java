@@ -78,7 +78,7 @@ public class SignedToken {
    */
   public SignedToken(final int age, final String keyBase64)
       throws XsrfException {
-    maxAge = age / 5;
+    maxAge = age > 5 ? age / 5 : age;
     key = new SecretKeySpec(decodeBase64(keyBase64), MAC_ALG);
     rng = new SecureRandom();
     tokenLength = 2 * INT_SZ + newMac().getMacLength();
@@ -86,7 +86,7 @@ public class SignedToken {
 
   /** @return maximum age of a signed token, in seconds. */
   public int getMaxAge() {
-    return maxAge * 5;
+    return maxAge > 0 ? maxAge * 5 : maxAge;
   }
 
   /**
@@ -165,7 +165,7 @@ public class SignedToken {
     final int q = decodeInt(in, 0);
     final int c = decodeInt(in, INT_SZ) ^ q;
     final int n = now();
-    if (Math.abs(c - n) > maxAge) {
+    if (maxAge > 0 && Math.abs(c - n) > maxAge) {
       return null;
     }
 
@@ -176,7 +176,7 @@ public class SignedToken {
       return null;
     }
 
-    return new ValidToken(c + (maxAge >> 1) <= n, recvText);
+    return new ValidToken(maxAge > 0 && c + (maxAge >> 1) <= n, recvText);
   }
 
   private void computeToken(final byte[] buf, final String text)
