@@ -326,17 +326,14 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       return;
     }
 
-    if (!call.method.allowCrossSiteRequest()) {
-      try {
-        if (!xsrfValidate(call)) {
-          call.onFailure(new Exception(JsonUtil.ERROR_INVALID_XSRF));
-          return;
-        }
-      } catch (XsrfException e) {
-        getServletContext().log("Unexpected XSRF validation error", e);
-        call.onFailure(new Exception(JsonUtil.ERROR_INVALID_XSRF));
-        return;
-      }
+    try {
+      call.xsrfValid = xsrfValidate(call);
+    } catch (XsrfException e) {
+      getServletContext().log("Unexpected XSRF validation error", e);
+      call.xsrfValid = false;
+    }
+    if (!call.method.allowCrossSiteRequest() && !call.requireXsrfValid()) {
+      return;
     }
 
     preInvoke(call);
