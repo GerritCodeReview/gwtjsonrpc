@@ -27,17 +27,15 @@ import com.google.gwt.user.client.rpc.StatusCodeException;
 class JsonCall<T> implements RequestCallback {
   private final AbstractJsonProxy proxy;
   private final String methodName;
-  private final boolean allowCrossSiteRequest;
   private final String requestParams;
   private final JsonSerializer<T> resultSerializer;
   private final AsyncCallback<T> callback;
   private int attempts;
 
   JsonCall(final AbstractJsonProxy abstractJsonProxy, final String methodName,
-      final boolean allowXsrf, final String requestParams,
-      final JsonSerializer<T> resultSerializer, final AsyncCallback<T> callback) {
+      final String requestParams, final JsonSerializer<T> resultSerializer,
+      final AsyncCallback<T> callback) {
     this.proxy = abstractJsonProxy;
-    this.allowCrossSiteRequest = allowXsrf;
     this.methodName = methodName;
     this.requestParams = requestParams;
     this.resultSerializer = resultSerializer;
@@ -51,7 +49,7 @@ class JsonCall<T> implements RequestCallback {
     body.append("\",\"params\":[");
     body.append(requestParams);
     body.append("]");
-    if (!allowCrossSiteRequest && proxy.xsrfKey != null) {
+    if (proxy.xsrfKey != null) {
       body.append(",\"xsrfKey\":");
       body.append(JsonSerializer.escapeString(proxy.xsrfKey));
     }
@@ -96,12 +94,7 @@ class JsonCall<T> implements RequestCallback {
       if (r.error() != null) {
         final String errmsg = r.error().message();
         if (JsonUtil.ERROR_INVALID_XSRF.equals(errmsg)) {
-          if (allowCrossSiteRequest) {
-            // This wasn't supposed to happen.
-            //
-            JsonUtil.fireOnCallEnd();
-            callback.onFailure(new InvocationException(errmsg));
-          } else if (attempts < 2) {
+          if (attempts < 2) {
             // The XSRF cookie was invalidated (or didn't exist) and the
             // service demands we have one in place to make calls to it.
             // A new token was returned to us, so start the request over.
