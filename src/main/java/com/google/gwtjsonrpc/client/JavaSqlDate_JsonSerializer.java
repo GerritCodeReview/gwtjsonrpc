@@ -31,9 +31,17 @@ public final class JavaSqlDate_JsonSerializer extends
   @Override
   public void printJson(final StringBuilder sb, final java.sql.Date o) {
     sb.append('"');
-    sb.append(o);
+    sb.append(toString(o.getTime()));
     sb.append('"');
   }
+
+  private static native String toString(double utcMilli) /*-{
+      var d = new Date(utcMilli);
+      var p2 = @com.google.gwtjsonrpc.client.JavaSqlTimestamp_JsonSerializer::padTwo(I);
+      return d.getUTCFullYear() + "-" +
+      p2(1 + d.getUTCMonth()) + "-" +
+      p2(d.getUTCDate());
+    }-*/;
 
   protected static java.sql.Date parseDate(final String s) {
     final String[] split = s.split("-");

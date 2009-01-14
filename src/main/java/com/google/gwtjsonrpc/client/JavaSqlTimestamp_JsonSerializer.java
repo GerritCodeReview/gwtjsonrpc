@@ -33,7 +33,7 @@ public final class JavaSqlTimestamp_JsonSerializer extends
   @Override
   public void printJson(final StringBuilder sb, final java.sql.Timestamp o) {
     sb.append('"');
-    sb.append(toString(o));
+    sb.append(toString(o.getTime()));
     sb.append('"');
   }
 
@@ -55,8 +55,8 @@ public final class JavaSqlTimestamp_JsonSerializer extends
     }
   }
 
-  private static native String toString(java.sql.Timestamp ts) /*-{
-      var d = ts.jsdate;
+  private static native String toString(double utcMilli) /*-{
+      var d = new Date(utcMilli);
       var p2 = @com.google.gwtjsonrpc.client.JavaSqlTimestamp_JsonSerializer::padTwo(I);
       var p3 = @com.google.gwtjsonrpc.client.JavaSqlTimestamp_JsonSerializer::padThree(I);
       return d.getUTCFullYear() + "-" +
