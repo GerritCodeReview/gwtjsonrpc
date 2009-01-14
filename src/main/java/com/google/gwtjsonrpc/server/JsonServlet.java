@@ -285,8 +285,19 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       try {
         if ("GET".equals(call.httpRequest.getMethod())) {
           parseGetRequest(call);
+          if (!call.method.allowCrossSiteRequest()) {
+            // Flat out refuse to service a method that requires XSRF
+            // protection when requested over a GET method. Even if we
+            // somehow managed to populate the XSRF token this is a very
+            // insecure request against what must be a secure service method.
+            //
+            call.onFailure(new Exception(JsonUtil.ERROR_INVALID_XSRF));
+            return;
+          }
+
         } else if ("POST".equals(call.httpRequest.getMethod())) {
           parsePostRequest(call);
+
         } else {
           call.httpResponse.setStatus(SC_BAD_REQUEST);
           call.onFailure(new Exception("Unsupported HTTP method"));
