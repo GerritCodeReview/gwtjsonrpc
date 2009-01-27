@@ -225,6 +225,15 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     return (CallType) new ActiveCall(req, resp);
   }
 
+  /** @return maximum size of a JSON request, in bytes */
+  protected int maxRequestSize() {
+    // Our default limit of 1 MB should be sufficient for nearly any
+    // application. It takes a long time to format this on the client
+    // or to upload it.
+    //
+    return 1 * 1024 * 1024;
+  }
+
   /**
    * Invoked just before the service method is invoked.
    * <p>
@@ -429,7 +438,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     return enc.toLowerCase().contains(JsonUtil.JSON_ENC.toLowerCase());
   }
 
-  private static String readBody(final ActiveCall call) throws IOException {
+  private String readBody(final ActiveCall call) throws IOException {
     if (!isBodyJson(call)) {
       throw new JsonParseException("Invalid Request Content-Type");
     }
@@ -443,6 +452,9 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     }
     if (len == 0) {
       throw new JsonParseException("Invalid Request POST Body Required");
+    }
+    if (len > maxRequestSize()) {
+      throw new JsonParseException("Invalid Request POST Body Too Large");
     }
 
     final InputStream in = call.httpRequest.getInputStream();
