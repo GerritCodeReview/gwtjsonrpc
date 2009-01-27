@@ -33,14 +33,19 @@ import com.google.gwtjsonrpc.client.JsonUtil;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.io.Reader;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CodingErrorAction;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -340,7 +345,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
           throw (NoSuchRemoteMethodException) err.getCause();
         }
         call.httpResponse.setStatus(SC_BAD_REQUEST);
-        call.onFailure(new Exception("Error parsing request"));
+        call.onFailure(new Exception("Error parsing request", err));
         return;
       }
     } catch (NoSuchRemoteMethodException err) {
@@ -404,7 +409,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     call.callback = req.getParameter("callback");
   }
 
-  private static boolean isJsonBody(final ActiveCall call) {
+  private static boolean isBodyJson(final ActiveCall call) {
     String type = call.httpRequest.getContentType();
     if (type == null) {
       return false;
@@ -416,34 +421,71 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     return JsonUtil.JSON_TYPE.equals(type);
   }
 
-  private void parsePostRequest(final CallType call)
-      throws UnsupportedEncodingException, IOException {
-    final HttpServletRequest req = call.httpRequest;
-    if (!isJsonBody(call)) {
+  private static boolean isBodyUTF8(final ActiveCall call) {
+    String enc = call.httpRequest.getCharacterEncoding();
+    if (enc == null) {
+      enc = "";
+    }
+    return enc.toLowerCase().contains(JsonUtil.JSON_ENC.toLowerCase());
+  }
+
+  private static String readBody(final ActiveCall call) throws IOException {
+    if (!isBodyJson(call)) {
       throw new JsonParseException("Invalid Request Content-Type");
     }
-    if (call.httpRequest.getContentLength() == 0) {
-      throw new JsonParseException("POST Body Required");
+    if (!isBodyUTF8(call)) {
+      throw new JsonParseException("Invalid Request Character-Encoding");
     }
-    final Reader in = req.getReader();
+
+    final int len = call.httpRequest.getContentLength();
+    if (len < 0) {
+      throw new JsonParseException("Invalid Request Content-Length");
+    }
+    if (len == 0) {
+      throw new JsonParseException("Invalid Request POST Body Required");
+    }
+
+    final InputStream in = call.httpRequest.getInputStream();
+    if (in == null) {
+      throw new JsonParseException("Invalid Request POST Body Required");
+    }
+
     try {
+      final byte[] body = new byte[len];
+      int off = 0;
+      while (off < len) {
+        final int n = in.read(body, off, len - off);
+        if (n <= 0) {
+          throw new JsonParseException("Invalid Request Incomplete Body");
+        }
+        off += n;
+      }
+
+      final CharsetDecoder d = Charset.forName(JsonUtil.JSON_ENC).newDecoder();
+      d.onMalformedInput(CodingErrorAction.REPORT);
+      d.onUnmappableCharacter(CodingErrorAction.REPORT);
       try {
-        parsePostRequest(call, in);
-      } catch (JsonParseException err) {
-        call.method = null;
-        call.params = null;
-        throw err;
+        return d.decode(ByteBuffer.wrap(body)).toString();
+      } catch (CharacterCodingException e) {
+        throw new JsonParseException("Invalid Request Not UTF-8", e);
       }
     } finally {
       in.close();
     }
   }
 
-  private void parsePostRequest(final CallType call, final Reader in) {
-    final GsonBuilder gb = createGsonBuilder();
-    gb.registerTypeAdapter(ActiveCall.class, new CallDeserializer<CallType>(
-        call, this));
-    gb.create().fromJson(in, ActiveCall.class);
+  private void parsePostRequest(final CallType call)
+      throws UnsupportedEncodingException, IOException {
+    try {
+      final GsonBuilder gb = createGsonBuilder();
+      gb.registerTypeAdapter(ActiveCall.class, new CallDeserializer<CallType>(
+          call, this));
+      gb.create().fromJson(readBody(call), ActiveCall.class);
+    } catch (JsonParseException err) {
+      call.method = null;
+      call.params = null;
+      throw err;
+    }
   }
 
   private String formatResult(final ActiveCall call)

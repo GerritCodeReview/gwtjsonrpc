@@ -26,6 +26,12 @@ public class JsonUtil {
   /** Proper Content-Type header value for JSON encoded data. */
   public static final String JSON_TYPE = "application/json";
 
+  /** Character encoding preferred for JSON text. */
+  public static final String JSON_ENC = "UTF-8";
+
+  /** Request Content-Type header for JSON data. */
+  static final String JSON_REQ_CT = JSON_TYPE + "; charset=utf-8";
+
   /** Error message when xsrfKey in request is missing or invalid. */
   public static final String ERROR_INVALID_XSRF = "Invalid xsrfKey in request";
 

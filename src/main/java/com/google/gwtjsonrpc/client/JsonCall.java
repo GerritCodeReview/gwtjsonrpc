@@ -57,7 +57,7 @@ class JsonCall<T> implements RequestCallback {
 
     final RequestBuilder rb;
     rb = new RequestBuilder(RequestBuilder.POST, proxy.url);
-    rb.setHeader("Content-Type", JsonUtil.JSON_TYPE);
+    rb.setHeader("Content-Type", JsonUtil.JSON_REQ_CT);
     rb.setHeader("Accept", JsonUtil.JSON_TYPE);
     rb.setCallback(this);
     rb.setRequestData(body.toString());
