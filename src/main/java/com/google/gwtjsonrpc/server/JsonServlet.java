@@ -254,7 +254,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       final CallType call = createActiveCall(req, resp);
 
       call.noCache();
-      if (!JsonUtil.JSON_TYPE.equals(call.httpRequest.getHeader("Accept"))) {
+      if (!acceptJSON(call)) {
         textError(call, SC_BAD_REQUEST, "Must Accept " + JsonUtil.JSON_TYPE);
         return;
       }
@@ -278,6 +278,36 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     } finally {
       perThreadCall.set(null);
     }
+  }
+
+  private boolean acceptJSON(final CallType call) {
+    final String accepts = call.httpRequest.getHeader("Accept");
+    if (JsonUtil.JSON_TYPE.equals(accepts)) {
+      // Common case, as our JSON client side code sets only this
+      //
+      return true;
+    }
+
+    // The browser may take JSON, but also other types. The popular
+    // Opera browser will add other accept types to our AJAX requests
+    // even though our AJAX handler wouldn't be able to actually use
+    // the data. The common case for these is to start with our own
+    // type, then others, so we special case it before we go through
+    // the expense of splitting the Accepts header up.
+    //
+    if (accepts.startsWith(JsonUtil.JSON_TYPE + ",")) {
+      return true;
+    }
+    final String[] parts = accepts.split("[ ,;][ ,;]*");
+    for (final String p : parts) {
+      if (JsonUtil.JSON_TYPE.equals(p)) {
+        return true;
+      }
+    }
+
+    // Assume the client is busted and won't take JSON back.
+    //
+    return false;
   }
 
   private void doService(final CallType call) throws IOException {
