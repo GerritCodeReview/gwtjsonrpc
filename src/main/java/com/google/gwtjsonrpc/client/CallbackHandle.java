@@ -49,16 +49,19 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
  * response is received will never be invoked.
  */
 public class CallbackHandle<R> {
-  private static final int cbgen = (int) (System.currentTimeMillis() / 1000L);
   private static int callbackId;
 
-  private static String nextFunction() {
-    return "__gwtjsonrpc_callback" + cbgen + callbackId++;
+  static {
+    nativeInit();
+  }
+  
+  private static int nextFunction() {
+    return ++callbackId;
   }
 
   private final JsonSerializer<R> serializer;
   private final AsyncCallback<R> callback;
-  private String functionName;
+  private int functionId;
 
   /**
    * Create a new callback instance.
@@ -87,9 +90,9 @@ public class CallbackHandle<R> {
    * use {@link #cancel()} to explicitly remove this handle.
    */
   public void install() {
-    if (functionName == null) {
-      functionName = nextFunction();
-      nativeInstall(functionName, this);
+    if (functionId == 0) {
+      functionId = nextFunction();
+      nativeInstall(functionId, this);
     }
   }
 
@@ -105,8 +108,8 @@ public class CallbackHandle<R> {
    *         resulting data.
    */
   public String getFunctionName() {
-    assert functionName != null;
-    return functionName;
+    assert functionId > 0;
+    return "__gwtjsonrpc_callbackhandle[" + functionId + "]";
   }
 
   /**
@@ -119,9 +122,9 @@ public class CallbackHandle<R> {
    * result is received.
    */
   public void cancel() {
-    if (functionName != null) {
-      nativeDelete(functionName);
-      functionName = null;
+    if (functionId > 0) {
+      nativeDelete(functionId);
+      functionId = 0;
     }
   }
 
@@ -130,8 +133,13 @@ public class CallbackHandle<R> {
     JsonUtil.invoke(serializer, callback, result);
   }
 
-  private static final native void nativeDelete(String name)/*-{ delete $wnd[name]; }-*/;
+  private static final native void nativeInit()
+  /*-{ $wnd.__gwtjsonrpc_callbackhandle = new Array(); }-*/;
 
-  private static final native void nativeInstall(String name,
-      CallbackHandle<?> imp)/*-{ $wnd[name] = function(r) { imp.@com.google.gwtjsonrpc.client.CallbackHandle::onResult(Ljava/lang/Object;)(r); }; }-*/;
+  private static final native void nativeDelete(int funid)
+  /*-{ delete $wnd.__gwtjsonrpc_callbackhandle[funid]; }-*/;
+
+  private static final native void nativeInstall(int funid,
+      CallbackHandle<?> imp)
+  /*-{ $wnd.__gwtjsonrpc_callbackhandle[funid] = function(r) { imp.@com.google.gwtjsonrpc.client.CallbackHandle::onResult(Ljava/lang/Object;)(r); }; }-*/;
 }
