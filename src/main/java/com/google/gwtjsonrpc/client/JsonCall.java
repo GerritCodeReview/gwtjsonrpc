@@ -20,6 +20,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.StatusCodeException;
@@ -106,7 +107,8 @@ class JsonCall<T> implements RequestCallback {
           }
         } else {
           JsonUtil.fireOnCallEnd();
-          callback.onFailure(new RemoteJsonException(errmsg));
+          callback.onFailure(new RemoteJsonException(errmsg, r.error().code(),
+              new JSONObject(r.error()).get("error")));
         }
         return;
       }
@@ -171,5 +173,7 @@ class JsonCall<T> implements RequestCallback {
     }
 
     final native String message()/*-{ return this.message; }-*/;
+
+    final native int code()/*-{ return this.code; }-*/;
   }
 }
