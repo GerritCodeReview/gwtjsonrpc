@@ -21,7 +21,7 @@ limitations under the License.
   <groupId>gwtjsonrpc</groupId>
   <artifactId>gwtjsonrpc</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.2</version>
+  <version>1.0.3-SNAPSHOT</version>
   <name>gwtjsonrpc</name>
   <description>JSON-RPC 1.1 for GWT (Google Web Toolkit)</description>
   <url>http://android.git.kernel.org/?p=tools/gwtjsonrpc.git</url>
