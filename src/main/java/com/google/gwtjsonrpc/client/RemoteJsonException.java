@@ -14,12 +14,7 @@
 
 package com.google.gwtjsonrpc.client;
 
-import com.google.gwt.json.client.JSONNull;
-import com.google.gwt.json.client.JSONNumber;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * Exception given to {@link AsyncCallback#onFailure(Throwable)}.

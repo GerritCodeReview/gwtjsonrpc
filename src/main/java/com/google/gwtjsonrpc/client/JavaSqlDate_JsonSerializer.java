@@ -43,6 +43,7 @@ public final class JavaSqlDate_JsonSerializer extends
       p2(d.getUTCDate());
     }-*/;
 
+  @SuppressWarnings("deprecation")
   protected static java.sql.Date parseDate(final String s) {
     final String[] split = s.split("-");
     if (split.length != 3) {

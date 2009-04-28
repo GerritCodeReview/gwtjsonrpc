@@ -25,9 +25,9 @@ import java.util.HashSet;
  * {@link HashSet}. When serializing to JSON any Set is permitted.
  */
 public class SetSerializer<T> extends JsonSerializer<java.util.Set<T>> {
-  private final JsonSerializer serializer;
+  private final JsonSerializer<T> serializer;
 
-  public SetSerializer(final JsonSerializer s) {
+  public SetSerializer(final JsonSerializer<T> s) {
     serializer = s;
   }
 

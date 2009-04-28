@@ -30,9 +30,9 @@ import java.util.Map;
  */
 public class StringMapSerializer<V> extends
     JsonSerializer<java.util.Map<String, V>> {
-  private final JsonSerializer valueSerializer;
+  private final JsonSerializer<V> valueSerializer;
 
-  public StringMapSerializer(final JsonSerializer v) {
+  public StringMapSerializer(final JsonSerializer<V> v) {
     valueSerializer = v;
   }
 
@@ -74,7 +74,7 @@ public class StringMapSerializer<V> extends
     return r;
   }
 
-  private native <V> void copy(Map<String, V> r, JavaScriptObject jsObject) /*-{
+  private native void copy(Map<String, V> r, JavaScriptObject jsObject) /*-{
     for (var key in jsObject) {
       this.@com.google.gwtjsonrpc.client.StringMapSerializer::copyOne(Ljava/util/Map;Ljava/lang/String;Ljava/lang/Object;)(r, key, jsObject[key]);
     }
