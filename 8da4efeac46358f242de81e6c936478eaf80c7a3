@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAQX///wM\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JavaSqlDate_JsonSerializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-04-28T14:37:10Z",
+      "side": 1,
+      "message": "If these are using deprecated calls, what does GWT 1.6 suggest we replace them with?  I wonder if its just better to upgrade the code now vs. tagging a deprecation warning away and needing to do the upgrade later.",
+      "revId": "8da4efeac46358f242de81e6c936478eaf80c7a3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAQX///vs\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/ListSerializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-04-28T14:37:10Z",
+      "side": 1,
+      "message": "I think I would have preferred to see these type annotations fixes in their own commit, as they are quite simple and are unrelated to fixing imports in the other classes, or removing dead code, etc.",
+      "revId": "8da4efeac46358f242de81e6c936478eaf80c7a3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAQX///wI\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/SerializerCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-04-28T14:37:10Z",
+      "side": 1,
+      "message": "If its not used, why not just delete it?",
+      "revId": "8da4efeac46358f242de81e6c936478eaf80c7a3",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
