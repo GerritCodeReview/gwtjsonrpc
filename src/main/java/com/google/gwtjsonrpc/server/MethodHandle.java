@@ -14,7 +14,6 @@
 
 package com.google.gwtjsonrpc.server;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtjsonrpc.client.AllowCrossSiteRequest;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
 
