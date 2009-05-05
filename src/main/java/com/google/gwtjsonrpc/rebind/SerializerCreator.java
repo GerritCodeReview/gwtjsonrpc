@@ -23,7 +23,6 @@ import com.google.gwt.core.ext.typeinfo.JField;
 import com.google.gwt.core.ext.typeinfo.JPackage;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwtjsonrpc.client.EnumSerializer;
@@ -101,7 +100,6 @@ class SerializerCreator {
     recursivelyCreateSerializers(logger, targetType);
 
     this.targetType = targetType;
-    final TypeOracle typeOracle = context.getTypeOracle();
     final SourceWriter srcWriter = getSourceWriter(logger, context);
     final String sn = getSerializerQualifiedName(targetType);
     if (!generatedSerializers.containsKey(targetType.getQualifiedSourceName())) {
