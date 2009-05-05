@@ -31,10 +31,10 @@ import java.util.Map;
  */
 public class ObjectMapSerializer<K, V> extends
     JsonSerializer<java.util.Map<K, V>> {
-  private final JsonSerializer keySerializer;
-  private final JsonSerializer valueSerializer;
+  private final JsonSerializer<K> keySerializer;
+  private final JsonSerializer<V> valueSerializer;
 
-  public ObjectMapSerializer(final JsonSerializer k, final JsonSerializer v) {
+  public ObjectMapSerializer(final JsonSerializer<K> k, final JsonSerializer<V> v) {
     keySerializer = k;
     valueSerializer = v;
   }

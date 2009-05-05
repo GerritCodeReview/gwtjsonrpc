@@ -22,9 +22,9 @@ import com.google.gwt.core.client.JavaScriptObject;
  * Primitive array types (like <code>int[]</code>) are not supported.
  */
 public class ObjectArraySerializer<T> {
-  private final JsonSerializer serializer;
+  private final JsonSerializer<T> serializer;
 
-  public ObjectArraySerializer(final JsonSerializer s) {
+  public ObjectArraySerializer(final JsonSerializer<T> s) {
     serializer = s;
   }
 

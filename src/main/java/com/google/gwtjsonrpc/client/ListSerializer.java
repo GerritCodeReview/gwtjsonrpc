@@ -25,9 +25,9 @@ import java.util.ArrayList;
  * {@link ArrayList}. When serializing to JSON any List is permitted.
  */
 public class ListSerializer<T> extends JsonSerializer<java.util.List<T>> {
-  private final JsonSerializer serializer;
+  private final JsonSerializer<T> serializer;
 
-  public ListSerializer(final JsonSerializer s) {
+  public ListSerializer(final JsonSerializer<T> s) {
     serializer = s;
   }
 
