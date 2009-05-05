@@ -14,7 +14,6 @@
 
 package com.google.gwtjsonrpc.client;
 
-import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
  * Marker interface for JSON based RPC.
