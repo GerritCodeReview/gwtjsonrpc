@@ -127,7 +127,7 @@ class SerializerCreator {
 
   private void recursivelyCreateSerializers(final TreeLogger logger,
       final JType targetType) throws UnableToCompleteException {
-    if (targetType.isPrimitive() != null) {
+    if (targetType.isPrimitive() != null || isBoxedPrimitive(targetType)) {
       return;
     }
 
@@ -143,7 +143,7 @@ class SerializerCreator {
 
   private void ensureSerializer(final TreeLogger logger, final JType type)
       throws UnableToCompleteException {
-    if (isJsonPrimitive(type)) {
+    if (isJsonPrimitive(type) || isBoxedPrimitive(type)) {
       return;
     }
 
@@ -187,7 +187,7 @@ class SerializerCreator {
       return;
     }
 
-    if (isJsonPrimitive(type)) {
+    if (isJsonPrimitive(type) || isBoxedPrimitive(type)) {
       return;
     }
 
@@ -365,7 +365,7 @@ class SerializerCreator {
         w.println("}-*/;");
       }
 
-      if (f.getType() == JPrimitiveType.CHAR) {
+      if (f.getType() == JPrimitiveType.CHAR || isBoxedCharacter(f.getType())) {
         w.print("private static final native String");
         w.print(" jsonGet0_" + f.getName());
         w.print("(final JavaScriptObject instance)");
@@ -377,7 +377,8 @@ class SerializerCreator {
         w.outdent();
         w.println("}-*/;");
 
-        w.print("private static final char");
+        w.print("private static final ");
+        w.print(f.getType() == JPrimitiveType.CHAR ? "char" : "Character");
         w.print(" jsonGet_" + f.getName());
         w.print("(JavaScriptObject instance)");
         w.println(" {");
@@ -386,7 +387,8 @@ class SerializerCreator {
         w.print(JsonSerializer.class.getName());
         w.print(".toChar(");
         w.print("jsonGet0_" + f.getName());
-        w.println("(instance));");
+        w.print("(instance)");
+        w.println(");");
         w.outdent();
         w.println("}");
       } else {
@@ -395,6 +397,8 @@ class SerializerCreator {
           w.print("JavaScriptObject");
         } else if (isJsonPrimitive(f.getType())) {
           w.print(f.getType().getQualifiedSourceName());
+        } else if (isBoxedPrimitive(f.getType())) {
+          w.print(boxedTypeToPrimitiveTypeName(f.getType()));
         } else {
           w.print("Object");
         }
@@ -458,7 +462,7 @@ class SerializerCreator {
       }
 
       final String doname = "sb.append(\"\\\"" + f.getName() + "\\\":\");";
-      if (f.getType() == JPrimitiveType.CHAR) {
+      if (f.getType() == JPrimitiveType.CHAR || isBoxedCharacter(f.getType())) {
         w.println(docomma);
         w.println(doname);
         w.println("sb.append(\"\\\"\");");
@@ -475,7 +479,7 @@ class SerializerCreator {
         w.outdent();
         w.println("}");
         w.println();
-      } else if (isJsonPrimitive(f.getType())) {
+      } else if (isJsonPrimitive(f.getType()) || isBoxedPrimitive(f.getType())) {
         w.println(docomma);
         w.println(doname);
         w.println("sb.append(" + doget + ");");
@@ -577,6 +581,14 @@ class SerializerCreator {
         w.print(doset1);
         w.println(";");
 
+      } else if (isBoxedPrimitive(f.getType())) {
+        w.print(doset0);
+        w.print("new " + f.getType().getQualifiedSourceName() + "(");
+        w.print(doget);
+        w.print(")");
+        w.print(doset1);
+        w.println(";");
+
       } else {
         w.print(doset0);
         if (needsTypeParameter(f.getType())) {
@@ -597,6 +609,34 @@ class SerializerCreator {
 
   static boolean isJsonPrimitive(final JType t) {
     return t.isPrimitive() != null || isJsonString(t);
+  }
+
+  static boolean isBoxedPrimitive(final JType t) {
+    final String qsn = t.getQualifiedSourceName();
+    return qsn.equals(Boolean.class.getCanonicalName())
+        || qsn.equals(Byte.class.getCanonicalName()) || isBoxedCharacter(t)
+        || qsn.equals(Double.class.getCanonicalName())
+        || qsn.equals(Float.class.getCanonicalName())
+        || qsn.equals(Integer.class.getCanonicalName())
+        || qsn.equals(Short.class.getCanonicalName());
+  }
+
+  static boolean isBoxedCharacter(JType t) {
+    return t.getQualifiedSourceName()
+        .equals(Character.class.getCanonicalName());
+  }
+
+  private String boxedTypeToPrimitiveTypeName(JType t) {
+    final String qsn = t.getQualifiedSourceName();
+    if (qsn.equals(Boolean.class.getCanonicalName())) return "boolean";
+    if (qsn.equals(Byte.class.getCanonicalName())) return "byte";
+    if (qsn.equals(Character.class.getCanonicalName()))
+      return "java.lang.String";
+    if (qsn.equals(Double.class.getCanonicalName())) return "double";
+    if (qsn.equals(Float.class.getCanonicalName())) return "float";
+    if (qsn.equals(Integer.class.getCanonicalName())) return "int";
+    if (qsn.equals(Short.class.getCanonicalName())) return "short";
+    throw new IllegalArgumentException(t + " is not a boxed type");
   }
 
   static boolean isJsonString(final JType t) {

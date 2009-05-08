@@ -143,7 +143,7 @@ class ProxyCreator {
             logger.branch(TreeLogger.DEBUG, m.getName() + ", parameter "
                 + p.getName());
         serializerCreator.checkCanSerialize(branch, p.getType());
-        if (p.getType().isPrimitive() == null) {
+        if (p.getType().isPrimitive() == null && !SerializerCreator.isBoxedPrimitive(p.getType())) {
           serializerCreator.create((JClassType) p.getType(), branch);
         }
       }
@@ -151,8 +151,13 @@ class ProxyCreator {
       final TreeLogger branch =
           logger.branch(TreeLogger.DEBUG, m.getName() + ", result "
               + resultType.getQualifiedSourceName());
-      serializerCreator.checkCanSerialize(branch, resultType);
-      serializerCreator.create(resultType, branch);
+      // For now, extra-check on result deserialisation
+      if (resultType.isArray() != null || SerializerCreator.isJsonPrimitive(resultType) || SerializerCreator.isBoxedPrimitive(resultType))
+        invalid(branch, "(Boxed)Primitives and Arrays are not allowed as result values");
+      else {
+        serializerCreator.checkCanSerialize(branch, resultType);
+        serializerCreator.create(resultType, branch);
+      }
     }
   }
 
@@ -312,12 +317,12 @@ class ProxyCreator {
 
         final JType pType = params[i].getType();
         final String pName = params[i].getName();
-        if (pType == JPrimitiveType.CHAR) {
+        if (pType == JPrimitiveType.CHAR || SerializerCreator.isBoxedCharacter(pType)) {
           w.println(reqData + ".append(\"\\\"\");");
           w.println(reqData + ".append(" + JsonSerializer.class.getSimpleName()
               + ".escapeChar(" + pName + "));");
           w.println(reqData + ".append(\"\\\"\");");
-        } else if (SerializerCreator.isJsonPrimitive(pType)
+        } else if ((SerializerCreator.isJsonPrimitive(pType) || SerializerCreator.isBoxedPrimitive(pType))
             && !SerializerCreator.isJsonString(pType)) {
           w.println(reqData + ".append(" + pName + ");");
         } else {
