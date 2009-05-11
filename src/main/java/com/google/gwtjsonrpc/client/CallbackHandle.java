@@ -14,6 +14,7 @@
 
 package com.google.gwtjsonrpc.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 /**
@@ -59,7 +60,7 @@ public class CallbackHandle<R> {
     return ++callbackId;
   }
 
-  private final JsonSerializer<R> serializer;
+  private final ResultDeserializer<R> deserializer;
   private final AsyncCallback<R> callback;
   private int functionId;
 
@@ -73,8 +74,9 @@ public class CallbackHandle<R> {
    * @param ac the application callback function to supply the result to. Only
    *        <code>onSuccess</code> will be invoked.
    */
-  public CallbackHandle(final JsonSerializer<R> ser, final AsyncCallback<R> ac) {
-    serializer = ser;
+  public CallbackHandle(final ResultDeserializer<R> ser,
+      final AsyncCallback<R> ac) {
+    deserializer = ser;
     callback = ac;
   }
 
@@ -128,11 +130,11 @@ public class CallbackHandle<R> {
     }
   }
 
-  final void onResult(final Object result) {
+  final void onResult(final JavaScriptObject rpcResult) {
     cancel();
-    JsonUtil.invoke(serializer, callback, result);
+    JsonUtil.invoke(deserializer, callback, rpcResult);
   }
-
+  
   private static final native void nativeInit()
   /*-{ $wnd.__gwtjsonrpc_callbackhandle = new Array(); }-*/;
 
@@ -141,5 +143,5 @@ public class CallbackHandle<R> {
 
   private static final native void nativeInstall(int funid,
       CallbackHandle<?> imp)
-  /*-{ $wnd.__gwtjsonrpc_callbackhandle[funid] = function(r) { imp.@com.google.gwtjsonrpc.client.CallbackHandle::onResult(Ljava/lang/Object;)(r); }; }-*/;
+  /*-{ $wnd.__gwtjsonrpc_callbackhandle[funid] = function(r) { imp.@com.google.gwtjsonrpc.client.CallbackHandle::onResult(Ljava/lang/Object;)({result:r}); }; }-*/;
 }

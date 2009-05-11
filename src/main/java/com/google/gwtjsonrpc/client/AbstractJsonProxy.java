@@ -14,6 +14,7 @@
 
 package com.google.gwtjsonrpc.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
@@ -48,9 +49,9 @@ public abstract class AbstractJsonProxy implements ServiceDefTarget {
     new JsonCall<T>(this, methodName, reqData, ser, cb).send();
   }
 
-  protected static native Object hostPageCacheGetOnce(String name)
-  /*-{ var r = $wnd[name];$wnd[name] = null;return r; }-*/;
+  protected static native JavaScriptObject hostPageCacheGetOnce(String name)
+  /*-{ var r = $wnd[name];$wnd[name] = null;return r ? {result: r} : null; }-*/;
 
-  protected static native Object hostPageCacheGetMany(String name)
-  /*-{ return $wnd[name]; }-*/;
+  protected static native JavaScriptObject hostPageCacheGetMany(String name)
+  /*-{ return $wnd[name] ? {result : $wnd[name]} : null; }-*/;
 }

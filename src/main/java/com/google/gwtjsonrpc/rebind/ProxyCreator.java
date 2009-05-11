@@ -14,6 +14,7 @@
 
 package com.google.gwtjsonrpc.rebind;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -154,16 +155,6 @@ class ProxyCreator {
       final TreeLogger branch =
           logger.branch(TreeLogger.DEBUG, m.getName() + ", result "
               + resultType.getQualifiedSourceName());
-      // For now, extra-check on result deserialisation using CbHandles or HPC
-      if (returnsCallbackHandle(m)
-          || m.getAnnotation(HostPageCache.class) != null) {
-        if (resultType.isArray() != null
-            || SerializerCreator.isJsonPrimitive(resultType)
-            || SerializerCreator.isBoxedPrimitive(resultType))
-          invalid(branch, "GwtJsonRpc does not support (Boxed)Primitives or "
-              + "Arrays as result values using a CallbackHandle "
-              + "or HostPageCache");
-      }
       serializerCreator.checkCanSerialize(branch, resultType);
       if (resultType.isArray() != null) {
         // Arrays need a special deserializer
@@ -202,6 +193,7 @@ class ProxyCreator {
     cf = new ClassSourceFileComposerFactory(pkgName, getProxySimpleName());
     cf.addImport(AbstractJsonProxy.class.getCanonicalName());
     cf.addImport(JsonSerializer.class.getCanonicalName());
+    cf.addImport(JavaScriptObject.class.getCanonicalName());
     cf.setSuperclass(AbstractJsonProxy.class.getSimpleName());
     cf.addImplementedInterface(svcInf.getErasedType().getQualifiedSourceName());
     return cf.createSourceWriter(ctx, pw);
@@ -279,7 +271,6 @@ class ProxyCreator {
     w.println(") {");
     w.indent();
 
-    // TODO: add support for non-object return values with a CallbackHandle
     if (returnsCallbackHandle(method)) {
       w.print("return new ");
       w.print(CallbackHandle.class.getName());
@@ -287,7 +278,7 @@ class ProxyCreator {
       if (SerializerCreator.needsTypeParameter(resultType)) {
         w.print(serializerFields[params.length - 1]);
       } else {
-        serializerCreator.generateSerializerReference(resultType, w);
+        deserializerCreator.generateDeserializerReference(resultType, w);
       }
       w.print(", " + callback.getName());
       w.println(");");
@@ -296,10 +287,9 @@ class ProxyCreator {
       return;
     }
 
-    // TODO: add support for non-object return values using HostPageCache
     if (hpc != null) {
       final String objName = nameFactory.createName("cached");
-      w.print("final Object " + objName + " = ");
+      w.print("final JavaScriptObject " + objName + " = ");
       w.print(AbstractJsonProxy.class.getName());
       w.print(".");
       w.print(hpc.once() ? "hostPageCacheGetOnce" : "hostPageCacheGetMany");
@@ -311,7 +301,7 @@ class ProxyCreator {
       if (SerializerCreator.needsTypeParameter(resultType)) {
         w.print(serializerFields[params.length - 1]);
       } else {
-        serializerCreator.generateSerializerReference(resultType, w);
+        deserializerCreator.generateDeserializerReference(resultType, w);
       }
       w.print(", " + callback.getName());
       w.print(", " + objName);
