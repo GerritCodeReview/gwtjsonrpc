@@ -35,6 +35,7 @@ import com.google.gwtjsonrpc.client.ListSerializer;
 import com.google.gwtjsonrpc.client.ObjectArraySerializer;
 import com.google.gwtjsonrpc.client.ObjectMapSerializer;
 import com.google.gwtjsonrpc.client.ObjectSerializer;
+import com.google.gwtjsonrpc.client.PrimitiveArraySerializer;
 import com.google.gwtjsonrpc.client.SetSerializer;
 import com.google.gwtjsonrpc.client.StringMapSerializer;
 
@@ -192,10 +193,16 @@ class SerializerCreator {
     }
 
     if (type.isArray() != null) {
-      if (type.isArray().getComponentType().isPrimitive() != null) {
-        logger.log(TreeLogger.ERROR,
-            "Primitive array not supported in JSON encoding", null);
-        throw new UnableToCompleteException();
+      final JType leafType = type.isArray().getLeafType();
+      if (leafType.isPrimitive() != null || isBoxedPrimitive(leafType)) {
+        if (type.isArray().getRank() != 1) {
+          logger.log(TreeLogger.ERROR, "gwtjsonrpc does not support "
+              + "(de)serializing of multi-dimensional arrays of primitves");
+          // To work around this, we would need to generate serializers for
+          // them, this can be considered a todo
+          throw new UnableToCompleteException();
+        } else // Rank 1 arrays work fine.
+          return;
       }
       checkCanSerialize(logger, type.isArray().getComponentType());
       return;
@@ -240,8 +247,13 @@ class SerializerCreator {
 
   String serializerFor(final JType t) {
     if (t.isArray() != null) {
-      return ObjectArraySerializer.class.getCanonicalName() + "<"
-          + t.isArray().getComponentType().getQualifiedSourceName() + ">";
+      final JType componentType = t.isArray().getComponentType();
+      if (componentType.isPrimitive() != null
+          || isBoxedPrimitive(componentType))
+        return PrimitiveArraySerializer.class.getCanonicalName();
+      else
+        return ObjectArraySerializer.class.getCanonicalName() + "<"
+            + componentType.getQualifiedSourceName() + ">";
     }
 
     if (isStringMap(t)) {
@@ -298,9 +310,16 @@ class SerializerCreator {
 
   void generateSerializerReference(final JType type, final SourceWriter w) {
     if (type.isArray() != null) {
-      w.print("new " + serializerFor(type) + "(");
-      generateSerializerReference(type.isArray().getComponentType(), w);
-      w.print(")");
+      final JType componentType = type.isArray().getComponentType();
+      if (componentType.isPrimitive() != null
+          || isBoxedPrimitive(componentType)) {
+        w.print(PrimitiveArraySerializer.class.getCanonicalName());
+        w.print(".INSTANCE");
+      } else {
+        w.print("new " + serializerFor(type) + "(");
+        generateSerializerReference(componentType, w);
+        w.print(")");
+      }
 
     } else if (type.isParameterized() != null) {
       w.print("new " + serializerFor(type) + "(");
@@ -666,7 +685,8 @@ class SerializerCreator {
       cf.setSuperclass(getSerializerQualifiedName(targetType.getSuperclass()));
     } else {
       cf.addImport(ObjectSerializer.class.getCanonicalName());
-      cf.setSuperclass(ObjectSerializer.class.getSimpleName());
+      cf.setSuperclass(ObjectSerializer.class.getSimpleName() + "<"
+          + targetType.getQualifiedSourceName() + ">");
     }
     return cf.createSourceWriter(ctx, pw);
   }
