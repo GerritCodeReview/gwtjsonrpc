@@ -1,4 +1,4 @@
-// Copyright 2008 Google Inc.
+// Copyright 2009 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,26 +16,13 @@ package com.google.gwtjsonrpc.client;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-public class VoidResult_JsonSerializer extends JsonSerializer<VoidResult>
-    implements ResultDeserializer<VoidResult> {
-  public static final VoidResult_JsonSerializer INSTANCE =
-      new VoidResult_JsonSerializer();
-
-  private VoidResult_JsonSerializer() {
-  }
-
-  @Override
-  public void printJson(final StringBuilder sb, final VoidResult o) {
-    sb.append("{}");
-  }
-
-  @Override
-  public VoidResult fromJson(final Object o) {
-    return VoidResult.INSTANCE;
-  }
-
-  @Override
-  public VoidResult fromResult(JavaScriptObject responseObject) {
-    return VoidResult.INSTANCE;
-  }
+/**
+ * Inteface class for deserializers of results from JSON RPC calls. Since
+ * primitive and array results need to be handled specially, not all results can
+ * be deserialized using the standard object serializers.
+ * 
+ * @param <T> the result type of an RPC call.
+ */
+public interface ResultDeserializer<T> {
+  public T fromResult(JavaScriptObject responseObject);
 }

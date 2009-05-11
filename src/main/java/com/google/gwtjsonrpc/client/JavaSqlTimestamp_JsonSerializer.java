@@ -14,11 +14,14 @@
 
 package com.google.gwtjsonrpc.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
+import java.sql.Timestamp;
 import java.util.Date;
 
 /** Default serialization for a {@link java.sql.Timestamp}. */
 public final class JavaSqlTimestamp_JsonSerializer extends
-    JsonSerializer<java.sql.Timestamp> {
+    JsonSerializer<java.sql.Timestamp> implements ResultDeserializer<java.sql.Timestamp> {
   public static final JavaSqlTimestamp_JsonSerializer INSTANCE =
       new JavaSqlTimestamp_JsonSerializer();
 
@@ -119,5 +122,10 @@ public final class JavaSqlTimestamp_JsonSerializer extends
         dSplit[i] = dSplit[i].substring(1);
       }
     }
+  }
+
+  @Override
+  public Timestamp fromResult(JavaScriptObject responseObject) {
+    return fromJson(PrimitiveResultDeserializers.stringResult(responseObject));
   }
 }

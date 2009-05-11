@@ -16,25 +16,18 @@ package com.google.gwtjsonrpc.client;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
-/** Default serialization for a String. */
-public final class JavaLangString_JsonSerializer extends
-    JsonSerializer<java.lang.String> implements
-    ResultDeserializer<java.lang.String> {
-  public static final JavaLangString_JsonSerializer INSTANCE =
-      new JavaLangString_JsonSerializer();
+/**
+ * Base class for the {@link PrimitiveArrayResultDeserializer} and generated
+ * object array result deserializers.
+ */
+public abstract class ArrayResultDeserializer {
+  protected static native JavaScriptObject getResult(JavaScriptObject responseObject)
+  /*-{
+    return responseObject.result;
+  }-*/;
 
-  @Override
-  public java.lang.String fromJson(final Object o) {
-    return (String) o;
-  }
-
-  @Override
-  public void printJson(final StringBuilder sb, final java.lang.String o) {
-    sb.append(escapeString(o));
-  }
-
-  @Override
-  public String fromResult(JavaScriptObject responseObject) {
-    return PrimitiveResultDeserializers.stringResult(responseObject);
-  }
+  protected static native int getResultSize(JavaScriptObject responseObject)
+  /*-{
+    return responseObject.result.length;
+  }-*/;
 }

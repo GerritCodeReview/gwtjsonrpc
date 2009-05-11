@@ -15,6 +15,7 @@
 package com.google.gwtjsonrpc.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
@@ -78,6 +79,20 @@ public class JsonUtil {
     }
   }
 
+  public static <T> void invoke(final ResultDeserializer<T> resultDeserializer,
+      final AsyncCallback<T> callback, final JavaScriptObject rpcResult) {
+    final T result;
+    try {
+      result = resultDeserializer.fromResult(rpcResult);
+    } catch (RuntimeException e) {
+      callback.onFailure(new InvocationException("Invalid JSON Response", e));
+      return;
+    }
+    callback.onSuccess(result);
+  }
+
+  // TODO: remove when the CallbackHandle supports primitive 'return' types?
+  // It is not called from anywhere in gwtjsonrpc, but it is a public method
   public static <T> void invoke(final JsonSerializer<T> resultSerializer,
       final AsyncCallback<T> callback, final Object encoded) {
     final T resobj;

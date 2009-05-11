@@ -14,11 +14,13 @@
 
 package com.google.gwtjsonrpc.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 import java.util.Date;
 
 /** Default serialization for a {@link java.util.Date}. */
 public final class JavaUtilDate_JsonSerializer extends
-    JsonSerializer<java.util.Date> {
+    JsonSerializer<java.util.Date> implements ResultDeserializer<java.util.Date>{
   public static final JavaUtilDate_JsonSerializer INSTANCE =
       new JavaUtilDate_JsonSerializer();
 
@@ -40,5 +42,10 @@ public final class JavaUtilDate_JsonSerializer extends
   @SuppressWarnings("deprecation")
   private static Date parse(final String o) {
     return new java.util.Date(o);
+  }
+
+  @Override
+  public Date fromResult(JavaScriptObject responseObject) {
+    return fromJson(PrimitiveResultDeserializers.stringResult(responseObject));
   }
 }

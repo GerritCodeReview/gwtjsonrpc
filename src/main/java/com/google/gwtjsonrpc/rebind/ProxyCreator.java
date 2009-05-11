@@ -45,6 +45,7 @@ class ProxyCreator {
   private JClassType svcInf;
   private JClassType asyncCallbackClass;
   private SerializerCreator serializerCreator;
+  private ResultDeserializerCreator deserializerCreator;
   private int instanceField;
 
   ProxyCreator(final JClassType remoteService) {
@@ -54,6 +55,7 @@ class ProxyCreator {
   String create(final TreeLogger logger, final GeneratorContext context)
       throws UnableToCompleteException {
     serializerCreator = new SerializerCreator(context);
+    deserializerCreator = new ResultDeserializerCreator(context, serializerCreator);
     final TypeOracle typeOracle = context.getTypeOracle();
     try {
       asyncCallbackClass = typeOracle.getType(AsyncCallback.class.getName());
@@ -143,7 +145,8 @@ class ProxyCreator {
             logger.branch(TreeLogger.DEBUG, m.getName() + ", parameter "
                 + p.getName());
         serializerCreator.checkCanSerialize(branch, p.getType());
-        if (p.getType().isPrimitive() == null && !SerializerCreator.isBoxedPrimitive(p.getType())) {
+        if (p.getType().isPrimitive() == null
+            && !SerializerCreator.isBoxedPrimitive(p.getType())) {
           serializerCreator.create((JClassType) p.getType(), branch);
         }
       }
@@ -151,13 +154,25 @@ class ProxyCreator {
       final TreeLogger branch =
           logger.branch(TreeLogger.DEBUG, m.getName() + ", result "
               + resultType.getQualifiedSourceName());
-      // For now, extra-check on result deserialisation
-      if (resultType.isArray() != null || SerializerCreator.isJsonPrimitive(resultType) || SerializerCreator.isBoxedPrimitive(resultType))
-        invalid(branch, "(Boxed)Primitives and Arrays are not allowed as result values");
-      else {
-        serializerCreator.checkCanSerialize(branch, resultType);
-        serializerCreator.create(resultType, branch);
+      // For now, extra-check on result deserialisation using CbHandles or HPC
+      if (returnsCallbackHandle(m)
+          || m.getAnnotation(HostPageCache.class) != null) {
+        if (resultType.isArray() != null
+            || SerializerCreator.isJsonPrimitive(resultType)
+            || SerializerCreator.isBoxedPrimitive(resultType))
+          invalid(branch, "GwtJsonRpc does not support (Boxed)Primitives or "
+              + "Arrays as result values using a CallbackHandle "
+              + "or HostPageCache");
       }
+      serializerCreator.checkCanSerialize(branch, resultType);
+      if (resultType.isArray() != null) {
+        // Arrays need a special deserializer
+        deserializerCreator.create(branch, resultType.isArray());
+      } else if (resultType.isPrimitive() == null
+          && !SerializerCreator.isBoxedPrimitive(resultType))
+      // Non primitives get deserialized by their normal serializer
+        serializerCreator.create(resultType, branch);
+      // (Boxed)Primitives are left, they are handled specially
     }
   }
 
@@ -226,7 +241,7 @@ class ProxyCreator {
         w.println(";");
       }
     }
-    if (SerializerCreator.needsTypeParameter(resultType)) {
+    if (resultType.isParameterized() != null) {
       serializerFields[params.length - 1] = "serializer_" + instanceField++;
       w.print("private static final ");
       w.print(JsonSerializer.class.getName());
@@ -264,6 +279,7 @@ class ProxyCreator {
     w.println(") {");
     w.indent();
 
+    // TODO: add support for non-object return values with a CallbackHandle
     if (returnsCallbackHandle(method)) {
       w.print("return new ");
       w.print(CallbackHandle.class.getName());
@@ -280,6 +296,7 @@ class ProxyCreator {
       return;
     }
 
+    // TODO: add support for non-object return values using HostPageCache
     if (hpc != null) {
       final String objName = nameFactory.createName("cached");
       w.print("final Object " + objName + " = ");
@@ -320,12 +337,14 @@ class ProxyCreator {
 
         final JType pType = params[i].getType();
         final String pName = params[i].getName();
-        if (pType == JPrimitiveType.CHAR || SerializerCreator.isBoxedCharacter(pType)) {
+        if (pType == JPrimitiveType.CHAR
+            || SerializerCreator.isBoxedCharacter(pType)) {
           w.println(reqData + ".append(\"\\\"\");");
           w.println(reqData + ".append(" + JsonSerializer.class.getSimpleName()
               + ".escapeChar(" + pName + "));");
           w.println(reqData + ".append(\"\\\"\");");
-        } else if ((SerializerCreator.isJsonPrimitive(pType) || SerializerCreator.isBoxedPrimitive(pType))
+        } else if ((SerializerCreator.isJsonPrimitive(pType) || SerializerCreator
+            .isBoxedPrimitive(pType))
             && !SerializerCreator.isJsonString(pType)) {
           w.println(reqData + ".append(" + pName + ");");
         } else {
@@ -353,10 +372,10 @@ class ProxyCreator {
     w.print("\"" + method.getName() + "\"");
     w.print(", " + reqDataStr);
     w.print(", ");
-    if (SerializerCreator.needsTypeParameter(resultType)) {
+    if (resultType.isParameterized() != null) {
       w.print(serializerFields[params.length - 1]);
     } else {
-      serializerCreator.generateSerializerReference(resultType, w);
+      deserializerCreator.generateDeserializerReference(resultType, w);
     }
     w.print(", " + callback.getName());
     w.println(");");
