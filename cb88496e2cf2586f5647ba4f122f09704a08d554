@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAARX////U\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/PrimitiveArraySerializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T14:25:24Z",
+      "side": 1,
+      "message": "Please add our standard copyright header.",
+      "revId": "cb88496e2cf2586f5647ba4f122f09704a08d554",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX////Q\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/PrimitiveArraySerializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 211,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T14:25:24Z",
+      "side": 1,
+      "message": "Please remove unnecessary leading indentation.",
+      "revId": "cb88496e2cf2586f5647ba4f122f09704a08d554",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
