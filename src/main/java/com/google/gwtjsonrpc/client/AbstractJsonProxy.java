@@ -40,7 +40,7 @@ public abstract class AbstractJsonProxy implements ServiceDefTarget {
   }
 
   protected <T> void doInvoke(final String methodName, final String reqData,
-      final JsonSerializer<T> ser, final AsyncCallback<T> cb)
+      final ResultDeserializer<T> ser, final AsyncCallback<T> cb)
       throws InvocationException {
     if (url == null) {
       throw new NoServiceEntryPointSpecifiedException();

@@ -14,9 +14,13 @@
 
 package com.google.gwtjsonrpc.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
+import java.sql.Date;
+
 /** Default serialization for a {@link java.sql.Date}. */
 public final class JavaSqlDate_JsonSerializer extends
-    JsonSerializer<java.sql.Date> {
+    JsonSerializer<java.sql.Date> implements ResultDeserializer<java.sql.Date> {
   public static final JavaSqlDate_JsonSerializer INSTANCE =
       new JavaSqlDate_JsonSerializer();
 
@@ -68,5 +72,10 @@ public final class JavaSqlDate_JsonSerializer extends
     } catch (NumberFormatException e) {
       throw new IllegalArgumentException("Invalid escape format: " + s);
     }
+  }
+
+  @Override
+  public Date fromResult(JavaScriptObject responseObject) {
+    return fromJson(PrimitiveResultDeserializers.stringResult(responseObject));
   }
 }

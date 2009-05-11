@@ -29,17 +29,17 @@ class JsonCall<T> implements RequestCallback {
   private final AbstractJsonProxy proxy;
   private final String methodName;
   private final String requestParams;
-  private final JsonSerializer<T> resultSerializer;
+  private final ResultDeserializer<T> resultDeserializer;
   private final AsyncCallback<T> callback;
   private int attempts;
 
   JsonCall(final AbstractJsonProxy abstractJsonProxy, final String methodName,
-      final String requestParams, final JsonSerializer<T> resultSerializer,
+      final String requestParams, final ResultDeserializer<T> resultDeserializer,
       final AsyncCallback<T> callback) {
     this.proxy = abstractJsonProxy;
     this.methodName = methodName;
     this.requestParams = requestParams;
-    this.resultSerializer = resultSerializer;
+    this.resultDeserializer = resultDeserializer;
     this.callback = callback;
   }
 
@@ -115,7 +115,7 @@ class JsonCall<T> implements RequestCallback {
 
       if (sc == Response.SC_OK) {
         JsonUtil.fireOnCallEnd();
-        JsonUtil.invoke(resultSerializer, callback, r.result());
+        JsonUtil.invoke(resultDeserializer, callback, r);
         return;
       }
     }
@@ -162,8 +162,6 @@ class JsonCall<T> implements RequestCallback {
     }
 
     final native RpcError error()/*-{ return this.error; }-*/;
-
-    final native JavaScriptObject result()/*-{ return this.result; }-*/;
 
     final native String xsrfKey()/*-{ return this.xsrfKey; }-*/;
   }

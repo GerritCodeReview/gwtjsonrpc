@@ -14,8 +14,11 @@
 
 package com.google.gwtjsonrpc.client;
 
+import com.google.gwt.core.client.JavaScriptObject;
+
 /** Base class for generated JsonSerializer implementations. */
-public abstract class ObjectSerializer extends JsonSerializer<Object> {
+public abstract class ObjectSerializer<T extends Object> extends
+    JsonSerializer<T> implements ResultDeserializer<T> {
   @Override
   public void printJson(final StringBuilder sb, final Object o) {
     sb.append("{");
@@ -24,4 +27,14 @@ public abstract class ObjectSerializer extends JsonSerializer<Object> {
   }
 
   protected abstract int printJsonImpl(int field, StringBuilder sb, Object o);
+
+  @Override
+  public T fromResult(JavaScriptObject responseObject) {
+    final JavaScriptObject result = objectResult(responseObject);
+    return result == null ? null : fromJson(result);
+  }
+
+  static native JavaScriptObject objectResult(JavaScriptObject responseObject) /*-{
+     return responseObject.result;
+  }-*/;
 }

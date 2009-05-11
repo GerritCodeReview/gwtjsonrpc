@@ -14,7 +14,10 @@
 
 package com.google.gwtjsonrpc.client;
 
-public class VoidResult_JsonSerializer extends JsonSerializer<VoidResult> {
+import com.google.gwt.core.client.JavaScriptObject;
+
+public class VoidResult_JsonSerializer extends JsonSerializer<VoidResult>
+    implements ResultDeserializer<VoidResult> {
   public static final VoidResult_JsonSerializer INSTANCE =
       new VoidResult_JsonSerializer();
 
@@ -28,6 +31,11 @@ public class VoidResult_JsonSerializer extends JsonSerializer<VoidResult> {
 
   @Override
   public VoidResult fromJson(final Object o) {
+    return VoidResult.INSTANCE;
+  }
+
+  @Override
+  public VoidResult fromResult(JavaScriptObject responseObject) {
     return VoidResult.INSTANCE;
   }
 }
