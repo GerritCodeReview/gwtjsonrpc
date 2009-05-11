@@ -91,20 +91,6 @@ public class JsonUtil {
     callback.onSuccess(result);
   }
 
-  // TODO: remove when the CallbackHandle supports primitive 'return' types?
-  // It is not called from anywhere in gwtjsonrpc, but it is a public method
-  public static <T> void invoke(final JsonSerializer<T> resultSerializer,
-      final AsyncCallback<T> callback, final Object encoded) {
-    final T resobj;
-    try {
-      resobj = encoded != null ? resultSerializer.fromJson(encoded) : null;
-    } catch (RuntimeException e) {
-      callback.onFailure(new InvocationException("Invalid JSON Response", e));
-      return;
-    }
-    callback.onSuccess(resobj);
-  }
-
   private JsonUtil() {
   }
 }
