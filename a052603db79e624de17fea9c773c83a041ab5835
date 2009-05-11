@@ -1,0 +1,344 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAARX///+0\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/ArrayResultDeserializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please add standard copyright header.",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+4\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/PrimitiveArrayResultDeserializers.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please add standard copyright header.",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+8\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/PrimitiveResultDeserializers.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please add standard copyright header.",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+s\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/PrimitiveResultDeserializers.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please add \"final\".",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+o\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/PrimitiveResultDeserializers.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please add \"final\".",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+k\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/PrimitiveResultDeserializers.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please add \"final\".",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+g\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/PrimitiveResultDeserializers.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please add \"final\".",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+c\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/PrimitiveResultDeserializers.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please add \"final\".",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+Y\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/PrimitiveResultDeserializers.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please add \"final\".",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+U\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/PrimitiveResultDeserializers.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please add \"final\".",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX////I\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/ResultDeserializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please add standard copyright header.",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX////E\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/ResultDeserializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please remove unnecessary whitespace here.  Normally on a javadoc line I tolerate one space following the * because that is how Eclipse formats it, but it looks like there are 3 spaces here.",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX////A\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/ResultDeserializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please don\u0027t include @author tags; git blame provides sufficient information about who wrote the code.",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+w\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/ResultDeserializerCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Please add standard copyright header.",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+I\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/ResultDeserializerCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "IMHO, this comment provides no value in the code.",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+Q\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/ResultDeserializerCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "I try to avoid cuddling the statement onto the same line as if.  Instead use {} around the statement and force it into the next lines, e.g.:\n\n  if (deserializerFor(targetType) !\u003d null) {\n    return;\n  }",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+M\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/ResultDeserializerCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Again, no cuddling.",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///98\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/ResultDeserializerCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Maybe I\u0027m just being stupid, but wouldn\u0027t it be sufficient to just always place the ResultDeserializer in the same package as the component\u0027s JsonSerializer?",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+E\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/ResultDeserializerCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "Again, no cuddling.",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAARX///+A\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/ResultDeserializerCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 192,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-05-11T15:05:21Z",
+      "side": 1,
+      "message": "This commented out code block provides no additional understanding about the code, why is it here?",
+      "revId": "a052603db79e624de17fea9c773c83a041ab5835",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
