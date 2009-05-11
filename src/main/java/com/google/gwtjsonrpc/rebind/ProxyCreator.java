@@ -215,7 +215,10 @@ class ProxyCreator {
       if (SerializerCreator.needsTypeParameter(pType)) {
         serializerFields[i] = "serializer_" + instanceField++;
         w.print("private static final ");
-        w.print(JsonSerializer.class.getName());
+        if (pType.isArray() != null)
+          w.print(serializerCreator.serializerFor(pType));
+        else
+          w.print(JsonSerializer.class.getName());
         w.print(" ");
         w.print(serializerFields[i]);
         w.print(" = ");
