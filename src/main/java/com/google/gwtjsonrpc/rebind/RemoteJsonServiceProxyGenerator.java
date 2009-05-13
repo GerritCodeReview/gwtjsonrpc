@@ -22,7 +22,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 
 /**
- * Generates proxy implementations of {@link RemoteJsonService}.
+ * Generates proxy implementations of {@link com.google.gwtjsonrpc.client.RemoteJsonService}.
  */
 public class RemoteJsonServiceProxyGenerator extends Generator {
   @Override

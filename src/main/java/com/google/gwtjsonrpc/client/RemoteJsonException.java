@@ -17,7 +17,7 @@ package com.google.gwtjsonrpc.client;
 import com.google.gwt.json.client.JSONValue;
 
 /**
- * Exception given to {@link AsyncCallback#onFailure(Throwable)}.
+ * Exception given to {@link com.google.gwt.user.client.rpc.AsyncCallback#onFailure(Throwable)}.
  * <p>
  * This exception is used if the remote JSON server has returned a well-formed
  * JSON error response.
@@ -32,8 +32,7 @@ public class RemoteJsonException extends Exception {
    * @param message A String value that provides a short description of the
    *        error.
    * @param code A number that indicates the actual error that occurred.
-   * @param error A {@link JSONNull}, {@link JSONNumber}, {@link JSONString} or
-   *        {@link JSONObject} value that carries custom and
+   * @param error A JSON value instance that carries custom and
    *        application-specific error information.
    */
   public RemoteJsonException(final String message, int code, JSONValue error) {
@@ -61,8 +60,7 @@ public class RemoteJsonException extends Exception {
    * Gets the extra error information.
    * 
    * @return <code>null</code> if no error information was specified by the
-   *         server, or a {@link JSONNull}, {@link JSONNumber},
-   *         {@link JSONString} or {@link JSONObject} value.
+   *         server, or value.
    */
   public JSONValue getError() {
     return error;
