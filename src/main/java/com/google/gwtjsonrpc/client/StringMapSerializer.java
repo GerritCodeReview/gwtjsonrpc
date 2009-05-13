@@ -81,6 +81,6 @@ public class StringMapSerializer<V> extends
   }-*/;
 
   void copyOne(final Map<String, V> r, final String k, final Object o) {
-    r.put(k, (V) valueSerializer.fromJson(o));
+    r.put(k, valueSerializer.fromJson(o));
   }
 }

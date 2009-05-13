@@ -60,7 +60,7 @@ public class SetSerializer<T> extends JsonSerializer<java.util.Set<T>> {
     final int n = size(jso);
     final HashSet<T> r = new HashSet<T>(n);
     for (int i = 0; i < n; i++) {
-      r.add((T) serializer.fromJson(get(jso, i)));
+      r.add(serializer.fromJson(get(jso, i)));
     }
     return r;
   }

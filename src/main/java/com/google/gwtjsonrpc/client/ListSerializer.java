@@ -60,7 +60,7 @@ public class ListSerializer<T> extends JsonSerializer<java.util.List<T>> {
     final int n = size(jso);
     final ArrayList<T> r = new ArrayList<T>(n);
     for (int i = 0; i < n; i++) {
-      r.add((T) serializer.fromJson(get(jso, i)));
+      r.add(serializer.fromJson(get(jso, i)));
     }
     return r;
   }

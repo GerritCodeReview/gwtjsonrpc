@@ -75,8 +75,8 @@ public class ObjectMapSerializer<K, V> extends
     final int n = size(jso);
     final HashMap<K, V> r = new HashMap<K, V>();
     for (int i = 0; i < n;) {
-      final K k = (K) keySerializer.fromJson(get(jso, i++));
-      final V v = (V) valueSerializer.fromJson(get(jso, i++));
+      final K k = keySerializer.fromJson(get(jso, i++));
+      final V v = valueSerializer.fromJson(get(jso, i++));
       r.put(k, v);
     }
     return r;
