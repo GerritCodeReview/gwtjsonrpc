@@ -24,7 +24,8 @@ import java.util.ArrayList;
  * When deserialized from JSON the List implementation is always an
  * {@link ArrayList}. When serializing to JSON any List is permitted.
  */
-public class ListSerializer<T> extends JsonSerializer<java.util.List<T>> {
+public class ListSerializer<T> extends JsonSerializer<java.util.List<T>>
+    implements ResultDeserializer<java.util.List<T>> {
   private final JsonSerializer<T> serializer;
 
   public ListSerializer(final JsonSerializer<T> s) {
@@ -63,6 +64,12 @@ public class ListSerializer<T> extends JsonSerializer<java.util.List<T>> {
       r.add(serializer.fromJson(get(jso, i)));
     }
     return r;
+  }
+
+  @Override
+  public java.util.List<T> fromResult(final JavaScriptObject response) {
+    final JavaScriptObject result = ObjectSerializer.objectResult(response);
+    return result == null ? null : fromJson(result);
   }
 
   private static final native int size(JavaScriptObject o)/*-{ return o.length; }-*/;

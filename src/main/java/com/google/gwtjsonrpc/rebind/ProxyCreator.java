@@ -36,6 +36,7 @@ import com.google.gwtjsonrpc.client.CallbackHandle;
 import com.google.gwtjsonrpc.client.HostPageCache;
 import com.google.gwtjsonrpc.client.JsonSerializer;
 import com.google.gwtjsonrpc.client.JsonUtil;
+import com.google.gwtjsonrpc.client.ResultDeserializer;
 
 import java.io.PrintWriter;
 import java.util.HashSet;
@@ -236,7 +237,7 @@ class ProxyCreator {
     if (resultType.isParameterized() != null) {
       serializerFields[params.length - 1] = "serializer_" + instanceField++;
       w.print("private static final ");
-      w.print(JsonSerializer.class.getName());
+      w.print(ResultDeserializer.class.getName());
       w.print(" ");
       w.print(serializerFields[params.length - 1]);
       w.print(" = ");

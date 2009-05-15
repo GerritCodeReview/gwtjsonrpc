@@ -29,7 +29,8 @@ import java.util.Map;
  * {@link HashMap}. When serializing to JSON any Map is permitted.
  */
 public class StringMapSerializer<V> extends
-    JsonSerializer<java.util.Map<String, V>> {
+    JsonSerializer<java.util.Map<String, V>> implements
+    ResultDeserializer<java.util.Map<String, V>> {
   private final JsonSerializer<V> valueSerializer;
 
   public StringMapSerializer(final JsonSerializer<V> v) {
@@ -72,6 +73,12 @@ public class StringMapSerializer<V> extends
     final HashMap<String, V> r = new HashMap<String, V>();
     copy(r, jso);
     return r;
+  }
+
+  @Override
+  public java.util.Map<String, V> fromResult(final JavaScriptObject response) {
+    final JavaScriptObject result = ObjectSerializer.objectResult(response);
+    return result == null ? null : fromJson(result);
   }
 
   private native void copy(Map<String, V> r, JavaScriptObject jsObject) /*-{

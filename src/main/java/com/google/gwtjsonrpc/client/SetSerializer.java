@@ -24,7 +24,8 @@ import java.util.HashSet;
  * When deserialized from JSON the Set implementation is always a
  * {@link HashSet}. When serializing to JSON any Set is permitted.
  */
-public class SetSerializer<T> extends JsonSerializer<java.util.Set<T>> {
+public class SetSerializer<T> extends JsonSerializer<java.util.Set<T>>
+    implements ResultDeserializer<java.util.Set<T>> {
   private final JsonSerializer<T> serializer;
 
   public SetSerializer(final JsonSerializer<T> s) {
@@ -63,6 +64,12 @@ public class SetSerializer<T> extends JsonSerializer<java.util.Set<T>> {
       r.add(serializer.fromJson(get(jso, i)));
     }
     return r;
+  }
+
+  @Override
+  public java.util.Set<T> fromResult(final JavaScriptObject response) {
+    final JavaScriptObject result = ObjectSerializer.objectResult(response);
+    return result == null ? null : fromJson(result);
   }
 
   private static final native int size(JavaScriptObject o)/*-{ return o.length; }-*/;

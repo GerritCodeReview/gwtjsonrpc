@@ -30,7 +30,8 @@ import java.util.Map;
  * {@link HashMap}. When serializing to JSON any Map is permitted.
  */
 public class ObjectMapSerializer<K, V> extends
-    JsonSerializer<java.util.Map<K, V>> {
+    JsonSerializer<java.util.Map<K, V>> implements
+    ResultDeserializer<java.util.Map<K, V>> {
   private final JsonSerializer<K> keySerializer;
   private final JsonSerializer<V> valueSerializer;
 
@@ -80,6 +81,12 @@ public class ObjectMapSerializer<K, V> extends
       r.put(k, v);
     }
     return r;
+  }
+
+  @Override
+  public java.util.Map<K, V> fromResult(final JavaScriptObject response) {
+    final JavaScriptObject result = ObjectSerializer.objectResult(response);
+    return result == null ? null : fromJson(result);
   }
 
   private static final native int size(JavaScriptObject o)/*-{ return o.length; }-*/;
