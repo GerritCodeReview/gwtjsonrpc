@@ -143,5 +143,5 @@ public class CallbackHandle<R> {
 
   private static final native void nativeInstall(int funid,
       CallbackHandle<?> imp)
-  /*-{ $wnd.__gwtjsonrpc_callbackhandle[funid] = function(r) { imp.@com.google.gwtjsonrpc.client.CallbackHandle::onResult(Ljava/lang/Object;)({result:r}); }; }-*/;
+  /*-{ $wnd.__gwtjsonrpc_callbackhandle[funid] = function(r) { imp.@com.google.gwtjsonrpc.client.CallbackHandle::onResult(Lcom/google/gwt/core/client/JavaScriptObject;)({result:r}); }; }-*/;
 }
