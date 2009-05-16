@@ -1,4 +1,4 @@
-// Copyright 2008 Google Inc.
+// Copyright 2009 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,11 +14,10 @@
 
 package com.google.gwtjsonrpc.client;
 
-/** Listener interface to receive notifications on RPC status. */
-public interface RpcStatusListener {
-  /** Invoked when an RPC call starts. */
-  public void onCallStart();
+import com.google.gwt.event.shared.EventHandler;
 
+/** Handler to receive notifications on RPC has finished. */
+public interface RpcCompleteHandler extends EventHandler {
   /** Invoked when an RPC call completes. */
-  public void onCallEnd();
+  public void onRpcComplete(RpcCompleteEvent event);
 }
