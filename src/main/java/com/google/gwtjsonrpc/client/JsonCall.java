@@ -34,7 +34,8 @@ class JsonCall<T> implements RequestCallback {
   private int attempts;
 
   JsonCall(final AbstractJsonProxy abstractJsonProxy, final String methodName,
-      final String requestParams, final ResultDeserializer<T> resultDeserializer,
+      final String requestParams,
+      final ResultDeserializer<T> resultDeserializer,
       final AsyncCallback<T> callback) {
     this.proxy = abstractJsonProxy;
     this.methodName = methodName;
