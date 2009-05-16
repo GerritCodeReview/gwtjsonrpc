@@ -15,6 +15,7 @@
 package com.google.gwtjsonrpc.client;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -73,7 +74,7 @@ class JsonCall<T> implements RequestCallback {
     }
 
     if (attempts == 1) {
-      JsonUtil.fireOnCallStart();
+      fireEvent(RpcStartEvent.e);
     }
   }
 
@@ -84,7 +85,7 @@ class JsonCall<T> implements RequestCallback {
       try {
         r = parse(rsp.getText());
       } catch (RuntimeException e) {
-        JsonUtil.fireOnCallEnd();
+        fireEvent(RpcCompleteEvent.e);
         callback.onFailure(new InvocationException("Bad JSON response: " + e));
         return;
       }
@@ -103,11 +104,11 @@ class JsonCall<T> implements RequestCallback {
             //
             send();
           } else {
-            JsonUtil.fireOnCallEnd();
+            fireEvent(RpcCompleteEvent.e);
             callback.onFailure(new InvocationException(errmsg));
           }
         } else {
-          JsonUtil.fireOnCallEnd();
+          fireEvent(RpcCompleteEvent.e);
           callback.onFailure(new RemoteJsonException(errmsg, r.error().code(),
               new JSONObject(r.error()).get("error")));
         }
@@ -115,23 +116,23 @@ class JsonCall<T> implements RequestCallback {
       }
 
       if (sc == Response.SC_OK) {
-        JsonUtil.fireOnCallEnd();
+        fireEvent(RpcCompleteEvent.e);
         JsonUtil.invoke(resultDeserializer, callback, r);
         return;
       }
     }
 
     if (sc == Response.SC_OK) {
-      JsonUtil.fireOnCallEnd();
+      fireEvent(RpcCompleteEvent.e);
       callback.onFailure(new InvocationException("No JSON response"));
     } else {
-      JsonUtil.fireOnCallEnd();
+      fireEvent(RpcCompleteEvent.e);
       callback.onFailure(new StatusCodeException(sc, rsp.getStatusText()));
     }
   }
 
   public void onError(final Request request, final Throwable exception) {
-    JsonUtil.fireOnCallEnd();
+    fireEvent(RpcCompleteEvent.e);
     if (exception.getClass() == RuntimeException.class
         && exception.getMessage().contains("XmlHttpRequest.status")) {
       // GWT's XMLHTTPRequest class gives us RuntimeException when the
@@ -142,6 +143,11 @@ class JsonCall<T> implements RequestCallback {
     } else {
       callback.onFailure(exception);
     }
+  }
+
+  private <T extends EventHandler> void fireEvent(BaseRpcEvent<T> e) {
+    e.service = (RemoteJsonService) proxy;
+    JsonUtil.fireEvent(e);
   }
 
   private static boolean isJsonBody(final Response rsp) {

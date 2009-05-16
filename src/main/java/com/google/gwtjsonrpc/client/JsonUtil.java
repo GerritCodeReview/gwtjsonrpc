@@ -16,11 +16,11 @@ package com.google.gwtjsonrpc.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.shared.HandlerManager;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
-
-import java.util.ArrayList;
 
 /** Shared constants between client and server implementations. */
 public class JsonUtil {
@@ -36,8 +36,7 @@ public class JsonUtil {
   /** Error message when xsrfKey in request is missing or invalid. */
   public static final String ERROR_INVALID_XSRF = "Invalid xsrfKey in request";
 
-  private static final ArrayList<RpcStatusListener> listeners =
-      new ArrayList<RpcStatusListener>();
+  private static final HandlerManager globalHandlers = new HandlerManager(null);
 
   /**
    * Bind a RemoteJsonService proxy to its server URL.
@@ -56,27 +55,19 @@ public class JsonUtil {
     return imp;
   }
 
-  /** Register a status listener. */
-  public static void addRpcStatusListener(final RpcStatusListener l) {
-    assert !listeners.contains(l);
-    listeners.add(l);
+  /** Register a handler for RPC start events. */
+  public static HandlerRegistration addRpcStartHandler(RpcStartHandler h) {
+    return globalHandlers.addHandler(RpcStartEvent.getType(), h);
   }
 
-  /** Remove a registered status listener. */
-  public static void removeRpcStatusListener(final RpcStatusListener l) {
-    listeners.remove(l);
+  /** Register a handler for RPC completion events. */
+  public static HandlerRegistration addRpcCompleteHandler(RpcCompleteHandler h) {
+    return globalHandlers.addHandler(RpcCompleteEvent.getType(), h);
   }
 
-  static void fireOnCallStart() {
-    for (final RpcStatusListener l : listeners) {
-      l.onCallStart();
-    }
-  }
-
-  static void fireOnCallEnd() {
-    for (final RpcStatusListener l : listeners) {
-      l.onCallEnd();
-    }
+  static void fireEvent(BaseRpcEvent<?> event) {
+    globalHandlers.fireEvent(event);
+    event.service = null;
   }
 
   public static <T> void invoke(final ResultDeserializer<T> resultDeserializer,
