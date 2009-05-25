@@ -153,7 +153,7 @@ class JsonCall<T> implements RequestCallback {
     }
   }
 
-  private <T extends EventHandler> void fireEvent(BaseRpcEvent<T> e) {
+  private <S extends EventHandler> void fireEvent(BaseRpcEvent<S> e) {
     e.call = this;
     JsonUtil.fireEvent(e);
   }
