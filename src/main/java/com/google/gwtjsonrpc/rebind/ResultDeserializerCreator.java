@@ -24,7 +24,6 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwtjsonrpc.client.ArrayResultDeserializer;
-import com.google.gwtjsonrpc.client.JavaLangString_JsonSerializer;
 import com.google.gwtjsonrpc.client.PrimitiveArrayResultDeserializers;
 import com.google.gwtjsonrpc.client.PrimitiveResultDeserializers;
 import com.google.gwtjsonrpc.client.ResultDeserializer;
