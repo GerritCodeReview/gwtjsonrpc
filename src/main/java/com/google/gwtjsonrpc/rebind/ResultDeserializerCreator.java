@@ -55,8 +55,6 @@ import java.util.HashMap;
  */
 class ResultDeserializerCreator {
   private static final String DSER_SUFFIX = "_ResultDeserializer";
-  private static final String CUSTOM_SERIALIZER_PACKAGE =
-      JavaLangString_JsonSerializer.class.getPackage().getName();
 
   private GeneratorContext context;
   private HashMap<String, String> generatedDeserializers;
