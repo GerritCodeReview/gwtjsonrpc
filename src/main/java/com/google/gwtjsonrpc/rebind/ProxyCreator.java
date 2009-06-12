@@ -14,6 +14,7 @@
 
 package com.google.gwtjsonrpc.rebind;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
@@ -29,6 +30,7 @@ import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.dev.generator.NameFactory;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwtjsonrpc.client.AbstractJsonProxy;
@@ -72,6 +74,7 @@ class ProxyCreator {
       return getProxyQualifiedName();
     }
 
+    generateProxyConstructor(logger, srcWriter);
     generateProxyMethods(logger, srcWriter);
     srcWriter.commit(logger);
 
@@ -195,9 +198,25 @@ class ProxyCreator {
     cf.addImport(AbstractJsonProxy.class.getCanonicalName());
     cf.addImport(JsonSerializer.class.getCanonicalName());
     cf.addImport(JavaScriptObject.class.getCanonicalName());
+    cf.addImport(GWT.class.getCanonicalName());
     cf.setSuperclass(AbstractJsonProxy.class.getSimpleName());
     cf.addImplementedInterface(svcInf.getErasedType().getQualifiedSourceName());
     return cf.createSourceWriter(ctx, pw);
+  }
+
+  private void generateProxyConstructor(final TreeLogger logger,
+      final SourceWriter w) {
+    final RemoteServiceRelativePath relPath =
+        svcInf.getAnnotation(RemoteServiceRelativePath.class);
+    if (relPath != null) {
+      w.println();
+      w.println("public " + getProxySimpleName() + "() {");
+      w.indent();
+      w.println("setServiceEntryPoint(GWT.getModuleBaseURL() + \""
+          + relPath.value() + "\");");
+      w.outdent();
+      w.println("}");
+    }
   }
 
   private void generateProxyMethods(final TreeLogger logger,

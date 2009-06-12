@@ -45,6 +45,7 @@ public class JsonUtil {
    * @param imp the service instance, returned by <code>GWT.create</code>.
    * @param path the path of the service, relative to the GWT module.
    * @return always <code>imp</code>.
+   * @see com.google.gwt.user.client.rpc.RemoteServiceRelativePath
    */
   public static <T extends RemoteJsonService> T bind(final T imp,
       final String path) {
