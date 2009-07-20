@@ -90,7 +90,7 @@ class SerializerCreator {
   String create(final JClassType targetType, final TreeLogger logger)
       throws UnableToCompleteException {
     if (targetType.isParameterized() != null || targetType.isArray() != null) {
-      ensureSerializer(logger, targetType);
+      ensureSerializersForTypeParameters(logger, targetType);
     }
     String sClassName = serializerFor(targetType);
     if (sClassName != null) {
@@ -110,7 +110,7 @@ class SerializerCreator {
       return sn;
     }
 
-    if (!needsTypeParameter(targetType) && !targetType.isAbstract()) {
+    if (!targetType.isAbstract()) {
       generateSingleton(srcWriter);
     }
     if (targetType.isEnum() != null) {
@@ -144,20 +144,8 @@ class SerializerCreator {
 
   private void ensureSerializer(final TreeLogger logger, final JType type)
       throws UnableToCompleteException {
-    if (isJsonPrimitive(type) || isBoxedPrimitive(type)) {
+    if (ensureSerializersForTypeParameters(logger, type)) {
       return;
-    }
-
-    if (type.isArray() != null) {
-      ensureSerializer(logger, type.isArray().getComponentType());
-      return;
-    }
-
-    if (type.isParameterized() != null) {
-      final JClassType[] typeArgs = type.isParameterized().getTypeArgs();
-      for (final JClassType t : typeArgs) {
-        ensureSerializer(logger, t);
-      }
     }
 
     final String qsn = type.getQualifiedSourceName();
@@ -167,6 +155,26 @@ class SerializerCreator {
     }
 
     create((JClassType) type, logger);
+  }
+
+  private boolean ensureSerializersForTypeParameters(final TreeLogger logger,
+      final JType type) throws UnableToCompleteException {
+    if (isJsonPrimitive(type) || isBoxedPrimitive(type)) {
+      return true;
+    }
+
+    if (type.isArray() != null) {
+      ensureSerializer(logger, type.isArray().getComponentType());
+      return true;
+    }
+
+    if (type.isParameterized() != null) {
+      for (final JClassType t : type.isParameterized().getTypeArgs()) {
+        ensureSerializer(logger, t);
+      }
+    }
+
+    return false;
   }
 
   void checkCanSerialize(final TreeLogger logger, final JType type)
@@ -321,7 +329,7 @@ class SerializerCreator {
         w.print(")");
       }
 
-    } else if (type.isParameterized() != null) {
+    } else if (needsTypeParameter(type)) {
       w.print("new " + serializerFor(type) + "(");
       final JClassType[] typeArgs = type.isParameterized().getTypeArgs();
       int n = 0;
@@ -713,7 +721,9 @@ class SerializerCreator {
   }
 
   static boolean needsTypeParameter(final JType ft) {
-    return ft.isArray() != null || ft.isParameterized() != null;
+    return ft.isArray() != null
+        || (ft.isParameterized() != null && parameterizedSerializers
+            .containsKey(ft.getQualifiedSourceName()));
   }
 
   private static JField[] sortFields(final JClassType targetType) {

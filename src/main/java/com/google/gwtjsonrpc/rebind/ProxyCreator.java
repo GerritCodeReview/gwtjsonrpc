@@ -24,6 +24,7 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
 import com.google.gwt.core.ext.typeinfo.JPackage;
 import com.google.gwt.core.ext.typeinfo.JParameter;
+import com.google.gwt.core.ext.typeinfo.JParameterizedType;
 import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
@@ -419,6 +420,14 @@ class ProxyCreator {
       assert (classOrInterface != null);
       className = classOrInterface.getName();
       packageName = classOrInterface.getPackage().getName();
+    }
+
+    JParameterizedType isGeneric = type.isParameterized();
+    if (isGeneric != null) {
+      for (JClassType param : isGeneric.getTypeArgs()) {
+        className += "_";
+        className += param.getQualifiedSourceName().replace('.', '_');
+      }
     }
 
     JArrayType isArray = type.isArray();
