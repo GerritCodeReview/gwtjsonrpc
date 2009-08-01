@@ -183,21 +183,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
    *         the client cannot recover from.
    */
   protected boolean xsrfValidate(final CallType call) throws XsrfException {
-    final HttpServletRequest req = call.httpRequest;
-    final String username = call.getUser();
-    final StringBuilder b = new StringBuilder();
-    if (username != null) {
-      b.append("user/");
-      b.append(username);
-    } else {
-      b.append("anonymous");
-    }
-    final String userpath = b.toString();
-    final ValidToken t = xsrf.checkToken(call.getXsrfKeyIn(), userpath);
-    if (t == null || t.needsRefresh()) {
-      call.setXsrfKeyOut(xsrf.newToken(userpath));
-    }
-    return t != null;
+    return call.xsrfValidate();
   }
 
   /**
@@ -264,6 +250,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       final HttpServletResponse resp) throws IOException {
     try {
       final CallType call = createActiveCall(req, resp);
+      call.xsrf = xsrf;
 
       call.noCache();
       if (!acceptJSON(call)) {

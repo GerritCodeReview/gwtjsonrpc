@@ -30,6 +30,7 @@ public class ActiveCall implements AsyncCallback<Object> {
   protected final HttpServletRequest httpRequest;
   protected final HttpServletResponse httpResponse;
   JsonElement id;
+  SignedToken xsrf;
   String xsrfKeyIn;
   String xsrfKeyOut;
   boolean xsrfValid;
@@ -178,12 +179,20 @@ public class ActiveCall implements AsyncCallback<Object> {
     return params;
   }
 
+  public void setXsrfSignedToken(final SignedToken t) {
+    xsrf = t;
+  }
+
   public final String getXsrfKeyIn() {
     return xsrfKeyIn;
   }
 
   public final void setXsrfKeyOut(final String out) {
     xsrfKeyOut = out;
+  }
+
+  public final String getXsrfKeyOut() {
+    return xsrfKeyOut;
   }
 
   public final boolean isXsrfValid() {
@@ -197,6 +206,33 @@ public class ActiveCall implements AsyncCallback<Object> {
       onFailure(new Exception(JsonUtil.ERROR_INVALID_XSRF));
       return false;
     }
+  }
+
+  /**
+   * Verify the XSRF token submitted is valid.
+   * <p>
+   * By default this method validates the token, and refreshes it with a new
+   * token for the currently authenticated user.
+   *
+   * @return true if the token was supplied and is valid; false otherwise.
+   * @throws XsrfException the token could not be validated due to an error that
+   *         the client cannot recover from.
+   */
+  public boolean xsrfValidate() throws XsrfException {
+    final String username = getUser();
+    final StringBuilder b = new StringBuilder();
+    if (username != null) {
+      b.append("user/");
+      b.append(username);
+    } else {
+      b.append("anonymous");
+    }
+    final String userpath = b.toString();
+    final ValidToken t = xsrf.checkToken(getXsrfKeyIn(), userpath);
+    if (t == null || t.needsRefresh()) {
+      setXsrfKeyOut(xsrf.newToken(userpath));
+    }
+    return t != null;
   }
 
   /**
