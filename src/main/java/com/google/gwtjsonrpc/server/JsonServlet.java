@@ -192,8 +192,6 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     } else {
       b.append("anonymous");
     }
-    b.append('$');
-    b.append(req.getServletPath());
     final String userpath = b.toString();
     final ValidToken t = xsrf.checkToken(call.getXsrfKeyIn(), userpath);
     if (t == null || t.needsRefresh()) {

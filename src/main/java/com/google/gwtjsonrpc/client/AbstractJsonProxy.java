@@ -17,20 +17,18 @@ package com.google.gwtjsonrpc.client;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
-import com.google.gwt.user.client.rpc.ServiceDefTarget;
 
 /**
  * Base class for generated {@link RemoteJsonService} implementations.
  * <p>
  * At runtime <code>GWT.create(Foo.class)</code> returns a subclass of this
- * class, implementing the Foo and {@link ServiceDefTarget} interfaces.
+ * class, implementing the Foo and {@link JsonDefTarget} interfaces.
  */
-public abstract class AbstractJsonProxy implements ServiceDefTarget {
+public abstract class AbstractJsonProxy implements JsonDefTarget {
   /** URL of the service implementation. */
   String url;
 
-  /** Current XSRF token associated with this service. */
-  String xsrfKey;
+  private XsrfManager xsrfManager = JsonUtil.getDefaultXsrfManager();
 
   public String getServiceEntryPoint() {
     return url;
@@ -38,6 +36,17 @@ public abstract class AbstractJsonProxy implements ServiceDefTarget {
 
   public void setServiceEntryPoint(final String address) {
     url = address;
+  }
+
+  @Override
+  public XsrfManager getXsrfManager() {
+    return xsrfManager;
+  }
+
+  @Override
+  public void setXsrfManager(final XsrfManager m) {
+    assert m != null;
+    xsrfManager = m;
   }
 
   protected <T> void doInvoke(final String methodName, final String reqData,

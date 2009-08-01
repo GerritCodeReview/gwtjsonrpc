@@ -38,6 +38,43 @@ public class JsonUtil {
 
   private static final HandlerManager globalHandlers = new HandlerManager(null);
 
+  private static XsrfManager xsrfManager = new XsrfManager() {
+    private String token;
+
+    @Override
+    public String getToken(JsonDefTarget proxy) {
+      return token;
+    }
+
+    @Override
+    public void setToken(JsonDefTarget proxy, String token) {
+      this.token = token;
+    }
+  };
+
+  private static final XsrfManager defaultXsrfManager = new XsrfManager() {
+    @Override
+    public String getToken(JsonDefTarget proxy) {
+      return xsrfManager.getToken(proxy);
+    }
+
+    @Override
+    public void setToken(JsonDefTarget proxy, String token) {
+      xsrfManager.setToken(proxy, token);
+    }
+  };
+
+  /** A proxy {@link XsrfManager} that always points to the current default. */
+  public static XsrfManager getDefaultXsrfManager() {
+    return defaultXsrfManager;
+  }
+
+  /** Change the current default XsrfManager. */
+  public static void setDefaultXsrfManager(final XsrfManager m) {
+    assert m != null;
+    xsrfManager = m;
+  }
+
   /**
    * Bind a RemoteJsonService proxy to its server URL.
    * 

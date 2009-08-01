@@ -60,9 +60,10 @@ class JsonCall<T> implements RequestCallback {
     body.append("\",\"params\":[");
     body.append(requestParams);
     body.append("]");
-    if (proxy.xsrfKey != null) {
+    final String xsrfKey = proxy.getXsrfManager().getToken(proxy);
+    if (xsrfKey != null) {
       body.append(",\"xsrfKey\":");
-      body.append(JsonSerializer.escapeString(proxy.xsrfKey));
+      body.append(JsonSerializer.escapeString(xsrfKey));
     }
     body.append("}");
 
@@ -99,7 +100,7 @@ class JsonCall<T> implements RequestCallback {
       }
 
       if (r.xsrfKey() != null) {
-        proxy.xsrfKey = r.xsrfKey();
+        proxy.getXsrfManager().setToken(proxy, r.xsrfKey());
       }
 
       if (r.error() != null) {
