@@ -1,0 +1,72 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAm3///OY\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-09-23T15:08:51Z",
+      "side": 1,
+      "message": "Style-nit: Please insert a blank line after the }",
+      "revId": "f97e265d7487ec3cb7735a3a881be6a60a49c797",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAm3///OU\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-09-23T15:08:51Z",
+      "side": 1,
+      "message": "Style-nit: I prefer static methods of a class to be above instance members.  In this case that would move the method to be right after the static initializer which is calling it.",
+      "revId": "f97e265d7487ec3cb7735a3a881be6a60a49c797",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAm3///OQ\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-09-23T15:08:51Z",
+      "side": 1,
+      "message": "Style-nit: Unnecessary trailing space right here.",
+      "revId": "f97e265d7487ec3cb7735a3a881be6a60a49c797",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAm3///OM\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-09-23T15:08:51Z",
+      "side": 1,
+      "message": "I think it would better to use an abstract interface and two different Java objects for the two different implementations, to avoid modifying $wnd.JSON.\n\nIn other words, do something like this:\n\n  private static final JsonParser parser;\n\n  static {\n    if (hasEs31JsonParser())\n      parser \u003d new JsonParserImplEs31();\n    else\n      parser \u003d new JsonParserImplEval();\n  }\n\n  private static native boolean hasEs31JsonParser()\n  /*-{\n    if ($wnd.JSON \u0026\u0026 typeof $wnd.JSON.parse \u003d\u003d \u0027function\u0027)\n      return true;\n    return false;\n  }-*/;\n\n  private static abstract class JsonParser {\n    abstract RpcResult parse(String json);\n  }\n\n  private static class JsonParserImplEs31 extends JsonParser {\n    native RpcResult parse(String json)\n    /*-{ return $wnd.JSON.parse(json); }-*/;\n  }\n\n  private static class JsonParserImplEval extends JsonParser {\n    native RpcResult parse(String json)\n    /*-{ return eval(\u0027(\u0027 + text + \u0027)\u0027); }-*/;\n  }\n\nI\u0027m worried about other libraries one might link with gwtjsonrpc in the same application that might also test for $wnd.JSON and start assuming functionality which isn\u0027t present in our faked out $wnd.JSON.  By providing the implementation jump point in our own code we leave the $wnd.JSON namespace alone, and avoid any potential incompatibilities.\n\nAnother option is, we could actually add our own new property to the compiler and generate this test ourselves at compile time.  The downside is this doubles the number of permutations for any application.  E.g. we add to our module XML:\n\n  \u003cdefine-property name\u003d\"gwtjsonrpc.support\" values\u003d\"eval,es31\"/\u003e\n  \u003cproperty-provider name\u003d\"gwtjsonrpc.support\"\u003e\u003c![CDATA[\n    if (window.JSON \u0026\u0026 typeof window.JSON.parse \u003d\u003d \u0027function\u0027)\n      return \u0027es31\u0027;\n    return \u0027eval\u0027;\n  ]]\u003e\u003c/property-provider\u003e\n\n  \u003creplace-with class\u003d\"com.google.gwtjsonrpc.client.JsonParserImplEval\"\u003e\n    \u003cwhen-type-is class\u003d\"com.google.gwtjsonrpc.client.JsonParser\"/\u003e\n    \u003cwhen-property-is name\u003d\"gwtjsonrpc.support\" value\u003d\"eval\"/\u003e\n  \u003c/replace-with\u003e\n\n  \u003creplace-with class\u003d\"com.google.gwtjsonrpc.client.JsonParserImplEs31\"\u003e\n    \u003cwhen-type-is class\u003d\"com.google.gwtjsonrpc.client.JsonParser\"/\u003e\n    \u003cwhen-property-is name\u003d\"gwtjsonrpc.support\" value\u003d\"es31\"/\u003e\n  \u003c/replace-with\u003e\n\nand basically use the code above, except instead of the native method in the static initializer to test for $wnd.JSON use GWT.create(JsonParser.class) to construct the JsonParser instance.",
+      "revId": "f97e265d7487ec3cb7735a3a881be6a60a49c797",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
