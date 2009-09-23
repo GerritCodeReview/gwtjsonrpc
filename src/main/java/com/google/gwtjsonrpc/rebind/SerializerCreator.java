@@ -97,7 +97,7 @@ class SerializerCreator {
       return sClassName;
     }
 
-    checkCanSerialize(logger, targetType);
+    checkCanSerialize(logger, targetType, true);
     recursivelyCreateSerializers(logger, targetType);
 
     this.targetType = targetType;
@@ -179,6 +179,11 @@ class SerializerCreator {
 
   void checkCanSerialize(final TreeLogger logger, final JType type)
       throws UnableToCompleteException {
+    checkCanSerialize(logger, type, false);
+  }
+
+  void checkCanSerialize(final TreeLogger logger, final JType type,
+      boolean allowAbstractType) throws UnableToCompleteException {
     if (type.isPrimitive() == JPrimitiveType.LONG) {
       logger.log(TreeLogger.ERROR,
           "Type 'long' not supported in JSON encoding", null);
@@ -247,8 +252,15 @@ class SerializerCreator {
     }
 
     final JClassType ct = (JClassType) type;
-    final TreeLogger branch = logger.branch(TreeLogger.DEBUG, "In type " + qsn);
+    if (ct.isAbstract() && !allowAbstractType) {
+      logger.log(TreeLogger.ERROR, "Abstract type " + qsn
+          + " not supported here", null);
+      throw new UnableToCompleteException();
+    }
     for (final JField f : sortFields(ct)) {
+      final TreeLogger branch =
+          logger.branch(TreeLogger.DEBUG, "In type " + qsn + ", field "
+              + f.getName());
       checkCanSerialize(branch, f.getType());
     }
   }
