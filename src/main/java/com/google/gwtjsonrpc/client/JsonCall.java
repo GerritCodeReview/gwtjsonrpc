@@ -27,12 +27,40 @@ import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 
 class JsonCall<T> implements RequestCallback {
+  static {
+    ensurePartialEs31JsonParser();
+  }
   private final AbstractJsonProxy proxy;
   private final String methodName;
   private final String requestParams;
   private final ResultDeserializer<T> resultDeserializer;
   private final AsyncCallback<T> callback;
   private int attempts;
+
+  /**
+   * Check if we have a native JSON parser, present in modern browsers (FF 3.5
+   * and IE8, at time of writing). If no native parser is found, the
+   * <code>JSON.parse</code> method we need in the parser is simulated using
+   * eval. This is done dynamically, and not with a gwt user.agent check,
+   * because FF3.5 does not have a specific user.agent associated with it.
+   * 
+   * Note that only JSON.parse is partially implemented, it does not support the
+   * 2nd parameter (a reviver). This is fine because gwtjsonrpc does not use
+   * this parameter.
+   * 
+   * @see "http://wiki.ecmascript.org/doku.php?id=es3.1:json_support"
+   */
+  private static native void ensurePartialEs31JsonParser()
+  /*-{  
+    if (!$wnd.JSON) {
+      $wnd.JSON = {};
+    }
+    if (typeof $wnd.JSON.parse !== 'function') {
+      $wnd.JSON.parse = function(text) {
+        return eval('(' + text + ')');
+      }
+    }
+  }-*/;
 
   JsonCall(final AbstractJsonProxy abstractJsonProxy, final String methodName,
       final String requestParams,
@@ -171,7 +199,7 @@ class JsonCall<T> implements RequestCallback {
     return JsonUtil.JSON_TYPE.equals(type);
   }
 
-  private static final native RpcResult parse(String json)/*-{ return eval('('+json+')'); }-*/;
+  private static final native RpcResult parse(String json)/*-{ return $wnd.JSON.parse(json); }-*/;
 
   private static class RpcResult extends JavaScriptObject {
     protected RpcResult() {
