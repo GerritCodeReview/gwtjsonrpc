@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAm3///OE\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/SerializerCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-09-23T15:15:58Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand why abstract types are allowed here.  Don\u0027t we call this anytime we need the serializer?  And once we have the serializer for a type, we have no support to switch to different serializers based on actual value type supplied.\n\nWhen converting JSON to object, we can only convert to the declared type, thus an abstract type is not permitted.  And heck, a final type would be preferred, since we\u0027d then never be able to create any extensions of the type.\n\nWhen accepting an object as a parameter to a method and encoding it to JSON, we could in theory have different serializers for the different actual types that could be supplied, but RemoteJsonServiceProxyGenerator does not support that.  So again we only honor the declared type and any extensions are ignored.  Thus again, final types would be preferred, since then it is impossible to create a confusing case.",
+      "revId": "d8c327659eb4e4aa8686bed447d82134ddb9c288",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
