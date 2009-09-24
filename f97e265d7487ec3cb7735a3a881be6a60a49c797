@@ -103,6 +103,24 @@
       "revId": "f97e265d7487ec3cb7735a3a881be6a60a49c797",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAm3//+7g\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001689
+      },
+      "writtenOn": "2009-09-24T14:33:49Z",
+      "side": 1,
+      "message": "I like this one.",
+      "parentUuid": "AAAAm3//+7s\u003d",
+      "revId": "f97e265d7487ec3cb7735a3a881be6a60a49c797",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
