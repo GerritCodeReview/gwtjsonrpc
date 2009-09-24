@@ -34,6 +34,24 @@
       "revId": "d8c327659eb4e4aa8686bed447d82134ddb9c288",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAm3//+7o\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/SerializerCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-09-24T14:31:12Z",
+      "side": 1,
+      "message": "Ok, I understand now.  Thanks for the explanation.",
+      "parentUuid": "AAAAm3//+70\u003d",
+      "revId": "d8c327659eb4e4aa8686bed447d82134ddb9c288",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
