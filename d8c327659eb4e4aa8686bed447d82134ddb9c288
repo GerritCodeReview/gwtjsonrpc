@@ -16,6 +16,24 @@
       "revId": "d8c327659eb4e4aa8686bed447d82134ddb9c288",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAm3//+70\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/SerializerCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1001689
+      },
+      "writtenOn": "2009-09-24T07:45:51Z",
+      "side": 1,
+      "message": "It is because of the recursive checking that is only done when the serializers are created.\n\nWhen the service is inspected to verify serializability on the first pass, not the entire object hierarchy is checked, just the leaf nodes directly related to method parameters and return values, and these must indeed be non-abstract (preferably final). When the serializers are created in this method line 101 is the first recursion done. Since the create() is called recursively, it can encounter an abstract parent class, so it must allow for abstract classes to be valid.\n\nI am not sure why checking parent classes is not done until actual the actual creation of the serializers, but that is how it was. I am assuming the reason was to only have to check non-leaf nodes in the object hierarchy only once, since the create() method caches its results. If we would do the checking of the full hierarchy in the checking phase (resursive checking in checkCanSerialize()) we would traverse the tree to the root node for every object.\n\nEither way, since the actually used object are already checked before create() is called, and create is called recursively, it must allow abstract classes, and it has already been guaranteed that no leaf nodes are abstract classes.",
+      "parentUuid": "AAAAm3///OE\u003d",
+      "revId": "d8c327659eb4e4aa8686bed447d82134ddb9c288",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
