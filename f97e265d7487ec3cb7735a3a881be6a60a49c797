@@ -85,6 +85,24 @@
       "revId": "f97e265d7487ec3cb7735a3a881be6a60a49c797",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAm3//+7s\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-09-24T14:27:52Z",
+      "side": 1,
+      "message": "OK, I can agree that defining a new property is unnecessary.\n\nMy only qualm with defining a function pointer is you need to reference it through JSNI, which is brittle when it comes to refactoring and so forth.  For what its worth, the Java type for a JavaScript function pointer is just JavaScriptObject.  There is no other type available.\n\nMaybe this is cleaner:\n\n  private static final JavaScriptObject parseFun;\n\n  static {\n   parseFun \u003d selectJsonParser();\n  }\n\n  private static native JavaScriptObject selectJsonParser() /*-{\n    if ($wnd.JSON \u0026\u0026 typeof $wnd.JSON.parse \u003d\u003d\u003d \u0027function\u0027)\n      return $wnd.JSON.parse;\n    else\n      return function(expr) { return eval(\u0027(\u0027 + expr + \u0027)\u0027); };\n  }-*/;\n\nand later down in the code:\n\n  private static final native RpcResult parse(JavaScriptObject parser, String json)\n  /*-{ return parser(json); }-*/;\n\nBasically the same idea, but it avoids needing to reference the Java field from within the JSNI code.  The downside of course is you need to pass the parseFun in Java when we call the parse method.  I think that is still cleaner than directly accessing the Java field from JSNI as it at least survives through refactorings.",
+      "parentUuid": "AAAAm3//+8I\u003d",
+      "revId": "f97e265d7487ec3cb7735a3a881be6a60a49c797",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
