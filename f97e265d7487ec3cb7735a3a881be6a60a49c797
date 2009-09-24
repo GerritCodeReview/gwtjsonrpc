@@ -67,6 +67,24 @@
       "revId": "f97e265d7487ec3cb7735a3a881be6a60a49c797",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAm3//+8I\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1001689
+      },
+      "writtenOn": "2009-09-24T07:30:45Z",
+      "side": 1,
+      "message": "Defining a new property does not add anything usefull, the check always needs to be run once, and the result is only use once to select the right parser. If the result were used more often it might warrent the extra compile times.\n\nAnother way to do it would be by setting a (local scope) function pointer to the parser like such:\n\nstatic {\n  initJsonParser();\n}\n\nstatic native void initJsonParser() /*-{\n  if (window.JSON \u0026\u0026 typeof window.JSON.parse \u003d\u003d\u003d \u0027function\u0027) {\n    @pkg.JsonCall::parseJson \u003d window.JSON.parse;\n  } else {\n    @pkg.JsonCall::parseJson \u003d function(expr) {\n      return eval(\u0027(\u0027 + expr + \u0027)\u0027);\n    }\n  }\n}-*/;\n\nand then just call @pkg.JsonCall::parseJson(string) to parse...\nRemoves object creation and such all together. I\u0027m not sure how (if) to declare the field though, Java doesn\u0027t have a JavaScriptFunctionPointer type :) (can also set it to $wnd.__parseJson I guess... but that is a bit ugly).\n\nWhich method would you prefer: JsonParser object or javascript function pointer?",
+      "parentUuid": "AAAAm3///OM\u003d",
+      "revId": "f97e265d7487ec3cb7735a3a881be6a60a49c797",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
