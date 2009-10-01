@@ -27,6 +27,40 @@ import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 
 class JsonCall<T> implements RequestCallback {
+  private static final JavaScriptObject jsonParser;
+
+  static {
+    jsonParser = selectJsonParser();
+  }
+
+  /**
+   * Select the most efficient available JSON parser.
+   * 
+   * If we have a native JSON parser, present in modern browsers (FF 3.5 and
+   * IE8, at time of writing), it is returned. If no native parser is found, a
+   * parser function using <code>eval</code> is returned.
+   * 
+   * This is done dynamically, not with a GWT user.agent check, because FF3.5
+   * does not have a specific user.agent associated with it. Introducing a new
+   * property for the presence of an ES3.1 parser is not worth it, since the
+   * check is only done once anyway, and will result in significantly longer
+   * compile times.
+   * 
+   * As GWT will undoubtedly introduce support for the native JSON parser in the
+   * {@link com.google.gwt.json.client.JSONParser JSONParser} class, this code
+   * should be reevaluated to possibly use the GWT parser reference.
+   * 
+   * @return a javascript function with the fastest available JSON parser
+   * @see "http://wiki.ecmascript.org/doku.php?id=es3.1:json_support"
+   */
+  private static native JavaScriptObject selectJsonParser()
+  /*-{
+    if ($wnd.JSON && typeof $wnd.JSON.parse === 'function')
+      return $wnd.JSON.parse;
+    else
+      return function(expr) { return eval('(' + expr + ')'); };
+  }-*/;
+
   private final AbstractJsonProxy proxy;
   private final String methodName;
   private final String requestParams;
@@ -92,7 +126,7 @@ class JsonCall<T> implements RequestCallback {
     if (isJsonBody(rsp)) {
       final RpcResult r;
       try {
-        r = parse(rsp.getText());
+        r = parse(jsonParser, rsp.getText());
       } catch (RuntimeException e) {
         fireEvent(RpcCompleteEvent.e);
         callback.onFailure(new InvocationException("Bad JSON response: " + e));
@@ -171,7 +205,20 @@ class JsonCall<T> implements RequestCallback {
     return JsonUtil.JSON_TYPE.equals(type);
   }
 
-  private static final native RpcResult parse(String json)/*-{ return eval('('+json+')'); }-*/;
+  /**
+   * Call a JSON parser javascript function to parse an encoded JSON string.
+   * 
+   * @param parser a javascript function
+   * @param json encoded JSON text
+   * @return the parsed data
+   * @see #jsonParser
+   */
+  private static final native RpcResult parse(JavaScriptObject parserFunction,
+      String json)
+  /*-{
+    return parserFunction(json);
+  }-*/;
+
 
   private static class RpcResult extends JavaScriptObject {
     protected RpcResult() {
