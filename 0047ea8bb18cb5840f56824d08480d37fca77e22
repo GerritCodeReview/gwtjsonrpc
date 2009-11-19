@@ -54,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAo3///Kc\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall20HttpGet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-11-19T16:32:34Z",
+      "side": 1,
+      "message": "OK, I agree about moving [] into the proxy.",
+      "parentUuid": "AAAAo3///Ks\u003d",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAo3///LA\u003d",
         "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall20HttpGet.java",
         "patchSetId": 1
@@ -83,6 +101,24 @@
       "side": 1,
       "message": "Mainly because the spec @ says:\n---\nRegardless of whether a remote procedure call is made using HTTP GET or POST, the HTTP request message MUST specify the following headers:\n    * Content-Type SHOULD be \u0027application/json-rpc\u0027 but MAY be \u0027application/json\u0027 or \u0027application/jsonrequest\u0027\n---\nI am not sure if it makes sense... there is a semantic difference between a content-typed 0 length body and an untyped 0 length body...\n\nSummary:\n+ the spec says so\n+ it adds additional information about the type of request\n- few extra bytes overhead per call",
       "parentUuid": "AAAAo3///LA\u003d",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///KY\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall20HttpGet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-11-19T16:32:34Z",
+      "side": 1,
+      "message": "OK.  Since the spec says it should be, it should be.  Its just weird to send a Content-Type with no Content-Length (or Content-Length: 0).",
+      "parentUuid": "AAAAo3///Ko\u003d",
       "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
@@ -135,6 +171,24 @@
       "side": 1,
       "message": "Heh, such as the default Gerrit font :)\n\nNo objections at all, though I was planning a refactoring of the classes after this. My idea was to substructure the .gwtjsonrpc.client package similar to the gwt rpc packages, with an impl subpackage(s) for those classes required to be public, yet have no place in a public API (such as the JsonCall classes). I was going to suggest\n.gwtjsonrpc.client (for the main classes)\n.gwtjsonrpc.client.event.* (for the events)\n.gwtjsonrpc.client.impl.v11 (and then just .JsonCall for the class)\n.gwtjsonrpc.client.impl.ser (for the serializers)\n\nOn a side note, the Gerrit font could use a change to something that does not have this problem; should be usefull for a code review website.",
       "parentUuid": "AAAAo3///K0\u003d",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///KU\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/ProxyCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-11-19T16:32:34Z",
+      "side": 1,
+      "message": "I think your refactoring plan makes sense.  It would also fix the JsonCall11 naming issue, but it means we\u0027d have to use fully qualified names when we reference the classes here.  Not really a big deal.\n\nRegarding the Gerrit font, I opened issue 345 [1] for it.\n\n[1] http://code.google.com/p/gerrit/issues/detail?id\u003d345",
+      "parentUuid": "AAAAo3///Kk\u003d",
       "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
