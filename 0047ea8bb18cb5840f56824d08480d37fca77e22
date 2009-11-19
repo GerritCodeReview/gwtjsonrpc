@@ -1,0 +1,89 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAo3///LE\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall20HttpGet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-11-19T15:59:40Z",
+      "side": 1,
+      "message": "On these new JSON 2.0 files I\u0027m not sure you want to assign copyright to Google.  Its certainly not necessary, you could instead list yourself here.",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///K8\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall20HttpGet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-11-19T15:59:40Z",
+      "side": 1,
+      "message": "Don\u0027t you need to use\n\n  \"[\" + requestParams + \"]\"\n\nbecause the requestParams is encoded as a list without the list open/close tags as they are inserted by the request payload formatter (see JsonCall20HttpPost.send)?",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///LA\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall20HttpGet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-11-19T15:59:40Z",
+      "side": 1,
+      "message": "Why does a GET need a Content-Type?  It has no body.",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///K4\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/RpcImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-11-19T15:59:40Z",
+      "side": 1,
+      "message": "I think you can just do @see http:// and skip the anchor tag.",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///K0\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/ProxyCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-11-19T15:59:40Z",
+      "side": 1,
+      "message": "Wow, I didn\u0027t realize it but JsonCall11HttpPost is nearly impossible to read in some fonts.\n\nAny objection to putting underscores in the middle?  JsonCall_v1_1_HttpPost ?  JsonCall_v2_0_HttpGet ?",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
