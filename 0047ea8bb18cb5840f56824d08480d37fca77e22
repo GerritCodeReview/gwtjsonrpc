@@ -36,6 +36,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAo3///Ks\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall20HttpGet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1001689
+      },
+      "writtenOn": "2009-11-19T16:21:59Z",
+      "side": 1,
+      "message": "Yes, too much copy-pasting too little reading on my part.\nIf we want to support named parameter passing next to positional parameter passing, it would be best to put the bouding [] in the serializer (aka proxy) in the first place, so the call can ignore the exact parameter semantics. I\u0027ll adjust that tomorrow.",
+      "parentUuid": "AAAAo3///K8\u003d",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAo3///LA\u003d",
         "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall20HttpGet.java",
         "patchSetId": 1
@@ -47,6 +65,24 @@
       "writtenOn": "2009-11-19T15:59:40Z",
       "side": 1,
       "message": "Why does a GET need a Content-Type?  It has no body.",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///Ko\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall20HttpGet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1001689
+      },
+      "writtenOn": "2009-11-19T16:21:59Z",
+      "side": 1,
+      "message": "Mainly because the spec @ says:\n---\nRegardless of whether a remote procedure call is made using HTTP GET or POST, the HTTP request message MUST specify the following headers:\n    * Content-Type SHOULD be \u0027application/json-rpc\u0027 but MAY be \u0027application/json\u0027 or \u0027application/jsonrequest\u0027\n---\nI am not sure if it makes sense... there is a semantic difference between a content-typed 0 length body and an untyped 0 length body...\n\nSummary:\n+ the spec says so\n+ it adds additional information about the type of request\n- few extra bytes overhead per call",
+      "parentUuid": "AAAAo3///LA\u003d",
       "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
@@ -81,6 +117,24 @@
       "writtenOn": "2009-11-19T15:59:40Z",
       "side": 1,
       "message": "Wow, I didn\u0027t realize it but JsonCall11HttpPost is nearly impossible to read in some fonts.\n\nAny objection to putting underscores in the middle?  JsonCall_v1_1_HttpPost ?  JsonCall_v2_0_HttpGet ?",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///Kk\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/ProxyCreator.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 259,
+      "author": {
+        "id": 1001689
+      },
+      "writtenOn": "2009-11-19T16:21:59Z",
+      "side": 1,
+      "message": "Heh, such as the default Gerrit font :)\n\nNo objections at all, though I was planning a refactoring of the classes after this. My idea was to substructure the .gwtjsonrpc.client package similar to the gwt rpc packages, with an impl subpackage(s) for those classes required to be public, yet have no place in a public API (such as the JsonCall classes). I was going to suggest\n.gwtjsonrpc.client (for the main classes)\n.gwtjsonrpc.client.event.* (for the events)\n.gwtjsonrpc.client.impl.v11 (and then just .JsonCall for the class)\n.gwtjsonrpc.client.impl.ser (for the serializers)\n\nOn a side note, the Gerrit font could use a change to something that does not have this problem; should be usefull for a code review website.",
+      "parentUuid": "AAAAo3///K0\u003d",
       "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
