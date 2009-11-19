@@ -17,30 +17,38 @@ package com.google.gwtjsonrpc.client;
 import com.google.gwt.json.client.JSONValue;
 
 /**
- * Exception given to {@link com.google.gwt.user.client.rpc.AsyncCallback#onFailure(Throwable)}.
+ * Exception given to
+ * {@link com.google.gwt.user.client.rpc.AsyncCallback#onFailure(Throwable)}.
  * <p>
  * This exception is used if the remote JSON server has returned a well-formed
  * JSON error response.
  */
 public class RemoteJsonException extends Exception {
+  private static final long serialVersionUID = 1L;
   private int code;
-  private JSONValue error;
+  private JSONValue data;
 
   /**
-   * Construct a new exception representing a welformed JSON error response.
+   * Construct a new exception representing a well formed JSON error response.
    * 
    * @param message A String value that provides a short description of the
-   *        error.
-   * @param code A number that indicates the actual error that occurred.
-   * @param error A JSON value instance that carries custom and
-   *        application-specific error information.
+   *        error
+   * @param code A number that indicates the actual error that occurred
+   * @param data A JSON value instance that carries custom and
+   *        application-specific error information
    */
-  public RemoteJsonException(final String message, int code, JSONValue error) {
+  public RemoteJsonException(final String message, int code, JSONValue data) {
     super(message);
     this.code = code;
-    this.error = error;
+    this.data = data;
   }
 
+  /**
+   * Creates a new RemoteJsonException with code 999 and no data.
+   * 
+   * @param message A String value that provides a short description of the
+   *        error
+   */
   public RemoteJsonException(final String message) {
     this(message, 999, null);
   }
@@ -57,12 +65,21 @@ public class RemoteJsonException extends Exception {
   }
 
   /**
-   * Gets the extra error information.
+   * Same as getData.
    * 
-   * @return <code>null</code> if no error information was specified by the
-   *         server, or value.
+   * @return the error data, or <code>null</code> if none was specified
+   * @see #getData
    */
   public JSONValue getError() {
-    return error;
+    return data;
+  }
+
+  /**
+   * Gets the extra error information supplied by the service.
+   * 
+   * @return the error data, or <code>null</code> if none was specified
+   */
+  public JSONValue getData() {
+    return data;
   }
 }
