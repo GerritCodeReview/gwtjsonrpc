@@ -55,8 +55,12 @@ public abstract class AbstractJsonProxy implements JsonDefTarget {
     if (url == null) {
       throw new NoServiceEntryPointSpecifiedException();
     }
-    new JsonCall<T>(this, methodName, reqData, ser, cb).send();
+    newJsonCall(this, methodName, reqData, ser, cb).send();
   }
+
+  protected abstract <T> JsonCall<T> newJsonCall(AbstractJsonProxy proxy,
+      final String methodName, final String reqData,
+      final ResultDeserializer<T> ser, final AsyncCallback<T> cb);
 
   protected static native JavaScriptObject hostPageCacheGetOnce(String name)
   /*-{ var r = $wnd[name];$wnd[name] = null;return r ? {result: r} : null; }-*/;

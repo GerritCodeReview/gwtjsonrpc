@@ -33,6 +33,17 @@ public class JsonUtil {
   /** Request Content-Type header for JSON data. */
   static final String JSON_REQ_CT = JSON_TYPE + "; charset=utf-8";
 
+  /** Json-rpc 2.0: Proper Content-Type header value for JSON encoded data. */
+  public static final String JSONRPC20_TYPE = "application/json-rpc";
+
+  /** Json-rpc 2.0: Request Content-Type header for JSON data. */
+  static final String JSONRPC20_REQ_CT = JSON_TYPE + "; charset=utf-8";
+
+  /** Json-rpc 2.0: Content types that we SHOULD accept as being valid */
+  static final String JSONRPC20_ACCEPT_CTS =
+      JSON_TYPE + ",application/json,application/jsonrequest";
+
+
   /** Error message when xsrfKey in request is missing or invalid. */
   public static final String ERROR_INVALID_XSRF = "Invalid xsrfKey in request";
 

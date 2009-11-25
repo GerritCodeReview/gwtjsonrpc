@@ -19,6 +19,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
+import com.google.gwt.core.ext.TreeLogger.Type;
 import com.google.gwt.core.ext.typeinfo.JArrayType;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -37,9 +38,15 @@ import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwtjsonrpc.client.AbstractJsonProxy;
 import com.google.gwtjsonrpc.client.CallbackHandle;
 import com.google.gwtjsonrpc.client.HostPageCache;
+import com.google.gwtjsonrpc.client.JsonCall11HttpPost;
+import com.google.gwtjsonrpc.client.JsonCall20HttpGet;
+import com.google.gwtjsonrpc.client.JsonCall20HttpPost;
 import com.google.gwtjsonrpc.client.JsonSerializer;
 import com.google.gwtjsonrpc.client.JsonUtil;
 import com.google.gwtjsonrpc.client.ResultDeserializer;
+import com.google.gwtjsonrpc.client.RpcImpl;
+import com.google.gwtjsonrpc.client.RpcImpl.Transport;
+import com.google.gwtjsonrpc.client.RpcImpl.Version;
 
 import java.io.PrintWriter;
 import java.util.HashSet;
@@ -60,7 +67,8 @@ class ProxyCreator {
   String create(final TreeLogger logger, final GeneratorContext context)
       throws UnableToCompleteException {
     serializerCreator = new SerializerCreator(context);
-    deserializerCreator = new ResultDeserializerCreator(context, serializerCreator);
+    deserializerCreator =
+        new ResultDeserializerCreator(context, serializerCreator);
     final TypeOracle typeOracle = context.getTypeOracle();
     try {
       asyncCallbackClass = typeOracle.getType(AsyncCallback.class.getName());
@@ -76,6 +84,7 @@ class ProxyCreator {
     }
 
     generateProxyConstructor(logger, srcWriter);
+    generateProxyCallCreator(logger, srcWriter);
     generateProxyMethods(logger, srcWriter);
     srcWriter.commit(logger);
 
@@ -199,6 +208,8 @@ class ProxyCreator {
     cf.addImport(AbstractJsonProxy.class.getCanonicalName());
     cf.addImport(JsonSerializer.class.getCanonicalName());
     cf.addImport(JavaScriptObject.class.getCanonicalName());
+    cf.addImport(ResultDeserializer.class.getCanonicalName());
+    cf.addImport(AsyncCallback.class.getCanonicalName());
     cf.addImport(GWT.class.getCanonicalName());
     cf.setSuperclass(AbstractJsonProxy.class.getSimpleName());
     cf.addImplementedInterface(svcInf.getErasedType().getQualifiedSourceName());
@@ -218,6 +229,48 @@ class ProxyCreator {
       w.outdent();
       w.println("}");
     }
+  }
+
+  private void generateProxyCallCreator(final TreeLogger logger,
+      final SourceWriter w) throws UnableToCompleteException {
+    String callName = getJsonCallClassName(logger);
+    w.println();
+    w.println("@Override");
+    w.print("protected <T> ");
+    w.print(callName);
+    w.print("<T> newJsonCall(final AbstractJsonProxy proxy, ");
+    w.print("final String methodName, final String reqData, ");
+    w.println("final ResultDeserializer<T> ser, final AsyncCallback<T> cb) {");
+    w.indent();
+
+    w.print("return new ");
+    w.print(callName);
+    w.println("<T>(proxy, methodName, reqData, ser, cb);");
+
+    w.outdent();
+    w.println("}");
+  }
+
+  private String getJsonCallClassName(final TreeLogger logger)
+      throws UnableToCompleteException {
+    RpcImpl impl = svcInf.getAnnotation(RpcImpl.class);
+    if (impl == null) {
+      return JsonCall11HttpPost.class.getCanonicalName();
+    } else if (impl.version() == Version.V1_1
+        && impl.transport() == Transport.HTTP_POST) {
+      return JsonCall11HttpPost.class.getCanonicalName();
+    } else if (impl.version() == Version.V2_0
+        && impl.transport() == Transport.HTTP_POST) {
+      return JsonCall20HttpPost.class.getCanonicalName();
+    } else if (impl.version() == Version.V2_0
+        && impl.transport() == Transport.HTTP_GET) {
+      return JsonCall20HttpGet.class.getCanonicalName();
+    }
+
+    logger.log(Type.ERROR, "Unsupported JSON-RPC version and transport "
+        + "combination: Supported are 1.1 over HTTP POST and "
+        + "2.0 over HTTP POST and GET");
+    throw new UnableToCompleteException();
   }
 
   private void generateProxyMethods(final TreeLogger logger,
@@ -334,11 +387,12 @@ class ProxyCreator {
 
     final String reqDataStr;
     if (params.length == 1) {
-      reqDataStr = "\"\"";
+      reqDataStr = "\"[]\"";
     } else {
       final String reqData = nameFactory.createName("reqData");
       w.println("final StringBuilder " + reqData + " = new StringBuilder();");
       needsComma = false;
+      w.println(reqData + ".append('[');");
       for (int i = 0; i < params.length - 1; i++) {
         if (needsComma) {
           w.println(reqData + ".append(\",\");");
@@ -376,6 +430,7 @@ class ProxyCreator {
           w.println("}");
         }
       }
+      w.println(reqData + ".append(']');");
       reqDataStr = reqData + ".toString()";
     }
 
