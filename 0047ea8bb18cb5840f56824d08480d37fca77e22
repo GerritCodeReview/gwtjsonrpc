@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAo3///GM\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall20HttpGet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001689
+      },
+      "writtenOn": "2009-11-25T10:23:26Z",
+      "side": 1,
+      "message": "Ok, will do.\nI don\u0027t suppose it really matters, with the apache license and all (other then possible re-licensing; IANAL), but isn\u0027t it a bit odd that a new file gets introduced as Copyright \u003cyear\u003e \u003cauthor|comp\u003e, but that future modifications don\u0027t amend this? Shouldn\u0027t the year increase? Shouldn\u0027t all authors be listed? Perhaps this is why most open source projects have this disclaimer on a per-project instead of a per-file basis? Ah well, just some musings.",
+      "parentUuid": "AAAAo3///LE\u003d",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAo3///K8\u003d",
         "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall20HttpGet.java",
         "patchSetId": 1
@@ -136,6 +154,24 @@
       "writtenOn": "2009-11-19T15:59:40Z",
       "side": 1,
       "message": "I think you can just do @see http:// and skip the anchor tag.",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///GQ\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/RpcImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1001689
+      },
+      "writtenOn": "2009-11-25T10:23:26Z",
+      "side": 1,
+      "message": "Unfortunately, the javadoc spec disagrees. The parameter of @see is a:\n- \"non clickable string\"\n- \u003ca href link\n- Java spec (class, field, method etc)\nhttp://java.sun.com/javase/6/docs/technotes/tools/windows/javadoc.html#@see\n\nWould have been nice if it could recognize a scheme to make clickable.",
+      "parentUuid": "AAAAo3///K4\u003d",
       "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
