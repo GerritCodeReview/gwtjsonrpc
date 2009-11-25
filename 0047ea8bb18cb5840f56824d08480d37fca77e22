@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "AAAAo3///FU\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall20HttpGet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-11-25T19:47:05Z",
+      "side": 1,
+      "message": "Right, the copyright assignment only matters if the project were to ever re-license under something other than APLv2.  Copyright assignment can also be useful when prosecuting a copyright infringement case.  Its easier to do that with 1 copyright holder than 500.  But copyright infringement on APLv2 code is basically a moot point.  :-)\n\nMost big projects use a generic \"Copyright \u003cyear\u003e \u003cproject\u003e\" so they don\u0027t have to modify the headers each time there is a change to the file.  I didn\u0027t do that initially with gwtjsonrpc, but probably should have, because it simplifies this issue of what to list as the copyright notice.\n\nCopyright in the US is effectively 70+ years right now.  So you only need to claim copyright on the initial year of authorship.  Its generally advised *not* to increase the year, e.g. replace \"2008\" with \"2009\", because that might be seen as a voiding of the copyright held in 2008.  Instead, if the work really is significant enough, adding a new 2009 notice in addition to the 2008 is preferred.  But this gets somewhat crazy fast.\n\nAs for when to add a new notice, its usually whenever the file is new, or if the file has had a really significant introduction of new code, \u003e~250 lines.  The 250 line rule is still a really gray area in copyright law, but there is some basic agreement that below 250 lines might be harder to claim original work on, while more than 250 lines is easier to claim original work on due to its size.\n\nBut, IANAL, so take it all with a very big grain of salt.  :-)",
+      "parentUuid": "AAAAo3///GM\u003d",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAAo3///K8\u003d",
         "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonCall20HttpGet.java",
         "patchSetId": 1
@@ -172,6 +190,24 @@
       "side": 1,
       "message": "Unfortunately, the javadoc spec disagrees. The parameter of @see is a:\n- \"non clickable string\"\n- \u003ca href link\n- Java spec (class, field, method etc)\nhttp://java.sun.com/javase/6/docs/technotes/tools/windows/javadoc.html#@see\n\nWould have been nice if it could recognize a scheme to make clickable.",
       "parentUuid": "AAAAo3///K4\u003d",
+      "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///FQ\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/RpcImpl.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-11-25T19:47:05Z",
+      "side": 1,
+      "message": "Arrrgh.  OK.  Silly javadoc spec.",
+      "parentUuid": "AAAAo3///GQ\u003d",
       "revId": "0047ea8bb18cb5840f56824d08480d37fca77e22",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
