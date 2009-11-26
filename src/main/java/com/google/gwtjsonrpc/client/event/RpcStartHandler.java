@@ -12,17 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.event;
 
-import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.shared.EventHandler;
 
-/**
- * Inteface class for deserializers of results from JSON RPC calls. Since
- * primitive and array results need to be handled specially, not all results can
- * be deserialized using the standard object serializers.
- * 
- * @param <T> the result type of an RPC call.
- */
-public interface ResultDeserializer<T> {
-  public T fromResult(JavaScriptObject responseObject);
+/** Handler to receive notifications on RPC beginning. */
+public interface RpcStartHandler extends EventHandler {
+  /** Invoked when an RPC call starts. */
+  public void onRpcStart(RpcStartEvent event);
 }

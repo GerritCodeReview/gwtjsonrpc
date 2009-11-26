@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.impl;
+
+import com.google.gwtjsonrpc.client.impl.ser.JavaLangString_JsonSerializer;
 
 /**
  * Converter between JSON and Java object representations.
@@ -70,6 +72,7 @@ public abstract class JsonSerializer<T> {
   public static final String escapeChar(final char c) {
     return escapeCharImpl(String.valueOf(c));
   }
+
   private static final native String escapeCharImpl(String c)/*-{ return @com.google.gwt.json.client.JSONString::escapeChar(Ljava/lang/String;)(c); }-*/;
 
   /** Return the first character of a string, or '\0' if the string is empty. */

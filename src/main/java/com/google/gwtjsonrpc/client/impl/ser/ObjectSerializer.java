@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.impl.ser;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwtjsonrpc.client.impl.JsonSerializer;
+import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
 /** Base class for generated JsonSerializer implementations. */
 public abstract class ObjectSerializer<T extends Object> extends
@@ -35,6 +37,6 @@ public abstract class ObjectSerializer<T extends Object> extends
   }
 
   static native JavaScriptObject objectResult(JavaScriptObject responseObject) /*-{
-     return responseObject.result;
-  }-*/;
+                                                                               return responseObject.result;
+                                                                               }-*/;
 }

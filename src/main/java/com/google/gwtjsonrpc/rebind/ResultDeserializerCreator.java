@@ -23,10 +23,10 @@ import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.google.gwtjsonrpc.client.ArrayResultDeserializer;
-import com.google.gwtjsonrpc.client.PrimitiveArrayResultDeserializers;
-import com.google.gwtjsonrpc.client.PrimitiveResultDeserializers;
-import com.google.gwtjsonrpc.client.ResultDeserializer;
+import com.google.gwtjsonrpc.client.impl.ArrayResultDeserializer;
+import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
+import com.google.gwtjsonrpc.client.impl.ser.PrimitiveArrayResultDeserializers;
+import com.google.gwtjsonrpc.client.impl.ser.PrimitiveResultDeserializers;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
