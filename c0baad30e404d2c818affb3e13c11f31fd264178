@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAAo3///E4\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/impl/ser/ObjectSerializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-11-26T19:16:13Z",
+      "side": 1,
+      "message": "Please correct this so we indent only 2 levels here, not over 60 columns.",
+      "revId": "c0baad30e404d2c818affb3e13c11f31fd264178",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///E0\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/impl/ser/PrimitiveArraySerializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-11-26T19:16:13Z",
+      "side": 1,
+      "message": "Please fix all of these indentations to only be 2 levels, not 60 columns or whatever they are.",
+      "revId": "c0baad30e404d2c818affb3e13c11f31fd264178",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAAo3///Ew\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/impl/v1_1/JsonCall11HttpPost.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-11-26T19:16:13Z",
+      "side": 1,
+      "message": "Didn\u0027t you suggest changing the class name when you did the repackage?",
+      "revId": "c0baad30e404d2c818affb3e13c11f31fd264178",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
