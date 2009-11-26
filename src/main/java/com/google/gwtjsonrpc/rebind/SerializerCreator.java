@@ -25,19 +25,19 @@ import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
 import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
-import com.google.gwtjsonrpc.client.EnumSerializer;
-import com.google.gwtjsonrpc.client.JavaLangString_JsonSerializer;
-import com.google.gwtjsonrpc.client.JavaSqlDate_JsonSerializer;
-import com.google.gwtjsonrpc.client.JavaSqlTimestamp_JsonSerializer;
-import com.google.gwtjsonrpc.client.JavaUtilDate_JsonSerializer;
-import com.google.gwtjsonrpc.client.JsonSerializer;
-import com.google.gwtjsonrpc.client.ListSerializer;
-import com.google.gwtjsonrpc.client.ObjectArraySerializer;
-import com.google.gwtjsonrpc.client.ObjectMapSerializer;
-import com.google.gwtjsonrpc.client.ObjectSerializer;
-import com.google.gwtjsonrpc.client.PrimitiveArraySerializer;
-import com.google.gwtjsonrpc.client.SetSerializer;
-import com.google.gwtjsonrpc.client.StringMapSerializer;
+import com.google.gwtjsonrpc.client.impl.JsonSerializer;
+import com.google.gwtjsonrpc.client.impl.ser.EnumSerializer;
+import com.google.gwtjsonrpc.client.impl.ser.JavaLangString_JsonSerializer;
+import com.google.gwtjsonrpc.client.impl.ser.JavaSqlDate_JsonSerializer;
+import com.google.gwtjsonrpc.client.impl.ser.JavaSqlTimestamp_JsonSerializer;
+import com.google.gwtjsonrpc.client.impl.ser.JavaUtilDate_JsonSerializer;
+import com.google.gwtjsonrpc.client.impl.ser.ListSerializer;
+import com.google.gwtjsonrpc.client.impl.ser.ObjectArraySerializer;
+import com.google.gwtjsonrpc.client.impl.ser.ObjectMapSerializer;
+import com.google.gwtjsonrpc.client.impl.ser.ObjectSerializer;
+import com.google.gwtjsonrpc.client.impl.ser.PrimitiveArraySerializer;
+import com.google.gwtjsonrpc.client.impl.ser.SetSerializer;
+import com.google.gwtjsonrpc.client.impl.ser.StringMapSerializer;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -214,7 +214,8 @@ class SerializerCreator {
           // To work around this, we would need to generate serializers for
           // them, this can be considered a todo
           throw new UnableToCompleteException();
-        } else // Rank 1 arrays work fine.
+        } else
+          // Rank 1 arrays work fine.
           return;
       }
       checkCanSerialize(logger, type.isArray().getComponentType());

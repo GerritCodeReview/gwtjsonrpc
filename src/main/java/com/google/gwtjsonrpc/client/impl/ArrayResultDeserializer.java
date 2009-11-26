@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.impl;
 
 import com.google.gwt.core.client.JavaScriptObject;
 
@@ -21,7 +21,8 @@ import com.google.gwt.core.client.JavaScriptObject;
  * object array result deserializers.
  */
 public abstract class ArrayResultDeserializer {
-  protected static native JavaScriptObject getResult(JavaScriptObject responseObject)
+  protected static native JavaScriptObject getResult(
+      JavaScriptObject responseObject)
   /*-{
     return responseObject.result;
   }-*/;

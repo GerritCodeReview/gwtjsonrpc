@@ -1,4 +1,4 @@
-// Copyright 2009 Google Inc.
+// Copyright 2009 Gert Scholten
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,49 +12,33 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.impl.v2_0;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.StatusCodeException;
+import com.google.gwtjsonrpc.client.JsonUtil;
+import com.google.gwtjsonrpc.client.RemoteJsonException;
+import com.google.gwtjsonrpc.client.event.RpcCompleteEvent;
+import com.google.gwtjsonrpc.client.impl.AbstractJsonProxy;
+import com.google.gwtjsonrpc.client.impl.JsonCall;
+import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
-/** JsonCall implementation for JsonRPC version 1.1 over HTTP POST */
-public class JsonCall11HttpPost<T> extends JsonCall<T> {
+/** Base JsonCall implementation for JsonRPC version 2.0 */
+abstract class JsonCall20<T> extends JsonCall<T> {
+  protected static int lastRequestId = 0;
 
-  public JsonCall11HttpPost(AbstractJsonProxy abstractJsonProxy,
-      String methodName, String requestParams,
-      ResultDeserializer<T> resultDeserializer, AsyncCallback<T> callback) {
+  protected int requestId;
+
+  JsonCall20(AbstractJsonProxy abstractJsonProxy, String methodName,
+      String requestParams, ResultDeserializer<T> resultDeserializer,
+      AsyncCallback<T> callback) {
     super(abstractJsonProxy, methodName, requestParams, resultDeserializer,
         callback);
-  }
-
-  @Override
-  void send() {
-    final StringBuilder body = new StringBuilder();
-    body.append("{\"version\":\"1.1\",\"method\":\"");
-    body.append(methodName);
-    body.append("\",\"params\":");
-    body.append(requestParams);
-    final String xsrfKey = proxy.getXsrfManager().getToken(proxy);
-    if (xsrfKey != null) {
-      body.append(",\"xsrfKey\":");
-      body.append(JsonSerializer.escapeString(xsrfKey));
-    }
-    body.append("}");
-
-    final RequestBuilder rb;
-    rb = new RequestBuilder(RequestBuilder.POST, proxy.url);
-    rb.setHeader("Content-Type", JsonUtil.JSON_REQ_CT);
-    rb.setHeader("Accept", JsonUtil.JSON_TYPE);
-    rb.setCallback(this);
-    rb.setRequestData(body.toString());
-
-    send(rb);
   }
 
   @Override
@@ -65,7 +49,7 @@ public class JsonCall11HttpPost<T> extends JsonCall<T> {
       try {
         r = parse(jsonParser, rsp.getText());
       } catch (RuntimeException e) {
-        fireEvent(RpcCompleteEvent.e);
+        RpcCompleteEvent.fire(this);
         callback.onFailure(new InvocationException("Bad JSON response: " + e));
         return;
       }
@@ -75,6 +59,7 @@ public class JsonCall11HttpPost<T> extends JsonCall<T> {
       }
 
       if (r.error() != null) {
+        // TODO: define status code for the invalid XSRF msg for 2.0 (-32099 ?)
         final String errmsg = r.error().message();
         if (JsonUtil.ERROR_INVALID_XSRF.equals(errmsg)) {
           if (attempts < 2) {
@@ -84,34 +69,34 @@ public class JsonCall11HttpPost<T> extends JsonCall<T> {
             //
             send();
           } else {
-            fireEvent(RpcCompleteEvent.e);
+            RpcCompleteEvent.fire(this);
             callback.onFailure(new InvocationException(errmsg));
           }
         } else {
-          fireEvent(RpcCompleteEvent.e);
+          RpcCompleteEvent.fire(this);
           callback.onFailure(new RemoteJsonException(errmsg, r.error().code(),
-              new JSONObject(r.error()).get("error")));
+              new JSONObject(r.error()).get("data")));
         }
         return;
       }
 
       if (sc == Response.SC_OK) {
-        fireEvent(RpcCompleteEvent.e);
+        RpcCompleteEvent.fire(this);
         JsonUtil.invoke(resultDeserializer, callback, r);
         return;
       }
     }
 
     if (sc == Response.SC_OK) {
-      fireEvent(RpcCompleteEvent.e);
+      RpcCompleteEvent.fire(this);
       callback.onFailure(new InvocationException("No JSON response"));
     } else {
-      fireEvent(RpcCompleteEvent.e);
+      RpcCompleteEvent.fire(this);
       callback.onFailure(new StatusCodeException(sc, rsp.getStatusText()));
     }
   }
 
-  private static boolean isJsonBody(final Response rsp) {
+  protected static boolean isJsonBody(final Response rsp) {
     String type = rsp.getHeader("Content-Type");
     if (type == null) {
       return false;
@@ -120,7 +105,7 @@ public class JsonCall11HttpPost<T> extends JsonCall<T> {
     if (semi >= 0) {
       type = type.substring(0, semi).trim();
     }
-    return JsonUtil.JSON_TYPE.equals(type);
+    return JsonUtil.JSONRPC20_ACCEPT_CTS.contains(type);
   }
 
   /**

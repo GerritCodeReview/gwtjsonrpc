@@ -1,4 +1,4 @@
-// Copyright 2008 Google Inc.
+// Copyright 2009 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,14 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.impl;
 
-/** Base serializer for Enum types. */
-public abstract class EnumSerializer<T extends Enum<?>> extends JsonSerializer<T> {
-  @Override
-  public void printJson(final StringBuilder sb, final T o) {
-    sb.append('"');
-    sb.append(o.name());
-    sb.append('"');
-  }
+import com.google.gwt.core.client.JavaScriptObject;
+
+/**
+ * Inteface class for deserializers of results from JSON RPC calls. Since
+ * primitive and array results need to be handled specially, not all results can
+ * be deserialized using the standard object serializers.
+ * 
+ * @param <T> the result type of an RPC call.
+ */
+public interface ResultDeserializer<T> {
+  public T fromResult(JavaScriptObject responseObject);
 }

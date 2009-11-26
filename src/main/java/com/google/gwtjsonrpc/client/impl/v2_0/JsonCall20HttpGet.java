@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.impl.v2_0;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwtjsonrpc.client.JsonUtil;
+import com.google.gwtjsonrpc.client.impl.AbstractJsonProxy;
+import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
 /** JsonCall implementation for JsonRPC version 2.0 over HTTP POST */
 public class JsonCall20HttpGet<T> extends JsonCall20<T> {
@@ -31,9 +34,9 @@ public class JsonCall20HttpGet<T> extends JsonCall20<T> {
   }
 
   @Override
-  void send() {
+  protected void send() {
     requestId = ++lastRequestId;
-    final StringBuilder url = new StringBuilder(proxy.url);
+    final StringBuilder url = new StringBuilder(proxy.getServiceEntryPoint());
     url.append("?jsonrpc=2.0&method=").append(methodName);
     url.append("&params=").append(encodedRequestParams);
     url.append("&id=").append(requestId);

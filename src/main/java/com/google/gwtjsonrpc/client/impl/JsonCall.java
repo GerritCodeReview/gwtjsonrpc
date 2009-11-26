@@ -12,17 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.impl;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwtjsonrpc.client.ServerUnavailableException;
+import com.google.gwtjsonrpc.client.event.RpcCompleteEvent;
+import com.google.gwtjsonrpc.client.event.RpcStartEvent;
 
-abstract class JsonCall<T> implements RequestCallback {
+public abstract class JsonCall<T> implements RequestCallback {
   protected static final JavaScriptObject jsonParser;
 
   static {
@@ -64,8 +66,8 @@ abstract class JsonCall<T> implements RequestCallback {
   protected final AsyncCallback<T> callback;
   protected int attempts;
 
-  JsonCall(final AbstractJsonProxy abstractJsonProxy, final String methodName,
-      final String requestParams,
+  protected JsonCall(final AbstractJsonProxy abstractJsonProxy,
+      final String methodName, final String requestParams,
       final ResultDeserializer<T> resultDeserializer,
       final AsyncCallback<T> callback) {
     this.proxy = abstractJsonProxy;
@@ -75,15 +77,15 @@ abstract class JsonCall<T> implements RequestCallback {
     this.callback = callback;
   }
 
-  AbstractJsonProxy getProxy() {
+  public AbstractJsonProxy getProxy() {
     return proxy;
   }
 
-  String getMethodName() {
+  public String getMethodName() {
     return methodName;
   }
 
-  abstract void send();
+  protected abstract void send();
 
   protected void send(RequestBuilder rb) {
     try {
@@ -95,12 +97,12 @@ abstract class JsonCall<T> implements RequestCallback {
     }
 
     if (attempts == 1) {
-      fireEvent(RpcStartEvent.e);
+      RpcStartEvent.fire(this);
     }
   }
 
   public void onError(final Request request, final Throwable exception) {
-    fireEvent(RpcCompleteEvent.e);
+    RpcCompleteEvent.fire(this);
     if (exception.getClass() == RuntimeException.class
         && exception.getMessage().contains("XmlHttpRequest.status")) {
       // GWT's XMLHTTPRequest class gives us RuntimeException when the
@@ -111,10 +113,5 @@ abstract class JsonCall<T> implements RequestCallback {
     } else {
       callback.onFailure(exception);
     }
-  }
-
-  protected <S extends EventHandler> void fireEvent(BaseRpcEvent<S> e) {
-    e.call = this;
-    JsonUtil.fireEvent(e);
   }
 }
