@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.impl.ser;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwtjsonrpc.client.impl.JsonSerializer;
+import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
 public class PrimitiveResultDeserializers {
   static native boolean booleanResult(JavaScriptObject responseObject)

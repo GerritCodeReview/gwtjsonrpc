@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.impl.ser;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 
 public class PrimitiveArraySerializer {
   public static final PrimitiveArraySerializer INSTANCE =
@@ -151,33 +152,26 @@ public class PrimitiveArraySerializer {
   }
 
   // DeSerialisation native getters
-  private static final native boolean getBoolean(JavaScriptObject jso, int pos) /*-{
-     return jso[pos];
-   }-*/;
+  private static final native boolean getBoolean(JavaScriptObject jso, int pos)
+  /*-{ return jso[pos]; }-*/;
 
-  private static final native byte getByte(JavaScriptObject jso, int pos) /*-{
-     return jso[pos];
-   }-*/;
+  private static final native byte getByte(JavaScriptObject jso, int pos)
+  /*-{ return jso[pos]; }-*/;
 
-  private static final native String getString(JavaScriptObject jso, int pos) /*-{
-     return jso[pos];
-   }-*/;
+  private static final native String getString(JavaScriptObject jso, int pos)
+  /*-{ return jso[pos]; }-*/;
 
-  private static final native double getDouble(JavaScriptObject jso, int pos) /*-{
-     return jso[pos];
-   }-*/;
+  private static final native double getDouble(JavaScriptObject jso, int pos)
+  /*-{ return jso[pos]; }-*/;
 
-  private static final native float getFloat(JavaScriptObject jso, int pos) /*-{
-     return jso[pos];
-   }-*/;
+  private static final native float getFloat(JavaScriptObject jso, int pos)
+  /*-{ return jso[pos]; }-*/;
 
-  private static final native int getInteger(JavaScriptObject jso, int pos) /*-{
-     return jso[pos];
-   }-*/;
+  private static final native int getInteger(JavaScriptObject jso, int pos)
+  /*-{ return jso[pos]; }-*/;
 
-  private static final native short getShort(JavaScriptObject jso, int pos) /*-{
-     return jso[pos];
-   }-*/;
+  private static final native short getShort(JavaScriptObject jso, int pos)
+  /*-{ return jso[pos]; }-*/;
 
   // DeSerialisation of boxed primitive arrays
   public void fromJson(final JavaScriptObject jso, final Boolean[] r) {

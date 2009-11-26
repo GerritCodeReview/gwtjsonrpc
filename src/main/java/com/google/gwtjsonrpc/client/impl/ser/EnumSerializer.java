@@ -1,4 +1,4 @@
-// Copyright 2009 Google Inc.
+// Copyright 2008 Google Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,12 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.impl.ser;
 
-import com.google.gwt.event.shared.EventHandler;
+import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 
-/** Handler to receive notifications on RPC has finished. */
-public interface RpcCompleteHandler extends EventHandler {
-  /** Invoked when an RPC call completes. */
-  public void onRpcComplete(RpcCompleteEvent event);
+/** Base serializer for Enum types. */
+public abstract class EnumSerializer<T extends Enum<?>> extends
+    JsonSerializer<T> {
+  @Override
+  public void printJson(final StringBuilder sb, final T o) {
+    sb.append('"');
+    sb.append(o.name());
+    sb.append('"');
+  }
 }

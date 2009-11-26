@@ -12,10 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.impl.v2_0;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwtjsonrpc.client.JsonUtil;
+import com.google.gwtjsonrpc.client.impl.AbstractJsonProxy;
+import com.google.gwtjsonrpc.client.impl.JsonSerializer;
+import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
 /** JsonCall implementation for JsonRPC version 2.0 over HTTP POST */
 public class JsonCall20HttpPost<T> extends JsonCall20<T> {
@@ -27,7 +31,7 @@ public class JsonCall20HttpPost<T> extends JsonCall20<T> {
   }
 
   @Override
-  void send() {
+  protected void send() {
     requestId = ++lastRequestId;
     final StringBuilder body = new StringBuilder();
     body.append("{\"jsonrpc\":\"2.0\",\"method\":\"");
@@ -43,7 +47,7 @@ public class JsonCall20HttpPost<T> extends JsonCall20<T> {
     body.append("}");
 
     final RequestBuilder rb;
-    rb = new RequestBuilder(RequestBuilder.POST, proxy.url);
+    rb = new RequestBuilder(RequestBuilder.POST, proxy.getServiceEntryPoint());
     rb.setHeader("Content-Type", JsonUtil.JSONRPC20_REQ_CT);
     rb.setHeader("Accept", JsonUtil.JSONRPC20_ACCEPT_CTS);
     rb.setCallback(this);

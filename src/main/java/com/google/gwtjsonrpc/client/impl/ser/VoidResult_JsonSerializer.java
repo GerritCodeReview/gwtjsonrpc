@@ -12,9 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.impl.ser;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwtjsonrpc.client.VoidResult;
+import com.google.gwtjsonrpc.client.impl.JsonSerializer;
+import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
 public class VoidResult_JsonSerializer extends JsonSerializer<VoidResult>
     implements ResultDeserializer<VoidResult> {

@@ -12,49 +12,48 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.impl.ser;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwtjsonrpc.client.impl.JsonSerializer;
+import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Serialization for a {@link java.util.Map} using any Object key.
+ * Serialization for a {@link java.util.Map} using only String keys.
  * <p>
- * The JSON format is an array with even length, alternating key and value
- * elements. For example: <code>[k1, v1, k2, v2, k3, v3, ...]</code>. The keys
- * and values may be any Object type.
+ * The JSON representation is a JSON object, the map keys become the property
+ * names of the JSON object and the map values are the property values.
  * <p>
  * When deserialized from JSON the Map implementation is always a
  * {@link HashMap}. When serializing to JSON any Map is permitted.
  */
-public class ObjectMapSerializer<K, V> extends
-    JsonSerializer<java.util.Map<K, V>> implements
-    ResultDeserializer<java.util.Map<K, V>> {
-  private final JsonSerializer<K> keySerializer;
+public class StringMapSerializer<V> extends
+    JsonSerializer<java.util.Map<String, V>> implements
+    ResultDeserializer<java.util.Map<String, V>> {
   private final JsonSerializer<V> valueSerializer;
 
-  public ObjectMapSerializer(final JsonSerializer<K> k, final JsonSerializer<V> v) {
-    keySerializer = k;
+  public StringMapSerializer(final JsonSerializer<V> v) {
     valueSerializer = v;
   }
 
   @Override
-  public void printJson(final StringBuilder sb, final java.util.Map<K, V> o) {
-    sb.append('[');
+  public void printJson(final StringBuilder sb, final java.util.Map<String, V> o) {
+    sb.append('{');
     boolean first = true;
-    for (final Map.Entry<K, V> e : o.entrySet()) {
+    for (final Map.Entry<String, V> e : o.entrySet()) {
       if (first) {
         first = false;
       } else {
         sb.append(',');
       }
-      encode(sb, keySerializer, e.getKey());
-      sb.append(',');
+      sb.append(escapeString(e.getKey()));
+      sb.append(':');
       encode(sb, valueSerializer, e.getValue());
     }
-    sb.append(']');
+    sb.append('}');
   }
 
   private static <T> void encode(final StringBuilder sb,
@@ -67,29 +66,31 @@ public class ObjectMapSerializer<K, V> extends
   }
 
   @Override
-  public java.util.Map<K, V> fromJson(final Object o) {
+  public java.util.Map<String, V> fromJson(final Object o) {
     if (o == null) {
       return null;
     }
 
     final JavaScriptObject jso = (JavaScriptObject) o;
-    final int n = size(jso);
-    final HashMap<K, V> r = new HashMap<K, V>();
-    for (int i = 0; i < n;) {
-      final K k = keySerializer.fromJson(get(jso, i++));
-      final V v = valueSerializer.fromJson(get(jso, i++));
-      r.put(k, v);
-    }
+    final HashMap<String, V> r = new HashMap<String, V>();
+    copy(r, jso);
     return r;
   }
 
   @Override
-  public java.util.Map<K, V> fromResult(final JavaScriptObject response) {
+  public java.util.Map<String, V> fromResult(final JavaScriptObject response) {
     final JavaScriptObject result = ObjectSerializer.objectResult(response);
     return result == null ? null : fromJson(result);
   }
 
-  private static final native int size(JavaScriptObject o)/*-{ return o.length; }-*/;
+  private native void copy(Map<String, V> r, JavaScriptObject jsObject)
+  /*-{
+    for (var key in jsObject) {
+      this.@com.google.gwtjsonrpc.client.impl.ser.StringMapSerializer::copyOne(Ljava/util/Map;Ljava/lang/String;Ljava/lang/Object;)(r, key, jsObject[key]);
+    }
+  }-*/;
 
-  private static final native Object get(JavaScriptObject o, int i)/*-{ return o[i]; }-*/;
+  void copyOne(final Map<String, V> r, final String k, final Object o) {
+    r.put(k, valueSerializer.fromJson(o));
+  }
 }

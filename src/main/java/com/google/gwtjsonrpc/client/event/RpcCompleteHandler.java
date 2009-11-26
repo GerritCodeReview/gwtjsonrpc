@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.client.event;
 
 import com.google.gwt.event.shared.EventHandler;
 
-/** Handler to receive notifications on RPC beginning. */
-public interface RpcStartHandler extends EventHandler {
-  /** Invoked when an RPC call starts. */
-  public void onRpcStart(RpcStartEvent event);
+/** Handler to receive notifications on RPC has finished. */
+public interface RpcCompleteHandler extends EventHandler {
+  /** Invoked when an RPC call completes. */
+  public void onRpcComplete(RpcCompleteEvent event);
 }

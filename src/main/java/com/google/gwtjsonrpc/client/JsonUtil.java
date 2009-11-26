@@ -21,6 +21,12 @@ import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
+import com.google.gwtjsonrpc.client.event.BaseRpcEvent;
+import com.google.gwtjsonrpc.client.event.RpcCompleteEvent;
+import com.google.gwtjsonrpc.client.event.RpcCompleteHandler;
+import com.google.gwtjsonrpc.client.event.RpcStartEvent;
+import com.google.gwtjsonrpc.client.event.RpcStartHandler;
+import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
 /** Shared constants between client and server implementations. */
 public class JsonUtil {
@@ -31,16 +37,16 @@ public class JsonUtil {
   public static final String JSON_ENC = "UTF-8";
 
   /** Request Content-Type header for JSON data. */
-  static final String JSON_REQ_CT = JSON_TYPE + "; charset=utf-8";
+  public static final String JSON_REQ_CT = JSON_TYPE + "; charset=utf-8";
 
   /** Json-rpc 2.0: Proper Content-Type header value for JSON encoded data. */
   public static final String JSONRPC20_TYPE = "application/json-rpc";
 
   /** Json-rpc 2.0: Request Content-Type header for JSON data. */
-  static final String JSONRPC20_REQ_CT = JSON_TYPE + "; charset=utf-8";
+  public static final String JSONRPC20_REQ_CT = JSON_TYPE + "; charset=utf-8";
 
   /** Json-rpc 2.0: Content types that we SHOULD accept as being valid */
-  static final String JSONRPC20_ACCEPT_CTS =
+  public static final String JSONRPC20_ACCEPT_CTS =
       JSON_TYPE + ",application/json,application/jsonrequest";
 
 
@@ -114,9 +120,8 @@ public class JsonUtil {
     return globalHandlers.addHandler(RpcCompleteEvent.getType(), h);
   }
 
-  static void fireEvent(BaseRpcEvent<?> event) {
+  public static void fireEvent(BaseRpcEvent<?> event) {
     globalHandlers.fireEvent(event);
-    event.call = null;
   }
 
   public static <T> void invoke(final ResultDeserializer<T> resultDeserializer,
