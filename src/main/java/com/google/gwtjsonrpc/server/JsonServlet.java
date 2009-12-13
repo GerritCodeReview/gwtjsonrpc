@@ -24,6 +24,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -31,6 +32,8 @@ import com.google.gwt.user.server.rpc.RPCServletUtils;
 import com.google.gwtjsonrpc.client.CookieAccess;
 import com.google.gwtjsonrpc.client.JsonUtil;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
+
+import org.apache.commons.codec.binary.Base64;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,9 +70,13 @@ import javax.servlet.http.HttpServletResponse;
  * any interface(s) that extend from {@link RemoteJsonService}. Clients may
  * invoke methods declared in any implemented interface.
  * <p>
+ * <b>JSON-RPC 1.1</b><br>
  * Calling conventions match the JSON-RPC 1.1 working draft from 7 August 2006
  * (<a href="http://json-rpc.org/wd/JSON-RPC-1-1-WD-20060807.html">draft</a>).
  * Only positional parameters are supported.
+ * <p>
+ * <b>JSON-RPC 2.0</b><br>
+ * Calling conventions match the JSON-RPC 2.0 specification.
  * <p>
  * When supported by the browser/client, the "gzip" encoding is used to compress
  * the resulting JSON, reducing transfer time for the response data.
@@ -110,7 +117,6 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
   }
 
   static final Object[] NO_PARAMS = {};
-  static final String RPC_VERSION = "1.1";
   private static final String ENC = "UTF-8";
 
   private Map<String, MethodHandle> myMethods;
@@ -371,36 +377,64 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     }
   }
 
-  private void parseGetRequest(final ActiveCall call) {
-    final Gson gs = createGsonBuilder().create();
+  private void parseGetRequest(final CallType call) {
     final HttpServletRequest req = call.httpRequest;
-    call.method = lookupMethod(req.getParameter("method"));
-    if (call.method == null) {
-      throw new NoSuchRemoteMethodException();
-    }
 
-    final Type[] paramTypes = call.method.getParamTypes();
-    final Object[] r = new Object[paramTypes.length];
-    for (int i = 0; i < r.length; i++) {
-      final String v = req.getParameter("param" + i);
-      if (v == null) {
-        r[i] = null;
-      } else if (paramTypes[i] == String.class) {
-        r[i] = v;
-      } else if (paramTypes[i] instanceof Class
-          && ((Class<?>) paramTypes[i]).isPrimitive()) {
-        // Primitive type, use the JSON representation of that type.
-        //
-        r[i] = gs.fromJson(v, paramTypes[i]);
-      } else {
-        // Assume it is like a java.sql.Timestamp or something and treat
-        // the value as JSON string.
-        //
-        r[i] = gs.fromJson(gs.toJson(v), paramTypes[i]);
+    if ("2.0".equals(req.getParameter("jsonrpc"))) {
+      final JsonObject d = new JsonObject();
+      d.addProperty("jsonrpc", "2.0");
+      d.addProperty("method", req.getParameter("method"));
+      d.addProperty("id", req.getParameter("id"));
+      try {
+        final byte[] params = req.getParameter("params").getBytes("ISO-8859-1");
+        final String p = new String(Base64.decodeBase64(params), "UTF-8");
+        d.add("params", new JsonParser().parse(p));
+      } catch (UnsupportedEncodingException e) {
+        throw new JsonParseException("Cannot parse params", e);
       }
+
+      try {
+        final GsonBuilder gb = createGsonBuilder();
+        gb.registerTypeAdapter(ActiveCall.class, //
+            new CallDeserializer<CallType>(call, this));
+        gb.create().fromJson(d, ActiveCall.class);
+      } catch (JsonParseException err) {
+        call.method = null;
+        call.params = null;
+        throw err;
+      }
+
+    } else { /* JSON-RPC 1.1 */
+      final Gson gs = createGsonBuilder().create();
+
+      call.method = lookupMethod(req.getParameter("method"));
+      if (call.method == null) {
+        throw new NoSuchRemoteMethodException();
+      }
+      final Type[] paramTypes = call.method.getParamTypes();
+      final Object[] r = new Object[paramTypes.length];
+
+      for (int i = 0; i < r.length; i++) {
+        final String v = req.getParameter("param" + i);
+        if (v == null) {
+          r[i] = null;
+        } else if (paramTypes[i] == String.class) {
+          r[i] = v;
+        } else if (paramTypes[i] instanceof Class
+            && ((Class<?>) paramTypes[i]).isPrimitive()) {
+          // Primitive type, use the JSON representation of that type.
+          //
+          r[i] = gs.fromJson(v, paramTypes[i]);
+        } else {
+          // Assume it is like a java.sql.Timestamp or something and treat
+          // the value as JSON string.
+          //
+          r[i] = gs.fromJson(gs.toJson(v), paramTypes[i]);
+        }
+      }
+      call.params = r;
+      call.callback = req.getParameter("callback");
     }
-    call.params = r;
-    call.callback = req.getParameter("callback");
   }
 
   private static boolean isBodyJson(final ActiveCall call) {
@@ -499,7 +533,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
         }
 
         final JsonObject r = new JsonObject();
-        r.addProperty("version", RPC_VERSION);
+        r.add(src.versionName, src.versionValue);
         if (src.id != null) {
           r.add("id", src.id);
         }
@@ -508,9 +542,16 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
         }
         if (src.externalFailure != null) {
           final JsonObject error = new JsonObject();
-          error.addProperty("name", "JSONRPCError");
-          error.addProperty("code", 999);
-          error.addProperty("message", src.externalFailure.getMessage());
+          if ("jsonrpc".equals(src.versionName)) {
+            final int code = to2_0ErrorCode(src);
+
+            error.addProperty("code", code);
+            error.addProperty("message", src.externalFailure.getMessage());
+          } else {
+            error.addProperty("name", "JSONRPCError");
+            error.addProperty("code", 999);
+            error.addProperty("message", src.externalFailure.getMessage());
+          }
           r.add("error", error);
         } else {
           r.add("result", context.serialize(src.result));
@@ -530,6 +571,21 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     }
     o.close();
     return o.toString();
+  }
+
+  private int to2_0ErrorCode(final ActiveCall src) {
+    final Throwable e = src.externalFailure;
+    final Throwable i = src.internalFailure;
+
+    if (e instanceof NoSuchRemoteMethodException
+        || i instanceof NoSuchRemoteMethodException) {
+      return -32601 /* Method not found. */;
+    }
+    if (e instanceof JsonParseException || i instanceof JsonParseException) {
+      return -32700 /* Parse error. */;
+    }
+
+    return -32603 /* Internal error. */;
   }
 
   private static void textError(final ActiveCall call, final int status,
