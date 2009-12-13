@@ -44,7 +44,7 @@ public class ActiveCall implements AsyncCallback<Object> {
 
   /**
    * Create a new call.
-   * 
+   *
    * @param req the request.
    * @param resp the response.
    */
@@ -55,7 +55,7 @@ public class ActiveCall implements AsyncCallback<Object> {
 
   /**
    * Get the HTTP request that is attempting this RPC call.
-   * 
+   *
    * @return the original servlet HTTP request.
    */
   public HttpServletRequest getHttpServletRequest() {
@@ -64,7 +64,7 @@ public class ActiveCall implements AsyncCallback<Object> {
 
   /**
    * Get the HTTP response that will be returned from this call.
-   * 
+   *
    * @return the original servlet HTTP response.
    */
   public HttpServletResponse getHttpServletResponse() {
@@ -73,7 +73,7 @@ public class ActiveCall implements AsyncCallback<Object> {
 
   /**
    * Get the value of a cookie.
-   * 
+   *
    * @param name the name of the cookie.
    * @return the cookie's value; or null.
    */
@@ -92,7 +92,7 @@ public class ActiveCall implements AsyncCallback<Object> {
 
   /**
    * Get the value of a cookie, verifying its signature.
-   * 
+   *
    * @param name the name of the cookie.
    * @return the cookie's value; or null.
    */
@@ -117,7 +117,7 @@ public class ActiveCall implements AsyncCallback<Object> {
    * Set the value of a cookie.
    * <p>
    * The cookie is scope to the context path used by this web application.
-   * 
+   *
    * @param name name of the cookie.
    * @param value the value of the cookie.
    * @param age the age (in seconds) before it expires.
@@ -134,7 +134,7 @@ public class ActiveCall implements AsyncCallback<Object> {
    * <p>
    * The cookie value is actually set to the signed token which both includes
    * (and protects via an HMAC signature) <code>value</code>.s
-   * 
+   *
    * @param name name of the cookie.
    * @param value the data value of the cookie.
    * @param sig a signature to protect the cookie value.
@@ -153,7 +153,7 @@ public class ActiveCall implements AsyncCallback<Object> {
    * By default this method uses <code>getRemoteUser()</code>. Services may
    * override this method to acquire a different property of the request, such
    * as data from an HTTP cookie or an extended HTTP header.
-   * 
+   *
    * @return the user identity; null if the user is anonymous.
    */
   public String getUser() {
@@ -162,7 +162,7 @@ public class ActiveCall implements AsyncCallback<Object> {
 
   /**
    * Get the method this request is asking to invoke.
-   * 
+   *
    * @return the requested method handle.
    */
   public MethodHandle getMethod() {
@@ -171,7 +171,7 @@ public class ActiveCall implements AsyncCallback<Object> {
 
   /**
    * Get the actual parameter values to be supplied to the method.
-   * 
+   *
    * @return the parameter array; never null but may be 0-length if the method
    *         takes no parameters.
    */

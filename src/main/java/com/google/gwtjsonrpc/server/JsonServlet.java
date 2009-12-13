@@ -141,7 +141,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
 
   /**
    * Get the object which provides the RemoteJsonService implementation.
-   * 
+   *
    * @return by default <code>this</code>, but any object which implements a
    *         RemoteJsonService interface.
    * @throws Exception any error indicating the service is not configured.
@@ -156,7 +156,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
    * By default this method creates a unique XSRF key for this service. Service
    * implementors may wish to override this method to use a pooled instance that
    * relies upon a stable private key.
-   * 
+   *
    * @return new XSRF implementation. Null if the caller has overridden all
    *         relevant XSRF methods and is implementing their own XSRF protection
    *         algorithm.
@@ -176,7 +176,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
    * <p>
    * By default this method validates the token, and refreshes it with a new
    * token for the currently authenticated user.
-   * 
+   *
    * @param call current RPC being processed.
    * @return true if the token was supplied and is valid; false otherwise.
    * @throws XsrfException the token could not be validated due to an error that
@@ -188,7 +188,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
 
   /**
    * Lookup a method implemented by this servlet.
-   * 
+   *
    * @param methodName name of the method.
    * @return the method handle; null if the method is not declared.
    */
@@ -198,7 +198,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
 
   /**
    * Create a new call structure for the active HTTP request.
-   * 
+   *
    * @param req the incoming request.
    * @param resp the response to return to the client.
    * @return the new call wrapping both.
@@ -224,7 +224,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
    * Subclasses may override this method to perform additional checks, such as
    * per-method application level security validation. An override of this
    * method should take the following form:
-   * 
+   *
    * <pre>
    * protected void preInvoke(final CallType call) {
    *   super.preInvoke(call);
@@ -239,7 +239,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
    * {@link ActiveCall#onInternalFailure(Throwable)} method is invoked with a
    * non-null exception argument the method call itself will be bypassed and the
    * error response will be returned to the client instead.
-   * 
+   *
    * @param call the current call information.
    */
   protected void preInvoke(final CallType call) {
