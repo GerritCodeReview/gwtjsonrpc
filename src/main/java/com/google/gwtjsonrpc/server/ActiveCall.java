@@ -30,6 +30,8 @@ public class ActiveCall implements AsyncCallback<Object> {
   protected final HttpServletRequest httpRequest;
   protected final HttpServletResponse httpResponse;
   JsonElement id;
+  String versionName;
+  JsonElement versionValue;
   SignedToken xsrf;
   String xsrfKeyIn;
   String xsrfKeyOut;

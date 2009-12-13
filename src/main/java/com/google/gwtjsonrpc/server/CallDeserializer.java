@@ -26,7 +26,6 @@ import java.lang.reflect.Type;
 
 final class CallDeserializer<CallType extends ActiveCall> implements
     JsonDeserializer<CallType>, InstanceCreator<CallType> {
-  private static final String RPC_VERSION = JsonServlet.RPC_VERSION;
   private final CallType req;
   private final JsonServlet<? extends ActiveCall> server;
 
@@ -49,9 +48,27 @@ final class CallDeserializer<CallType extends ActiveCall> implements
     final JsonObject in = json.getAsJsonObject();
     req.id = in.get("id");
 
+    final JsonElement jsonrpc = in.get("jsonrpc");
     final JsonElement version = in.get("version");
-    if (!isString(version) || !RPC_VERSION.equals(version.getAsString())) {
-      throw new JsonParseException("Expected version = " + RPC_VERSION);
+    if (isString(jsonrpc) && version == null) {
+      final String v = jsonrpc.getAsString();
+      if ("2.0".equals(v)) {
+        req.versionName = "jsonrpc";
+        req.versionValue = jsonrpc;
+      } else {
+        throw new JsonParseException("Expected jsonrpc=2.0");
+      }
+
+    } else if (isString(version) && jsonrpc == null) {
+      final String v = version.getAsString();
+      if ("1.1".equals(v)) {
+        req.versionName = "version";
+        req.versionValue = version;
+      } else {
+        throw new JsonParseException("Expected version=1.1");
+      }
+    } else {
+      throw new JsonParseException("Expected version=1.1 or jsonrpc=2.0");
     }
 
     final JsonElement method = in.get("method");
