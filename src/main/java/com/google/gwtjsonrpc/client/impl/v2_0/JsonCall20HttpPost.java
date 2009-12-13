@@ -36,9 +36,9 @@ public class JsonCall20HttpPost<T> extends JsonCall20<T> {
     final StringBuilder body = new StringBuilder();
     body.append("{\"jsonrpc\":\"2.0\",\"method\":\"");
     body.append(methodName);
-    body.append("\",\"params\":[");
+    body.append("\",\"params\":");
     body.append(requestParams);
-    body.append("],\"id\":").append(requestId);
+    body.append(",\"id\":").append(requestId);
     final String xsrfKey = proxy.getXsrfManager().getToken(proxy);
     if (xsrfKey != null) {
       body.append(",\"xsrfKey\":");
