@@ -20,7 +20,6 @@ import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.RpcRequestBuilder;
 import com.google.gwtjsonrpc.client.JsonDefTarget;
 import com.google.gwtjsonrpc.client.JsonUtil;
-import com.google.gwtjsonrpc.client.RemoteJsonService;
 import com.google.gwtjsonrpc.client.XsrfManager;
 
 /**

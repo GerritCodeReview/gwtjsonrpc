@@ -15,7 +15,6 @@
 package com.google.gwtjsonrpc.client.impl;
 
 import com.google.gwt.core.client.JsonUtils;
-import com.google.gwtjsonrpc.client.impl.ser.JavaLangString_JsonSerializer;
 
 /**
  * Converter between JSON and Java object representations.
