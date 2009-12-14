@@ -17,6 +17,7 @@ package com.google.gwtjsonrpc.client.impl;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
+import com.google.gwt.user.client.rpc.RpcRequestBuilder;
 import com.google.gwtjsonrpc.client.JsonDefTarget;
 import com.google.gwtjsonrpc.client.JsonUtil;
 import com.google.gwtjsonrpc.client.RemoteJsonService;
@@ -51,6 +52,21 @@ public abstract class AbstractJsonProxy implements JsonDefTarget {
   public void setXsrfManager(final XsrfManager m) {
     assert m != null;
     xsrfManager = m;
+  }
+
+  @Override
+  public void setRpcRequestBuilder(RpcRequestBuilder builder) {
+    if (builder != null)
+      throw new UnsupportedOperationException(
+          "A RemoteJsonService does not use the RpcRequestBuilder, so this method is unsupported.");
+    /**
+     * From the gwt docs:
+     * 
+     * Calling this method with a null value will reset any custom behavior to
+     * the default implementation.
+     * 
+     * If builder == null, we just ignore this invocation.
+     */
   }
 
   protected <T> void doInvoke(final String methodName, final String reqData,
