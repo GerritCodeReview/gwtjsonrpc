@@ -15,6 +15,7 @@
 package com.google.gwtjsonrpc.client.impl.ser;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 
 public class PrimitiveArraySerializer {
@@ -48,9 +49,7 @@ public class PrimitiveArraySerializer {
         sb.append(',');
       }
       if (o[i] != null) {
-        sb.append('"');
-        sb.append(JsonSerializer.escapeChar(o[i]));
-        sb.append('"');
+        sb.append(JsonUtils.escapeValue(String.valueOf(o[i])));
       } else
         sb.append(JsonSerializer.JS_NULL);
     }
