@@ -17,7 +17,6 @@ package com.google.gwtjsonrpc.rebind;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JArrayType;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JType;
@@ -68,8 +67,7 @@ class ResultDeserializerCreator {
     serializerCreator = sc;
   }
 
-  void create(TreeLogger logger, JArrayType targetType)
-      throws UnableToCompleteException {
+  void create(TreeLogger logger, JArrayType targetType) {
     this.targetType = targetType;
     this.componentType = targetType.getComponentType();
 
