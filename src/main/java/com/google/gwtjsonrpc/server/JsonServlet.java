@@ -420,7 +420,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
           r[i] = null;
         } else if (paramTypes[i] == String.class) {
           r[i] = v;
-        } else if (paramTypes[i] instanceof Class
+        } else if (paramTypes[i] instanceof Class<?>
             && ((Class<?>) paramTypes[i]).isPrimitive()) {
           // Primitive type, use the JSON representation of that type.
           //
