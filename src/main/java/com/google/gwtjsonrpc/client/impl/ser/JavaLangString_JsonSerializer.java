@@ -15,6 +15,7 @@
 package com.google.gwtjsonrpc.client.impl.ser;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
@@ -32,7 +33,7 @@ public final class JavaLangString_JsonSerializer extends
 
   @Override
   public void printJson(final StringBuilder sb, final java.lang.String o) {
-    sb.append(escapeString(o));
+    sb.append(JsonUtils.escapeValue(o));
   }
 
   @Override

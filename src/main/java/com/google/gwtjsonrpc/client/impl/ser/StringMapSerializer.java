@@ -15,6 +15,7 @@
 package com.google.gwtjsonrpc.client.impl.ser;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
@@ -49,7 +50,7 @@ public class StringMapSerializer<V> extends
       } else {
         sb.append(',');
       }
-      sb.append(escapeString(e.getKey()));
+      sb.append(JsonUtils.escapeValue(e.getKey()));
       sb.append(':');
       encode(sb, valueSerializer, e.getValue());
     }

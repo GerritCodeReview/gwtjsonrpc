@@ -14,11 +14,11 @@
 
 package com.google.gwtjsonrpc.client.impl.v2_0;
 
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtjsonrpc.client.JsonUtil;
 import com.google.gwtjsonrpc.client.impl.AbstractJsonProxy;
-import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
 /** JsonCall implementation for JsonRPC version 2.0 over HTTP POST */
@@ -42,7 +42,7 @@ public class JsonCall20HttpPost<T> extends JsonCall20<T> {
     final String xsrfKey = proxy.getXsrfManager().getToken(proxy);
     if (xsrfKey != null) {
       body.append(",\"xsrfKey\":");
-      body.append(JsonSerializer.escapeString(xsrfKey));
+      body.append(JsonUtils.escapeValue(xsrfKey));
     }
     body.append("}");
 
