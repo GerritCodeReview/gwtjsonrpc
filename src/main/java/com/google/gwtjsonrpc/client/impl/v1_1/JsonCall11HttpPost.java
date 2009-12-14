@@ -15,6 +15,7 @@
 package com.google.gwtjsonrpc.client.impl.v1_1;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.Response;
@@ -27,7 +28,6 @@ import com.google.gwtjsonrpc.client.RemoteJsonException;
 import com.google.gwtjsonrpc.client.event.RpcCompleteEvent;
 import com.google.gwtjsonrpc.client.impl.AbstractJsonProxy;
 import com.google.gwtjsonrpc.client.impl.JsonCall;
-import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
 /** JsonCall implementation for JsonRPC version 1.1 over HTTP POST */
@@ -50,7 +50,7 @@ public class JsonCall11HttpPost<T> extends JsonCall<T> {
     final String xsrfKey = proxy.getXsrfManager().getToken(proxy);
     if (xsrfKey != null) {
       body.append(",\"xsrfKey\":");
-      body.append(JsonSerializer.escapeString(xsrfKey));
+      body.append(JsonUtils.escapeValue(xsrfKey));
     }
     body.append("}");
 
