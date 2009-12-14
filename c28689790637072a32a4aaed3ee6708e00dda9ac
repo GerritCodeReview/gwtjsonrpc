@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAApH////U\u003d",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1001240
+      },
+      "writtenOn": "2009-12-14T15:37:09Z",
+      "side": 1,
+      "message": "Actually we screwed up.\n\nThe description shouldn\u0027t be changing with the project version.  Long ago it used to say \"JSON-RPC 1.1\" because that was the protocol version we spoke.  Now we speak both 1.1 and 2.0, so this makes no sense.  But we really shouldn\u0027t have updated it to say \"1.2\", as that was never a protocol version we supported.\n\nToday I\u0027d make this:\n\n  \u003cdescription\u003eJSON-RPC for Google Web Toolkit (GWT)\u003c/description\u003e\n\nas that is the description I\u0027m also using in Gerrit Code Review and gitweb for the project.  :-)",
+      "revId": "c28689790637072a32a4aaed3ee6708e00dda9ac",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
