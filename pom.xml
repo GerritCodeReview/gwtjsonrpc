@@ -321,19 +321,7 @@ limitations under the License.
       <id>gson</id>
       <url>http://google-gson.googlecode.com/svn/mavenrepo</url>
     </repository>
-
-    <repository>
-      <id>gwt-maven</id>
-      <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
-    </repository>
   </repositories>
-
-  <pluginRepositories>
-    <pluginRepository>
-      <id>gwt-maven-plugins</id>
-      <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
-    </pluginRepository>
-  </pluginRepositories>
 
   <distributionManagement>
     <snapshotRepository>
