@@ -124,12 +124,18 @@ abstract class JsonCall20<T> extends JsonCall<T> {
 
 
   private static class RpcResult extends JavaScriptObject {
+    protected RpcResult() {
+    }
+
     final native RpcError error()/*-{ return this.error; }-*/;
 
     final native String xsrfKey()/*-{ return this.xsrfKey; }-*/;
   }
 
   private static class RpcError extends JavaScriptObject {
+    protected RpcError() {
+    }
+
     final native String message()/*-{ return this.message; }-*/;
 
     final native int code()/*-{ return this.code; }-*/;
