@@ -287,6 +287,12 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
 
   private boolean acceptJSON(final CallType call) {
     final String accepts = call.httpRequest.getHeader("Accept");
+    if (accepts == null) {
+      // A really odd client, it didn't send us an accept header?
+      //
+      return false;
+    }
+
     if (JsonUtil.JSON_TYPE.equals(accepts)) {
       // Common case, as our JSON client side code sets only this
       //
