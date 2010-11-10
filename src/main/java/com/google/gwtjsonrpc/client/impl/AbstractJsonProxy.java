@@ -43,6 +43,11 @@ public abstract class AbstractJsonProxy implements JsonDefTarget {
   }
 
   @Override
+  public String getSerializationPolicyName() {
+    return "jsonrpc";
+  }
+
+  @Override
   public XsrfManager getXsrfManager() {
     return xsrfManager;
   }
