@@ -76,7 +76,7 @@ public final class JavaSqlTimestamp_JsonSerializer extends
   }-*/;
 
   @SuppressWarnings("deprecation")
-  private static java.sql.Timestamp parseTimestamp(final String s) {
+  public static java.sql.Timestamp parseTimestamp(final String s) {
     final String[] components = s.split(" ");
     if (components.length != 2) {
       throw new IllegalArgumentException("Invalid escape format: " + s);
