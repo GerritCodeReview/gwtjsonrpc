@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAEgn///wc\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/common/AllowCrossSiteRequest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2012-04-09T16:05:33Z",
+      "side": 1,
+      "message": "Unnecessary blank line?",
+      "revId": "229dc767860ff82f249fcf81a5595ff3459b7eb5",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
