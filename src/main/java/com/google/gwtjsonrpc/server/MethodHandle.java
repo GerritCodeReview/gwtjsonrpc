@@ -36,7 +36,7 @@ public class MethodHandle {
    * 
    * @param imp instance of the service all calls will be made on.
    * @param method Java method to invoke on <code>imp</code>. The last parameter
-   *        of the method must accept an {@link com.google.gwt.user.client.rpc.AsyncCallback}
+   *        of the method must accept an {@link com.google.gwtjsonrpc.common.AsyncCallback}
    *        and the method must return void.
    */
   MethodHandle(final RemoteJsonService imp, final Method method) {

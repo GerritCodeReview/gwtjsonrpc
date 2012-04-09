@@ -23,7 +23,7 @@ package com.google.gwtjsonrpc.common;
  * public interface FooService extends RemoteJsonService ...
  * </pre>
  * <p>
- * and declare each method as returning void and accepting {@link com.google.gwt.user.client.rpc.AsyncCallback}
+ * and declare each method as returning void and accepting {@link com.google.gwtjsonrpc.common.AsyncCallback}
  * as the final parameter, with a concrete type specified as the result type:
  *
  * <pre>

@@ -19,7 +19,7 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwtjsonrpc.client.ServerUnavailableException;
 import com.google.gwtjsonrpc.client.event.RpcCompleteEvent;
 import com.google.gwtjsonrpc.client.event.RpcStartEvent;

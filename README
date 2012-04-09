@@ -186,7 +186,7 @@ Example
 
 Define the service:
 
-  import com.google.gwt.user.client.rpc.AsyncCallback;
+  import com.google.gwtjsonrpc.common.AsyncCallback;
   import com.google.gwtjsonrpc.client.RemoteJsonService;
 
   public interface StringService extends RemoteJsonService {
@@ -201,7 +201,7 @@ Configure GWTJSONRPC in Application.gwt.xml:
 
 Implement the service in Java as a servlet:
 
-  import com.google.gwt.user.client.rpc.AsyncCallback;
+  import com.google.gwtjsonrpc.common.AsyncCallback;
   import com.google.gwtjsonrpc.server.JsonServlet;
 
   public StringServiceImpl extends JsonServlet

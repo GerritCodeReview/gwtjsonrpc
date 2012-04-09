@@ -16,7 +16,7 @@ package com.google.gwtjsonrpc.client.impl.v2_0;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwtjsonrpc.client.impl.AbstractJsonProxy;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 import com.google.gwtjsonrpc.common.JsonConstants;

@@ -15,7 +15,7 @@
 package com.google.gwtjsonrpc.server;
 
 import com.google.gson.JsonElement;
-import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwtjsonrpc.common.JsonConstants;
 
 import java.util.HashMap;

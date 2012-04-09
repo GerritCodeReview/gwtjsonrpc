@@ -18,7 +18,7 @@ package com.google.gwtjsonrpc.client;
 /**
  * Indicates the remote JSON server is not available.
  * <p>
- * Usually supplied to {@link com.google.gwt.user.client.rpc.AsyncCallback#onFailure(Throwable)} when the
+ * Usually supplied to {@link com.google.gwtjsonrpc.common.AsyncCallback#onFailure(Throwable)} when the
  * remote host isn't answering, such as if the HTTP server is restarting and has
  * temporarily stopped accepting new connections.
  */

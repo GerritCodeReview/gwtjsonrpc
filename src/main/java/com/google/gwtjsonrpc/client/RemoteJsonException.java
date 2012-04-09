@@ -18,7 +18,7 @@ import com.google.gwt.json.client.JSONValue;
 
 /**
  * Exception given to
- * {@link com.google.gwt.user.client.rpc.AsyncCallback#onFailure(Throwable)}.
+ * {@link com.google.gwtjsonrpc.common.AsyncCallback#onFailure(Throwable)}.
  * <p>
  * This exception is used if the remote JSON server has returned a well-formed
  * JSON error response.
