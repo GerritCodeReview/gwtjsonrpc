@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "AAAEgn///wE\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/JsonServlet.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2012-04-09T16:08:33Z",
+      "side": 1,
+      "message": "Why did this RPCServletUtils method go away?",
+      "revId": "4f6efd8005ef85893802ca0a372f73785bde1c8e",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
