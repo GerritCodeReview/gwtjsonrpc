@@ -14,16 +14,37 @@
 
 package com.google.gwtjsonrpc.server;
 
-import com.google.gwtjsonrpc.client.CookieAccess;
 
-final class ServletCookieAccess extends CookieAccess {
-  @Override
-  protected String getCookie(final String name) {
-    return JsonServlet.<ActiveCall> getCurrentCall().getCookie(name);
+final class ServletCookieAccess {
+  /**
+   * Get the value of a cookie.
+   *
+   * @param name the name of the cookie.
+   * @return the cookie's value; or null.
+   */
+  static String get(final String name) {
+      return JsonServlet.<ActiveCall> getCurrentCall().getCookie(name);
   }
 
-  @Override
-  protected void removeCookie(final String name) {
-    JsonServlet.<ActiveCall> getCurrentCall().removeCookie(name);
+  /**
+   * Get the text of a signed token which is stored in a cookie.
+   * <p>
+   * <b>Warning: This method does not validate the token.</b>
+   * <p>
+   * To validate the cookie hasn't been forged, use SignedToken.getCookieText.
+   *
+   * @param cookieName the name of the cookie to get the text from.
+   * @return the signed text; null if the cookie is not set.
+   */
+  static String getTokenText(final String cookieName) {
+    final String v = get(cookieName);
+    if (v == null) {
+      return null;
+    }
+    final int s = v.indexOf('$');
+    return s >= 0 ? v.substring(s + 1) : null;
+  }
+
+  private ServletCookieAccess() {
   }
 }

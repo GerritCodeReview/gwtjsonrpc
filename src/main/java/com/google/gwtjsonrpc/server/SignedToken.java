@@ -14,8 +14,6 @@
 
 package com.google.gwtjsonrpc.server;
 
-import com.google.gwtjsonrpc.client.CookieAccess;
-
 import org.apache.commons.codec.binary.Base64;
 
 import java.security.InvalidKeyException;
@@ -45,7 +43,7 @@ public class SignedToken {
 
   /**
    * Generate a random key for use with the XSRF library.
-   * 
+   *
    * @return a new private key, base 64 encoded.
    */
   public static String generateRandomKey() {
@@ -61,7 +59,7 @@ public class SignedToken {
 
   /**
    * Create a new utility, using a randomly generated key.
-   * 
+   *
    * @param age the number of seconds a token may remain valid.
    * @throws XsrfException the JVM doesn't support the necessary algorithms.
    */
@@ -71,7 +69,7 @@ public class SignedToken {
 
   /**
    * Create a new utility, using the specific key.
-   * 
+   *
    * @param age the number of seconds a token may remain valid.
    * @param keyBase64 base 64 encoded representation of the key.
    * @throws XsrfException the JVM doesn't support the necessary algorithms.
@@ -91,25 +89,25 @@ public class SignedToken {
 
   /**
    * Get the text of a signed token which is stored in a cookie.
-   * 
+   *
    * @param cookieName the name of the cookie to get the text from.
    * @return the signed text; null if the cookie is not set or the cookie's
    *         token was forged.
    */
   public String getCookieText(final String cookieName) {
-    final String val = CookieAccess.get(cookieName);
+    final String val = ServletCookieAccess.get(cookieName);
     boolean ok;
     try {
       ok = checkToken(val, null) != null;
     } catch (XsrfException e) {
       ok = false;
     }
-    return ok ? CookieAccess.getTokenText(cookieName) : null;
+    return ok ? ServletCookieAccess.getTokenText(cookieName) : null;
   }
 
   /**
    * Generate a new signed token.
-   * 
+   *
    * @param text the text string to sign. Typically this should be some
    *        user-specific string, to prevent replay attacks. The text must be
    *        safe to appear in whatever context the token itself will appear, as
@@ -129,7 +127,7 @@ public class SignedToken {
 
   /**
    * Validate a returned token.
-   * 
+   *
    * @param tokenString a token string previously created by this class.
    * @param text text that must have been used during {@link #newToken(String)}
    *        in order for the token to be valid. If null the text will be taken

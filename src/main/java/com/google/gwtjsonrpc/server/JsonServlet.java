@@ -29,7 +29,6 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RPCServletUtils;
-import com.google.gwtjsonrpc.client.CookieAccess;
 import com.google.gwtjsonrpc.common.JsonConstants;
 import com.google.gwtjsonrpc.common.RemoteJsonService;
 
@@ -91,7 +90,6 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
 
   static {
     perThreadCall = new ThreadLocal<ActiveCall>();
-    CookieAccess.setImplementation(new ServletCookieAccess());
   }
 
   /** Get the <code>ActiveCall</code> object for the current call. */
