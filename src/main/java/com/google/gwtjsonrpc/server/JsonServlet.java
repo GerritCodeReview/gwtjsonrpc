@@ -28,7 +28,6 @@ import com.google.gson.JsonParser;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gwtjsonrpc.common.AsyncCallback;
-import com.google.gwt.user.server.rpc.RPCServletUtils;
 import com.google.gwtjsonrpc.common.JsonConstants;
 import com.google.gwtjsonrpc.common.RemoteJsonService;
 
@@ -276,8 +275,8 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       final String out = formatResult(call);
       RPCServletUtils.writeResponse(getServletContext(), call.httpResponse,
           out, call.callback == null
-              && RPCServletUtils.acceptsGzipEncoding(call.httpRequest)
-              && RPCServletUtils.exceedsUncompressedContentLengthLimit(out));
+              && out.length() > 256
+              && RPCServletUtils.acceptsGzipEncoding(call.httpRequest));
     } finally {
       perThreadCall.set(null);
     }
