@@ -22,7 +22,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.google.gwtjsonrpc.client.impl.ser.JavaSqlTimestamp_JsonSerializer;
+import com.google.gwtjsonrpc.common.JavaSqlTimestampHelper;
 
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -45,8 +45,8 @@ public class SqlTimestampDeserializer implements
     if (!p.isString()) {
       throw new JsonParseException("Expected string for timestamp type");
     }
-    
-    return JavaSqlTimestamp_JsonSerializer.parseTimestamp(p.getAsString());
+
+    return JavaSqlTimestampHelper.parseTimestamp(p.getAsString());
   }
 
   public JsonElement serialize(final java.sql.Timestamp src,

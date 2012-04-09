@@ -17,8 +17,8 @@ package com.google.gwtjsonrpc.client.event;
 import com.google.gwt.event.shared.EventHandler;
 import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
-import com.google.gwtjsonrpc.client.RemoteJsonService;
 import com.google.gwtjsonrpc.client.impl.JsonCall;
+import com.google.gwtjsonrpc.common.RemoteJsonService;
 
 /** Common event for {@link RpcStartEvent}, {@link RpcCompleteEvent}. */
 public abstract class BaseRpcEvent<T extends EventHandler> extends GwtEvent<T> {

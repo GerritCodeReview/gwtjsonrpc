@@ -17,9 +17,9 @@ package com.google.gwtjsonrpc.client.impl.v2_0;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwtjsonrpc.client.JsonUtil;
 import com.google.gwtjsonrpc.client.impl.AbstractJsonProxy;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
+import com.google.gwtjsonrpc.common.JsonConstants;
 
 /** JsonCall implementation for JsonRPC version 2.0 over HTTP POST */
 public class JsonCall20HttpPost<T> extends JsonCall20<T> {
@@ -48,8 +48,8 @@ public class JsonCall20HttpPost<T> extends JsonCall20<T> {
 
     final RequestBuilder rb;
     rb = new RequestBuilder(RequestBuilder.POST, proxy.getServiceEntryPoint());
-    rb.setHeader("Content-Type", JsonUtil.JSONRPC20_REQ_CT);
-    rb.setHeader("Accept", JsonUtil.JSONRPC20_ACCEPT_CTS);
+    rb.setHeader("Content-Type", JsonConstants.JSONRPC20_REQ_CT);
+    rb.setHeader("Accept", JsonConstants.JSONRPC20_ACCEPT_CTS);
     rb.setCallback(this);
     rb.setRequestData(body.toString());
 

@@ -12,21 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
-
+package com.google.gwtjsonrpc.common;
 
 /**
  * Marker interface for JSON based RPC.
  * <p>
  * Application service interfaces should extend this interface:
- * 
+ *
  * <pre>
  * public interface FooService extends RemoteJsonService ...
  * </pre>
  * <p>
  * and declare each method as returning void and accepting {@link com.google.gwt.user.client.rpc.AsyncCallback}
  * as the final parameter, with a concrete type specified as the result type:
- * 
+ *
  * <pre>
  * public interface FooService extends RemoteJsonService {
  *   public void fooItUp(AsyncCallback&lt;ResultType&gt; callback);
@@ -35,7 +34,7 @@ package com.google.gwtjsonrpc.client;
  * <p>
  * Instances of the interface can be obtained in the client and configured to
  * reference a particular JSON server:
- * 
+ *
  * <pre>
  * FooService mysvc = GWT.create(FooService.class);
  * ((ServiceDefTarget) mysvc).setServiceEntryPoint(GWT.getModuleBaseURL()
@@ -46,7 +45,8 @@ package com.google.gwtjsonrpc.client;
  * (<a href="http://json-rpc.org/wd/JSON-RPC-1-1-WD-20060807.html">draft</a>).
  * Only positional parameters are supported.
  * <p>
- * JSON service callbacks may also be declared; see {@link CallbackHandle}.
+ * JSON service callbacks may also be declared; see
+ * {@link com.google.gwtjsonrpc.client.CallbackHandle}.
  */
 public interface RemoteJsonService {
 }

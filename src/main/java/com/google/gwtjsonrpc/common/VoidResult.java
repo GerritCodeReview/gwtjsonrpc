@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package com.google.gwtjsonrpc.client;
+package com.google.gwtjsonrpc.common;
 
 /** Mock object for AsyncCallbacks which do not need to return data. */
 public class VoidResult {

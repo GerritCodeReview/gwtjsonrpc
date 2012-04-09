@@ -17,9 +17,9 @@ package com.google.gwtjsonrpc.client.impl.ser;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
+import com.google.gwtjsonrpc.common.JavaSqlTimestampHelper;
 
 import java.sql.Timestamp;
-import java.util.Date;
 
 /** Default serialization for a {@link java.sql.Timestamp}. */
 public final class JavaSqlTimestamp_JsonSerializer extends
@@ -77,55 +77,7 @@ public final class JavaSqlTimestamp_JsonSerializer extends
 
   @SuppressWarnings("deprecation")
   public static java.sql.Timestamp parseTimestamp(final String s) {
-    final String[] components = s.split(" ");
-    if (components.length != 2) {
-      throw new IllegalArgumentException("Invalid escape format: " + s);
-    }
-
-    final String[] timeComponents = components[1].split("\\.");
-    if (timeComponents.length != 2) {
-      throw new IllegalArgumentException("Invalid escape format: " + s);
-    } else if (timeComponents[1].length() != 9) {
-      throw new IllegalArgumentException("Invalid escape format: " + s);
-    }
-
-    final String[] dSplit = components[0].split("-");
-    final String[] tSplit = timeComponents[0].split(":");
-    if (dSplit.length != 3 || tSplit.length != 3) {
-      throw new IllegalArgumentException("Invalid escape format: " + s);
-    }
-    trimLeading0(dSplit);
-    trimLeading0(tSplit);
-
-    if (timeComponents[1].startsWith("0")) {
-      timeComponents[1] = timeComponents[1].replaceFirst("^00*", "");
-      if (timeComponents[1].length() == 0) {
-        timeComponents[1] = "0";
-      }
-    }
-
-    try {
-      int yy = Integer.parseInt(dSplit[0]) - 1900;
-      int mm = Integer.parseInt(dSplit[1]) - 1;
-      int dd = Integer.parseInt(dSplit[2]);
-
-      int hh = Integer.parseInt(tSplit[0]);
-      int mi = Integer.parseInt(tSplit[1]);
-      int ss = Integer.parseInt(tSplit[2]);
-      int ms = Integer.valueOf(timeComponents[1]) / 1000000;
-
-      return new java.sql.Timestamp(Date.UTC(yy, mm, dd, hh, mi, ss) + ms);
-    } catch (NumberFormatException e) {
-      throw new IllegalArgumentException("Invalid escape format: " + s);
-    }
-  }
-
-  private static void trimLeading0(final String[] dSplit) {
-    for (int i = 0; i < 3; i++) {
-      if (dSplit[i].startsWith("0")) {
-        dSplit[i] = dSplit[i].substring(1);
-      }
-    }
+    return JavaSqlTimestampHelper.parseTimestamp(s);
   }
 
   @Override

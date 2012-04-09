@@ -15,9 +15,9 @@
 package com.google.gwtjsonrpc.client.impl.ser;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwtjsonrpc.client.VoidResult;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
+import com.google.gwtjsonrpc.common.VoidResult;
 
 public class VoidResult_JsonSerializer extends JsonSerializer<VoidResult>
     implements ResultDeserializer<VoidResult> {

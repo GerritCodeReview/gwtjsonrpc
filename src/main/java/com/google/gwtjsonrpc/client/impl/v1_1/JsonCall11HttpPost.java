@@ -29,6 +29,7 @@ import com.google.gwtjsonrpc.client.event.RpcCompleteEvent;
 import com.google.gwtjsonrpc.client.impl.AbstractJsonProxy;
 import com.google.gwtjsonrpc.client.impl.JsonCall;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
+import com.google.gwtjsonrpc.common.JsonConstants;
 
 /** JsonCall implementation for JsonRPC version 1.1 over HTTP POST */
 public class JsonCall11HttpPost<T> extends JsonCall<T> {
@@ -56,8 +57,8 @@ public class JsonCall11HttpPost<T> extends JsonCall<T> {
 
     final RequestBuilder rb;
     rb = new RequestBuilder(RequestBuilder.POST, proxy.getServiceEntryPoint());
-    rb.setHeader("Content-Type", JsonUtil.JSON_REQ_CT);
-    rb.setHeader("Accept", JsonUtil.JSON_TYPE);
+    rb.setHeader("Content-Type", JsonConstants.JSON_REQ_CT);
+    rb.setHeader("Accept", JsonConstants.JSON_TYPE);
     rb.setCallback(this);
     rb.setRequestData(body.toString());
 
@@ -83,7 +84,7 @@ public class JsonCall11HttpPost<T> extends JsonCall<T> {
 
       if (r.error() != null) {
         final String errmsg = r.error().message();
-        if (JsonUtil.ERROR_INVALID_XSRF.equals(errmsg)) {
+        if (JsonConstants.ERROR_INVALID_XSRF.equals(errmsg)) {
           if (attempts < 2) {
             // The XSRF cookie was invalidated (or didn't exist) and the
             // service demands we have one in place to make calls to it.
@@ -127,12 +128,12 @@ public class JsonCall11HttpPost<T> extends JsonCall<T> {
     if (semi >= 0) {
       type = type.substring(0, semi).trim();
     }
-    return JsonUtil.JSON_TYPE.equals(type);
+    return JsonConstants.JSON_TYPE.equals(type);
   }
 
   /**
    * Call a JSON parser javascript function to parse an encoded JSON string.
-   * 
+   *
    * @param parser a javascript function
    * @param json encoded JSON text
    * @return the parsed data

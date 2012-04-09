@@ -17,6 +17,7 @@ package com.google.gwtjsonrpc.client;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
+import com.google.gwtjsonrpc.common.RemoteJsonService;
 
 /**
  * Global JavaScript function for JSON callbacks from non-RPC invocations.

@@ -14,8 +14,8 @@
 
 package com.google.gwtjsonrpc.server;
 
-import com.google.gwtjsonrpc.client.AllowCrossSiteRequest;
-import com.google.gwtjsonrpc.client.RemoteJsonService;
+import com.google.gwtjsonrpc.common.AllowCrossSiteRequest;
+import com.google.gwtjsonrpc.common.RemoteJsonService;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;

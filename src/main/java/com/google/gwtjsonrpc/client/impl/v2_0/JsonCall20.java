@@ -27,6 +27,7 @@ import com.google.gwtjsonrpc.client.event.RpcCompleteEvent;
 import com.google.gwtjsonrpc.client.impl.AbstractJsonProxy;
 import com.google.gwtjsonrpc.client.impl.JsonCall;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
+import com.google.gwtjsonrpc.common.JsonConstants;
 
 /** Base JsonCall implementation for JsonRPC version 2.0 */
 abstract class JsonCall20<T> extends JsonCall<T> {
@@ -61,7 +62,7 @@ abstract class JsonCall20<T> extends JsonCall<T> {
       if (r.error() != null) {
         // TODO: define status code for the invalid XSRF msg for 2.0 (-32099 ?)
         final String errmsg = r.error().message();
-        if (JsonUtil.ERROR_INVALID_XSRF.equals(errmsg)) {
+        if (JsonConstants.ERROR_INVALID_XSRF.equals(errmsg)) {
           if (attempts < 2) {
             // The XSRF cookie was invalidated (or didn't exist) and the
             // service demands we have one in place to make calls to it.
@@ -105,12 +106,12 @@ abstract class JsonCall20<T> extends JsonCall<T> {
     if (semi >= 0) {
       type = type.substring(0, semi).trim();
     }
-    return JsonUtil.JSONRPC20_ACCEPT_CTS.contains(type);
+    return JsonConstants.JSONRPC20_ACCEPT_CTS.contains(type);
   }
 
   /**
    * Call a JSON parser javascript function to parse an encoded JSON string.
-   * 
+   *
    * @param parser a javascript function
    * @param json encoded JSON text
    * @return the parsed data

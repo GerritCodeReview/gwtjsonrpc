@@ -30,8 +30,8 @@ import com.google.gson.JsonSerializer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.server.rpc.RPCServletUtils;
 import com.google.gwtjsonrpc.client.CookieAccess;
-import com.google.gwtjsonrpc.client.JsonUtil;
-import com.google.gwtjsonrpc.client.RemoteJsonService;
+import com.google.gwtjsonrpc.common.JsonConstants;
+import com.google.gwtjsonrpc.common.RemoteJsonService;
 
 import org.apache.commons.codec.binary.Base64;
 
@@ -260,7 +260,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
 
       call.noCache();
       if (!acceptJSON(call)) {
-        textError(call, SC_BAD_REQUEST, "Must Accept " + JsonUtil.JSON_TYPE);
+        textError(call, SC_BAD_REQUEST, "Must Accept " + JsonConstants.JSON_TYPE);
         return;
       }
 
@@ -293,7 +293,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       return false;
     }
 
-    if (JsonUtil.JSON_TYPE.equals(accepts)) {
+    if (JsonConstants.JSON_TYPE.equals(accepts)) {
       // Common case, as our JSON client side code sets only this
       //
       return true;
@@ -306,12 +306,12 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     // type, then others, so we special case it before we go through
     // the expense of splitting the Accepts header up.
     //
-    if (accepts.startsWith(JsonUtil.JSON_TYPE + ",")) {
+    if (accepts.startsWith(JsonConstants.JSON_TYPE + ",")) {
       return true;
     }
     final String[] parts = accepts.split("[ ,;][ ,;]*");
     for (final String p : parts) {
-      if (JsonUtil.JSON_TYPE.equals(p)) {
+      if (JsonConstants.JSON_TYPE.equals(p)) {
         return true;
       }
     }
@@ -332,7 +332,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
             // somehow managed to populate the XSRF token this is a very
             // insecure request against what must be a secure service method.
             //
-            call.onFailure(new Exception(JsonUtil.ERROR_INVALID_XSRF));
+            call.onFailure(new Exception(JsonConstants.ERROR_INVALID_XSRF));
             return;
           }
 
@@ -452,7 +452,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     if (semi >= 0) {
       type = type.substring(0, semi).trim();
     }
-    return JsonUtil.JSON_TYPE.equals(type);
+    return JsonConstants.JSON_TYPE.equals(type);
   }
 
   private static boolean isBodyUTF8(final ActiveCall call) {
@@ -460,7 +460,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     if (enc == null) {
       enc = "";
     }
-    return enc.toLowerCase().contains(JsonUtil.JSON_ENC.toLowerCase());
+    return enc.toLowerCase().contains(JsonConstants.JSON_ENC.toLowerCase());
   }
 
   private String readBody(final ActiveCall call) throws IOException {
@@ -498,7 +498,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
         off += n;
       }
 
-      final CharsetDecoder d = Charset.forName(JsonUtil.JSON_ENC).newDecoder();
+      final CharsetDecoder d = Charset.forName(JsonConstants.JSON_ENC).newDecoder();
       d.onMalformedInput(CodingErrorAction.REPORT);
       d.onUnmappableCharacter(CodingErrorAction.REPORT);
       try {

@@ -16,6 +16,7 @@ package com.google.gwtjsonrpc.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwtjsonrpc.common.VoidResult;
 
 /** Simple callback to ignore a return value. */
 public class VoidCallback implements AsyncCallback<VoidResult> {

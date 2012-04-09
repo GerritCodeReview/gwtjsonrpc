@@ -17,9 +17,9 @@ package com.google.gwtjsonrpc.client.impl.v2_0;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwtjsonrpc.client.JsonUtil;
 import com.google.gwtjsonrpc.client.impl.AbstractJsonProxy;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
+import com.google.gwtjsonrpc.common.JsonConstants;
 
 /** JsonCall implementation for JsonRPC version 2.0 over HTTP POST */
 public class JsonCall20HttpGet<T> extends JsonCall20<T> {
@@ -43,8 +43,8 @@ public class JsonCall20HttpGet<T> extends JsonCall20<T> {
 
     final RequestBuilder rb;
     rb = new RequestBuilder(RequestBuilder.GET, url.toString());
-    rb.setHeader("Content-Type", JsonUtil.JSONRPC20_REQ_CT);
-    rb.setHeader("Accept", JsonUtil.JSONRPC20_ACCEPT_CTS);
+    rb.setHeader("Content-Type", JsonConstants.JSONRPC20_REQ_CT);
+    rb.setHeader("Accept", JsonConstants.JSONRPC20_ACCEPT_CTS);
     rb.setCallback(this);
 
     send(rb);
@@ -52,7 +52,7 @@ public class JsonCall20HttpGet<T> extends JsonCall20<T> {
 
   /**
    * Javascript base64 encoding implementation from.
-   * 
+   *
    * @see http://ecmanaut.googlecode.com/svn/trunk/lib/base64.js
    */
   private static native String encodeBase64(String data)

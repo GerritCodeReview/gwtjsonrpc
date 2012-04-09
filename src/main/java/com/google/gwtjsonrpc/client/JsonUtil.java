@@ -27,32 +27,10 @@ import com.google.gwtjsonrpc.client.event.RpcCompleteHandler;
 import com.google.gwtjsonrpc.client.event.RpcStartEvent;
 import com.google.gwtjsonrpc.client.event.RpcStartHandler;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
+import com.google.gwtjsonrpc.common.RemoteJsonService;
 
-/** Shared constants between client and server implementations. */
+/** Client side utility functions. */
 public class JsonUtil {
-  /** Proper Content-Type header value for JSON encoded data. */
-  public static final String JSON_TYPE = "application/json";
-
-  /** Character encoding preferred for JSON text. */
-  public static final String JSON_ENC = "UTF-8";
-
-  /** Request Content-Type header for JSON data. */
-  public static final String JSON_REQ_CT = JSON_TYPE + "; charset=utf-8";
-
-  /** Json-rpc 2.0: Proper Content-Type header value for JSON encoded data. */
-  public static final String JSONRPC20_TYPE = "application/json-rpc";
-
-  /** Json-rpc 2.0: Request Content-Type header for JSON data. */
-  public static final String JSONRPC20_REQ_CT = JSON_TYPE + "; charset=utf-8";
-
-  /** Json-rpc 2.0: Content types that we SHOULD accept as being valid */
-  public static final String JSONRPC20_ACCEPT_CTS =
-      JSON_TYPE + ",application/json,application/jsonrequest";
-
-
-  /** Error message when xsrfKey in request is missing or invalid. */
-  public static final String ERROR_INVALID_XSRF = "Invalid xsrfKey in request";
-
   private static final HandlerManager globalHandlers = new HandlerManager(null);
 
   private static XsrfManager xsrfManager = new XsrfManager() {
@@ -94,7 +72,7 @@ public class JsonUtil {
 
   /**
    * Bind a RemoteJsonService proxy to its server URL.
-   * 
+   *
    * @param <T> type of the service interface.
    * @param imp the service instance, returned by <code>GWT.create</code>.
    * @param path the path of the service, relative to the GWT module.

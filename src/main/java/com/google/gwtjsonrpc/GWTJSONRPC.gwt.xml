@@ -19,8 +19,10 @@
   <inherits name="com.google.gwt.user.User"/>
   <inherits name='com.google.gwt.http.HTTP'/>
   <inherits name='com.google.gwt.json.JSON'/>
+  <source path='client' />
+  <source path='common' />
 
   <generate-with class="com.google.gwtjsonrpc.rebind.RemoteJsonServiceProxyGenerator">
-    <when-type-assignable class="com.google.gwtjsonrpc.client.RemoteJsonService" />
+    <when-type-assignable class="com.google.gwtjsonrpc.common.RemoteJsonService" />
   </generate-with>
 </module>

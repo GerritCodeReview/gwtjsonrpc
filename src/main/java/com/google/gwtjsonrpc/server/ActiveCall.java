@@ -16,7 +16,7 @@ package com.google.gwtjsonrpc.server;
 
 import com.google.gson.JsonElement;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwtjsonrpc.client.JsonUtil;
+import com.google.gwtjsonrpc.common.JsonConstants;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -205,7 +205,7 @@ public class ActiveCall implements AsyncCallback<Object> {
     if (isXsrfValid()) {
       return true;
     } else {
-      onFailure(new Exception(JsonUtil.ERROR_INVALID_XSRF));
+      onFailure(new Exception(JsonConstants.ERROR_INVALID_XSRF));
       return false;
     }
   }
