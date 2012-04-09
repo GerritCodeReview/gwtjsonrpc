@@ -21,10 +21,10 @@ limitations under the License.
   <groupId>gwtjsonrpc</groupId>
   <artifactId>gwtjsonrpc</artifactId>
   <packaging>jar</packaging>
-  <version>1.3-SNAPSHOT</version>
+  <version>1.3</version>
   <name>gwtjsonrpc</name>
   <description>JSON-RPC for Google Web Toolkit (GWT)</description>
-  <url>http://android.git.kernel.org/?p=tools/gwtjsonrpc.git</url>
+  <url>http://code.google.com/p/gerrit/source/checkout?repo=gwtjsonrpc</url>
 
   <mailingLists>
     <mailingList>
@@ -321,14 +321,14 @@ limitations under the License.
     <snapshotRepository>
       <id>gerrit-snapshot-repository</id>
       <name>gerrit Snapshot Repository</name>
-      <url>dav:https://gerrit.googlecode.com/svn/mavenrepo/snapshots</url>
+      <url>dav:https://gerrit-maven-repository.googlecode.com/svn/</url>
       <uniqueVersion>true</uniqueVersion>
     </snapshotRepository>
 
     <repository>
       <id>gerrit-maven-repository</id>
       <name>gerrit Maven Repository</name>
-      <url>dav:https://gerrit.googlecode.com/svn/mavenrepo</url>
+      <url>dav:https://gerrit-maven-repository.googlecode.com/svn/</url>
       <uniqueVersion>true</uniqueVersion>
     </repository>
   </distributionManagement>
