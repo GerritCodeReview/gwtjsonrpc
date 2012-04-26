@@ -113,6 +113,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     gb.registerTypeAdapter(java.sql.Date.class, new SqlDateDeserializer());
     gb.registerTypeAdapter(java.sql.Timestamp.class,
         new SqlTimestampDeserializer());
+    gb.registerTypeAdapter(java.lang.Integer.class, new IntegerDeserializer());
     return gb;
   }
 
