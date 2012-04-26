@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "AAAFE3////w\u003d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2012-04-26T21:54:33Z",
+      "side": 1,
+      "message": "Actually, I first implemented it without serializing to string but it didn\u0027t work. Instead of realizing that I needed to register a type adapter in the JsonServlet I was thinking that something else was bad and tried several things. Among others serializing as a string. After registering a type adapter in JsonServet it started working but I forgot to come back at this place and fix it.\n\nI need it in order to (de)serializa a Map\u003cAccount.Id, Integer\u003e in Gerrit. Is it possible without this change?",
+      "parentUuid": "AAAFCX///8U\u003d",
+      "revId": "004275eb5490ae57c434b9a0048660c529da9997",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "AAAFCX///8o\u003d",
         "filename": "src/main/java/com/google/gwtjsonrpc/client/impl/ser/JavaLangInteger_JsonSerializer.java",
         "patchSetId": 1
@@ -30,6 +48,24 @@
       "writtenOn": "2012-04-26T16:27:06Z",
       "side": 1,
       "message": "We don\u0027t use the EDL for this, the package is Apache License.",
+      "revId": "004275eb5490ae57c434b9a0048660c529da9997",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFE3////o\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/impl/ser/JavaLangInteger_JsonSerializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2012-04-26T21:54:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAAFCX///8o\u003d",
       "revId": "004275eb5490ae57c434b9a0048660c529da9997",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
@@ -64,6 +100,24 @@
       "writtenOn": "2012-04-26T16:27:06Z",
       "side": 1,
       "message": "Apache license not EDL",
+      "revId": "004275eb5490ae57c434b9a0048660c529da9997",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "AAAFE3////k\u003d",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/IntegerDeserializer.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 6,
+      "author": {
+        "id": 1003873
+      },
+      "writtenOn": "2012-04-26T21:54:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "AAAFCX///8k\u003d",
       "revId": "004275eb5490ae57c434b9a0048660c529da9997",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
