@@ -27,6 +27,7 @@ import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ser.EnumSerializer;
+import com.google.gwtjsonrpc.client.impl.ser.JavaLangInteger_JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ser.JavaLangString_JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ser.JavaSqlDate_JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ser.JavaSqlTimestamp_JsonSerializer;
@@ -63,6 +64,8 @@ class SerializerCreator {
 
     defaultSerializers.put(java.lang.String.class.getCanonicalName(),
         JavaLangString_JsonSerializer.class.getCanonicalName());
+    defaultSerializers.put(java.lang.Integer.class.getCanonicalName(),
+        JavaLangInteger_JsonSerializer.class.getCanonicalName());
     defaultSerializers.put(java.util.Date.class.getCanonicalName(),
         JavaUtilDate_JsonSerializer.class.getCanonicalName());
     defaultSerializers.put(java.sql.Date.class.getCanonicalName(),
