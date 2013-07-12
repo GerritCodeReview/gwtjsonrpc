@@ -30,7 +30,7 @@ public class JsonCall20HttpGet<T> extends JsonCall20<T> {
       ResultDeserializer<T> resultDeserializer, AsyncCallback<T> callback) {
     super(abstractJsonProxy, methodName, requestParams, resultDeserializer,
         callback);
-    encodedRequestParams = URL.encodeComponent(encodeBase64(requestParams));
+    encodedRequestParams = URL.encodeQueryString(encodeBase64(requestParams));
   }
 
   @Override
