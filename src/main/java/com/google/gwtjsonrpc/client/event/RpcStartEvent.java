@@ -29,7 +29,7 @@ public class RpcStartEvent extends BaseRpcEvent<RpcStartHandler> {
    * 
    * @param eventData
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   public static void fire(Object eventData) {
     assert eventData instanceof JsonCall : "For internal use only";
     if (TYPE != null) { // If we have a TYPE, we have an INSTANCE.

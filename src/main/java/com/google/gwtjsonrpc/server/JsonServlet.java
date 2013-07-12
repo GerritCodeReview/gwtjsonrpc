@@ -79,6 +79,7 @@ import javax.servlet.http.HttpServletResponse;
  * When supported by the browser/client, the "gzip" encoding is used to compress
  * the resulting JSON, reducing transfer time for the response data.
  */
+@SuppressWarnings("serial")
 public abstract class JsonServlet<CallType extends ActiveCall> extends
     HttpServlet {
   /** Pattern that any safe JSON-in-script callback conforms to. */

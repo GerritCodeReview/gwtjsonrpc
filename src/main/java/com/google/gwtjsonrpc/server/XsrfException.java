@@ -15,6 +15,7 @@
 package com.google.gwtjsonrpc.server;
 
 /** Indicates the requested method is not known. */
+@SuppressWarnings("serial")
 public class XsrfException extends Exception {
   public XsrfException(final String message) {
     super(message);

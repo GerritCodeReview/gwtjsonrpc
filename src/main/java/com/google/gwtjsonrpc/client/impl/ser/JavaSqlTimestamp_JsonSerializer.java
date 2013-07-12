@@ -75,7 +75,6 @@ public final class JavaSqlTimestamp_JsonSerializer extends
     p3(d.getUTCMilliseconds()) + "000000";
   }-*/;
 
-  @SuppressWarnings("deprecation")
   public static java.sql.Timestamp parseTimestamp(final String s) {
     return JavaSqlTimestampHelper.parseTimestamp(s);
   }

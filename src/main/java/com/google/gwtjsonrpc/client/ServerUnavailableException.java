@@ -22,6 +22,7 @@ package com.google.gwtjsonrpc.client;
  * remote host isn't answering, such as if the HTTP server is restarting and has
  * temporarily stopped accepting new connections.
  */
+@SuppressWarnings("serial")
 public class ServerUnavailableException extends Exception {
   public static final String MESSAGE = "Server Unavailable";
 

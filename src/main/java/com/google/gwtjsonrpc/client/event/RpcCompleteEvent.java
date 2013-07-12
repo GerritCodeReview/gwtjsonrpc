@@ -29,7 +29,7 @@ public class RpcCompleteEvent extends BaseRpcEvent<RpcCompleteHandler> {
    * 
    * @param eventData
    */
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("rawtypes")
   public static void fire(Object eventData) {
     assert eventData instanceof JsonCall : "For internal use only";
     if (TYPE != null) { // If we have a TYPE, we have an INSTANCE.
