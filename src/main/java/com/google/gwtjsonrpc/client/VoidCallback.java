@@ -25,9 +25,11 @@ public class VoidCallback implements AsyncCallback<VoidResult> {
   protected VoidCallback() {
   }
 
+  @Override
   public void onSuccess(final VoidResult result) {
   }
 
+  @Override
   public void onFailure(final Throwable caught) {
     GWT.log("Error in VoidCallback", caught);
   }

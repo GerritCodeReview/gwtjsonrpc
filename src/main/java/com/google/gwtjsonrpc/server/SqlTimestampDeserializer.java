@@ -32,6 +32,7 @@ public class SqlTimestampDeserializer implements
     JsonDeserializer<java.sql.Timestamp>, JsonSerializer<java.sql.Timestamp> {
   private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
+  @Override
   public java.sql.Timestamp deserialize(final JsonElement json,
       final Type typeOfT, final JsonDeserializationContext context)
       throws JsonParseException {
@@ -49,6 +50,7 @@ public class SqlTimestampDeserializer implements
     return JavaSqlTimestampHelper.parseTimestamp(p.getAsString());
   }
 
+  @Override
   public JsonElement serialize(final java.sql.Timestamp src,
       final Type typeOfSrc, final JsonSerializationContext context) {
     if (src == null) {

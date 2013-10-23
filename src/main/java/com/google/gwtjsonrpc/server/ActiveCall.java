@@ -246,12 +246,14 @@ public class ActiveCall implements AsyncCallback<Object> {
     return result != null || externalFailure != null || internalFailure != null;
   }
 
+  @Override
   public final void onSuccess(final Object result) {
     this.result = result;
     this.externalFailure = null;
     this.internalFailure = null;
   }
 
+  @Override
   public void onFailure(final Throwable error) {
     this.result = null;
     this.externalFailure = error;

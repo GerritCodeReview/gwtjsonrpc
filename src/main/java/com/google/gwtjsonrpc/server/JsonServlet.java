@@ -103,6 +103,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     final GsonBuilder gb = new GsonBuilder();
     gb.registerTypeAdapter(java.util.Set.class,
         new InstanceCreator<java.util.Set<Object>>() {
+          @Override
           public Set<Object> createInstance(final Type arg0) {
             return new HashSet<Object>();
           }
@@ -527,6 +528,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       throws UnsupportedEncodingException, IOException {
     final GsonBuilder gb = createGsonBuilder();
     gb.registerTypeAdapter(call.getClass(), new JsonSerializer<ActiveCall>() {
+      @Override
       public JsonElement serialize(final ActiveCall src, final Type typeOfSrc,
           final JsonSerializationContext context) {
         if (call.callback != null) {

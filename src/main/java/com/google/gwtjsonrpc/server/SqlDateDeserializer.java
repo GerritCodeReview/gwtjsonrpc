@@ -27,6 +27,7 @@ import java.lang.reflect.Type;
 
 public class SqlDateDeserializer implements JsonDeserializer<java.sql.Date>,
     JsonSerializer<java.sql.Date> {
+  @Override
   public java.sql.Date deserialize(final JsonElement json, final Type typeOfT,
       final JsonDeserializationContext context) throws JsonParseException {
     if (json.isJsonNull()) {
@@ -46,6 +47,7 @@ public class SqlDateDeserializer implements JsonDeserializer<java.sql.Date>,
     }
   }
 
+  @Override
   public JsonElement serialize(final java.sql.Date src, final Type typeOfSrc,
       final JsonSerializationContext context) {
     if (src == null) {

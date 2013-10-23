@@ -34,10 +34,12 @@ public abstract class AbstractJsonProxy implements JsonDefTarget {
 
   private XsrfManager xsrfManager = JsonUtil.getDefaultXsrfManager();
 
+  @Override
   public String getServiceEntryPoint() {
     return url;
   }
 
+  @Override
   public void setServiceEntryPoint(final String address) {
     url = address;
   }

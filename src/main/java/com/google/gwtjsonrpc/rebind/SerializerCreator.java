@@ -50,6 +50,7 @@ class SerializerCreator {
   private static final String SER_SUFFIX = "_JsonSerializer";
   private static final Comparator<JField> FIELD_COMP =
       new Comparator<JField>() {
+        @Override
         public int compare(final JField o1, final JField o2) {
           return o1.getName().compareTo(o2.getName());
         }

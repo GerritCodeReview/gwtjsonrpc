@@ -101,6 +101,7 @@ public abstract class JsonCall<T> implements RequestCallback {
     }
   }
 
+  @Override
   public void onError(final Request request, final Throwable exception) {
     RpcCompleteEvent.fire(this);
     if (exception.getClass() == RuntimeException.class
