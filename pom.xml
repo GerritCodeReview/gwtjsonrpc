@@ -24,7 +24,7 @@ limitations under the License.
   <version>1.3</version>
   <name>gwtjsonrpc</name>
   <description>JSON-RPC for Google Web Toolkit (GWT)</description>
-  <url>http://code.google.com/p/gerrit/source/checkout?repo=gwtjsonrpc</url>
+  <url>https://gerrit.googlesource.com/gwtjsonrpc</url>
 
   <mailingLists>
     <mailingList>
@@ -278,6 +278,13 @@ limitations under the License.
         </executions>
       </plugin>
     </plugins>
+    <extensions>
+      <extension>
+        <groupId>com.googlesource.gerrit</groupId>
+        <artifactId>gs-maven-wagon</artifactId>
+        <version>3.3</version>
+      </extension>
+    </extensions>
   </build>
 
   <dependencies>
@@ -317,18 +324,17 @@ limitations under the License.
     </repository>
   </repositories>
 
-  <distributionManagement>
-    <snapshotRepository>
-      <id>gerrit-snapshot-repository</id>
-      <name>gerrit Snapshot Repository</name>
-      <url>dav:https://gerrit-maven-repository.googlecode.com/svn/</url>
-      <uniqueVersion>true</uniqueVersion>
-    </snapshotRepository>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>gerrit-maven</id>
+      <url>https://gerrit-maven.commondatastorage.googleapis.com</url>
+    </pluginRepository>
+  </pluginRepositories>
 
+  <distributionManagement>
     <repository>
       <id>gerrit-maven-repository</id>
-      <name>gerrit Maven Repository</name>
-      <url>dav:https://gerrit-maven-repository.googlecode.com/svn/</url>
+      <url>gs://gerrit-maven</url>
       <uniqueVersion>true</uniqueVersion>
     </repository>
   </distributionManagement>
