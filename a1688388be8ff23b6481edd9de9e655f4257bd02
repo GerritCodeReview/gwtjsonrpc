@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "830dfaeb_7934e7c6",
+        "filename": "pom.xml",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2013-12-09T05:27:59Z",
+      "side": 1,
+      "message": "I\u0027ll upload a new patch set to remove the snapshot suffix.",
+      "range": {
+        "startLine": 24,
+        "startChar": 14,
+        "endLine": 24,
+        "endChar": 23
+      },
+      "revId": "a1688388be8ff23b6481edd9de9e655f4257bd02",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
