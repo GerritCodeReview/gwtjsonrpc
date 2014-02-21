@@ -302,6 +302,13 @@ limitations under the License.
       <scope>compile</scope>
     </dependency>
 
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
+
     <!-- GWT -->
     <dependency>
       <groupId>com.google.gwt</groupId>
