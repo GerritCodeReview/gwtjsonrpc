@@ -14,8 +14,12 @@
 
 package com.google.gwtjsonrpc.common;
 
+import static com.google.gwtjsonrpc.common.JavaSqlTimestampHelper.hasTime;
+import static com.google.gwtjsonrpc.common.JavaSqlTimestampHelper.hasTimeZone;
 import static com.google.gwtjsonrpc.common.JavaSqlTimestampHelper.parseTimestamp;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import org.junit.After;
@@ -74,6 +78,19 @@ public class JavaSqlTimestampHelperTest {
     assertInvalid("2006-01-02T15:04:05.789000000");
     assertInvalid("15:04:05");
     assertInvalid("15:04:05.999000000");
+  }
+
+  @Test
+  public void testHasTimeZone() {
+    assertTrue(hasTimeZone("2006-01-02 15:04:05.789 -0500"));
+    assertFalse(hasTimeZone("2006-01-02 15:04:05.789"));
+  }
+
+  @Test
+  public void testHasTime() {
+    assertTrue(hasTime("2006-01-02 15:04:05.789 -0500"));
+    assertTrue(hasTime("2006-01-02 15:04:05.789"));
+    assertFalse(hasTime("2006-01-02"));
   }
 
   private static void assertInvalid(String input) {
