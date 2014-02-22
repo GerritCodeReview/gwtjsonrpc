@@ -14,61 +14,66 @@
 
 package com.google.gwtjsonrpc.common;
 
+import java.sql.Timestamp;
 import java.util.Date;
 
-/** Utility to parse java.sql.Timestamp from a string. */
+/** Utility to parse Timestamp from a string. */
 public class JavaSqlTimestampHelper {
-  @SuppressWarnings("deprecation")
-  public static java.sql.Timestamp parseTimestamp(final String s) {
-    final String[] components = s.split(" ");
-    if (components.length != 2) {
-      throw new IllegalArgumentException("Invalid escape format: " + s);
+  public static Timestamp parseTimestamp(String s) {
+    String[] components = s.split(" ");
+    if (components.length < 1 || components.length > 2) {
+      throw new IllegalArgumentException(
+          "Expected date and optional time: " + s);
     }
-
-    final String[] timeComponents = components[1].split("\\.");
-    if (timeComponents.length != 2) {
-      throw new IllegalArgumentException("Invalid escape format: " + s);
-    } else if (timeComponents[1].length() != 9) {
-      throw new IllegalArgumentException("Invalid escape format: " + s);
+    String date = components[0];
+    String time = components.length == 2 ? components[1] : null;
+    String[] dSplit = date.split("-");
+    if (dSplit.length != 3) {
+      throw new IllegalArgumentException("Invalid date format: " + date);
     }
-
-    final String[] dSplit = components[0].split("-");
-    final String[] tSplit = timeComponents[0].split(":");
-    if (dSplit.length != 3 || tSplit.length != 3) {
-      throw new IllegalArgumentException("Invalid escape format: " + s);
-    }
-    trimLeading0(dSplit);
-    trimLeading0(tSplit);
-
-    if (timeComponents[1].startsWith("0")) {
-      timeComponents[1] = timeComponents[1].replaceFirst("^00*", "");
-      if (timeComponents[1].length() == 0) {
-        timeComponents[1] = "0";
-      }
-    }
-
+    int yy, mm, dd;
     try {
-      int yy = Integer.parseInt(dSplit[0]) - 1900;
-      int mm = Integer.parseInt(dSplit[1]) - 1;
-      int dd = Integer.parseInt(dSplit[2]);
-
-      int hh = Integer.parseInt(tSplit[0]);
-      int mi = Integer.parseInt(tSplit[1]);
-      int ss = Integer.parseInt(tSplit[2]);
-      int ms = Integer.valueOf(timeComponents[1]) / 1000000;
-
-      return new java.sql.Timestamp(Date.UTC(yy, mm, dd, hh, mi, ss) + ms);
+      yy = Integer.parseInt(dSplit[0]) - 1900;
+      mm = Integer.parseInt(dSplit[1]) - 1;
+      dd = Integer.parseInt(dSplit[2]);
     } catch (NumberFormatException e) {
-      throw new IllegalArgumentException("Invalid escape format: " + s);
+      throw new IllegalArgumentException("Invalid date format: " + date, e);
     }
-  }
 
-  private static void trimLeading0(final String[] dSplit) {
-    for (int i = 0; i < 3; i++) {
-      if (dSplit[i].startsWith("0")) {
-        dSplit[i] = dSplit[i].substring(1);
+    int hh, mi, ss, ns;
+    if (time != null) {
+      int p = time.indexOf('.');
+      String t;
+      double f;
+      try {
+        if (p >= 0) {
+          t = time.substring(0, p);
+          f = Double.parseDouble("0." + time.substring(p + 1));
+        } else {
+          t = time;
+          f = 0;
+        }
+        String[] tSplit = t.split(":");
+        if (tSplit.length != 3) {
+          throw new IllegalArgumentException("Invalid time format: " + time);
+        }
+        hh = Integer.parseInt(tSplit[0]);
+        mi = Integer.parseInt(tSplit[1]);
+        ss = Integer.parseInt(tSplit[2]);
+        ns = (int) Math.round(f * 1e9);
+      } catch (NumberFormatException e) {
+        throw new IllegalArgumentException("Invalid time format: " + time, e);
       }
+    } else {
+      hh = 0;
+      mi = 0;
+      ss = 0;
+      ns = 0;
     }
+    @SuppressWarnings("deprecation")
+    Timestamp result = new Timestamp(Date.UTC(yy, mm, dd, hh, mi, ss));
+    result.setNanos(ns);
+    return result;
   }
 
   private JavaSqlTimestampHelper() {

@@ -29,8 +29,9 @@ public class JavaSqlTimestampHelperTest {
   private SimpleDateFormat format;
   private TimeZone systemTimeZone;
 
+  @SuppressWarnings("deprecation")
   @Before
-  public void setUp() {
+  public void setUp() throws Exception {
     synchronized (TimeZone.class) {
       systemTimeZone = TimeZone.getDefault();
       TimeZone.setDefault(TimeZone.getTimeZone("GMT-5:00"));
@@ -45,19 +46,26 @@ public class JavaSqlTimestampHelperTest {
 
   @Test
   public void parseFullTimestamp() {
-    assertEquals("2006-01-02 10:04:05.999 -0500",
-        reformat("2006-01-02 15:04:05.999000000"));
+    assertEquals("2006-01-02 15:04:05.789 -0500",
+        reformat("2006-01-02 20:04:05.789000000"));
+    assertEquals("2006-01-02 15:04:05.000 -0500",
+        reformat("2006-01-02 20:04:05"));
+  }
+
+  @Test
+  public void parseDateOnly() {
+    assertEquals("2006-01-01 19:00:00.000 -0500",
+        reformat("2006-01-02"));
   }
 
   @Test
   public void parseInvalidTimestamps() {
-    assertInvalid("2006-01-02-15:04:05.999000000");
-    assertInvalid("2006-01-02T15:04:05.999000000");
-    assertInvalid("2006-01-02");
+    assertInvalid("2006-01-02-15:04:05.789000000");
+    assertInvalid("2006-01-02T15:04:05.789000000");
     assertInvalid("15:04:05");
     assertInvalid("15:04:05.999000000");
-    assertInvalid("2006-01-02 10:04:05.999 -0500");
-    assertInvalid("2006-01-02 10:04:05.999000000 -0500");
+    assertInvalid("2006-01-02 10:04:05.789 -0500");
+    assertInvalid("2006-01-02 10:04:05.789000000 -0500");
   }
 
   private static void assertInvalid(String input) {
