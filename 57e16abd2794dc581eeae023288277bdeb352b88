@@ -22,6 +22,30 @@
       "revId": "57e16abd2794dc581eeae023288277bdeb352b88",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf439932_0bee5d2a",
+        "filename": "src/main/java/com/google/gwtjsonrpc/common/JavaSqlTimestampHelper.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-02-22T01:56:09Z",
+      "side": 1,
+      "message": "I started the time !\u003d null thing with the intent of eliminating this but never got there. Done.\n\nI guess the long method is the cost of not allocating.",
+      "parentUuid": "8f37e1c2_e9e83521",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 5
+      },
+      "revId": "57e16abd2794dc581eeae023288277bdeb352b88",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
