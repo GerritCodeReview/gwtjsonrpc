@@ -91,6 +91,18 @@ public class JavaSqlTimestampHelper {
     return result;
   }
 
+  /**
+   * Check whether an input string has a timezone portion.
+   *
+   * @param s input string.
+   * @return if {@code s} is a valid input to {@link #parseTimestamp(String)},
+   *     whether it contains an explicitly-specified timezone. Otherwise,
+   *     undefined.
+   */
+  public static boolean hasTimeZone(String s) {
+    return s.indexOf(' ') != s.lastIndexOf(' ');
+  }
+
   private static TimeZone parseTimeZone(String s) {
     if (s.length() != 5 || (s.charAt(0) != '-' && s.charAt(0) != '+')) {
       throw new IllegalArgumentException("Invalid time zone: " + s);
