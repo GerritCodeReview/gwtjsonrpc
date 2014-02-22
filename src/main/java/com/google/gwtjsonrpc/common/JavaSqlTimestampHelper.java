@@ -16,18 +16,32 @@ package com.google.gwtjsonrpc.common;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.TimeZone;
 
 /** Utility to parse Timestamp from a string. */
 public class JavaSqlTimestampHelper {
+  /**
+   * Parse a string into a timestamp.
+   * <p>
+   * Note that {@link Timestamp}s have no timezone, so the result is relative to
+   * the UTC epoch.
+   * <p>
+   * Supports the format {@code yyyy-MM-dd[ HH:mm:ss[.SSS][ Z]]} where
+   * {@code Z} is a 4-digit offset with sign, e.g. {@code -0500}.
+   *
+   * @param s input string.
+   * @return resulting timestamp.
+   */
   public static Timestamp parseTimestamp(String s) {
     String[] components = s.split(" ");
-    if (components.length < 1 || components.length > 2) {
+    if (components.length < 1 || components.length > 3) {
       throw new IllegalArgumentException(
           "Expected date and optional time: " + s);
     }
+    TimeZone tz = components.length == 3 ? parseTimeZone(components[2]) : null;
     return components.length == 1
         ? parseDate(components[0])
-        : parseTime(components[0], components[1]);
+        : parseTime(components[0], components[1], tz);
   }
 
   @SuppressWarnings("deprecation")
@@ -47,7 +61,7 @@ public class JavaSqlTimestampHelper {
   }
 
   @SuppressWarnings("deprecation")
-  private static Timestamp parseTime(String date, String time) {
+  private static Timestamp parseTime(String date, String time, TimeZone tz) {
     String[] dSplit = date.split("-");
     if (dSplit.length != 3) {
       throw new IllegalArgumentException("Invalid date format: " + date);
@@ -91,9 +105,23 @@ public class JavaSqlTimestampHelper {
       ss = 0;
       ns = 0;
     }
-    Timestamp result = new Timestamp(Date.UTC(yy, mm, dd, hh, mi, ss));
+    int off = tz != null ? -tz.getRawOffset() : 0;
+    Timestamp result = new Timestamp(Date.UTC(yy, mm, dd, hh, mi, ss) + off);
     result.setNanos(ns);
     return result;
+  }
+
+  private static TimeZone parseTimeZone(String s) {
+    if (s.length() != 5 || (s.charAt(0) != '-' && s.charAt(0) != '+')) {
+      throw new IllegalArgumentException("Invalid time zone: " + s);
+    }
+    for (int i = 1; i < s.length(); i++) {
+      if (s.charAt(i) < '0' || s.charAt(i) > '9') {
+        throw new IllegalArgumentException("Invalid time zone: " + s);
+      }
+    }
+    return TimeZone.getTimeZone(
+        "GMT" + s.substring(0, 3) + ':' + s.substring(3, 5));
   }
 
   private JavaSqlTimestampHelper() {
