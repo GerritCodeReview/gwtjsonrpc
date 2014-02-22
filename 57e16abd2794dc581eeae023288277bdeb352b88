@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f37e1c2_e9e83521",
+        "filename": "src/main/java/com/google/gwtjsonrpc/common/JavaSqlTimestampHelper.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1011842
+      },
+      "writtenOn": "2014-02-22T01:43:05Z",
+      "side": 1,
+      "message": "Nice --- this is way easier to read than the original. Could simplify to something like\n\n return parseTime(s, null);",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 5
+      },
+      "revId": "57e16abd2794dc581eeae023288277bdeb352b88",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
