@@ -44,6 +44,18 @@ public class JavaSqlTimestampHelper {
         : parseTime(components[0], components[1], tz);
   }
 
+  /**
+   * Check whether an input string has a timezone portion.
+   *
+   * @param s input string.
+   * @return if {@code s} is a valid input to {@link #parseTimestamp(String)},
+   *     whether it contains an explicitly-specified timezone. Otherwise,
+   *     undefined.
+   */
+  public static boolean hasTimeZone(String s) {
+    return s.indexOf(' ') != s.lastIndexOf(' ');
+  }
+
   @SuppressWarnings("deprecation")
   private static Timestamp parseDate(String s) {
     String[] components = s.split("-");
