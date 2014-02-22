@@ -19,14 +19,27 @@ import java.util.Date;
 
 /** Utility to parse Timestamp from a string. */
 public class JavaSqlTimestampHelper {
+  /**
+   * Parse a string into a timestamp.
+   * <p>
+   * Note that {@link Timestamp}s have no timezone, so the result is relative to
+   * the UTC epoch.
+   * <p>
+   * Supports the format {@code yyyy-MM-dd[ HH:mm:ss[.SSS][ Z]]} where
+   * {@code Z} is a 4-digit offset with sign, e.g. {@code -0500}.
+   *
+   * @param s input string.
+   * @return resulting timestamp.
+   */
   public static Timestamp parseTimestamp(String s) {
     String[] components = s.split(" ");
-    if (components.length < 1 || components.length > 2) {
+    if (components.length < 1 || components.length > 3) {
       throw new IllegalArgumentException(
           "Expected date and optional time: " + s);
     }
     String date = components[0];
-    String time = components.length == 2 ? components[1] : null;
+    String time = components.length >= 2 ? components[1] : null;
+    int off = components.length == 3 ? parseTimeZone(components[2]) : 0;
     String[] dSplit = date.split("-");
     if (dSplit.length != 3) {
       throw new IllegalArgumentException("Invalid date format: " + date);
@@ -71,9 +84,24 @@ public class JavaSqlTimestampHelper {
       ns = 0;
     }
     @SuppressWarnings("deprecation")
-    Timestamp result = new Timestamp(Date.UTC(yy, mm, dd, hh, mi, ss));
+    Timestamp result = new Timestamp(Date.UTC(yy, mm, dd, hh, mi, ss) - off);
     result.setNanos(ns);
     return result;
+  }
+
+  private static int parseTimeZone(String s) {
+    if (s.length() != 5 || (s.charAt(0) != '-' && s.charAt(0) != '+')) {
+      throw new IllegalArgumentException("Invalid time zone: " + s);
+    }
+    for (int i = 1; i < s.length(); i++) {
+      if (s.charAt(i) < '0' || s.charAt(i) > '9') {
+        throw new IllegalArgumentException("Invalid time zone: " + s);
+      }
+    }
+    int off = (s.charAt(0) == '-' ? -1 : 1) * 60 * 1000 * (
+        (60 * Integer.parseInt(s.substring(1, 3)))
+        + Integer.parseInt(s.substring(3, 5)));
+    return off;
   }
 
   private JavaSqlTimestampHelper() {

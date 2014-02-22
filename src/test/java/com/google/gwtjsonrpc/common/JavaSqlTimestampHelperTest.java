@@ -59,13 +59,21 @@ public class JavaSqlTimestampHelperTest {
   }
 
   @Test
+  public void parseTimeZone() {
+    assertEquals("2006-01-02 11:04:05.789 -0500",
+        reformat("2006-01-02 15:04:05.789 -0100"));
+    assertEquals("2006-01-02 10:04:05.789 -0500",
+        reformat("2006-01-02 15:04:05.789 -0000"));
+    assertEquals("2006-01-02 09:04:05.789 -0500",
+        reformat("2006-01-02 15:04:05.789 +0100"));
+  }
+
+  @Test
   public void parseInvalidTimestamps() {
     assertInvalid("2006-01-02-15:04:05.789000000");
     assertInvalid("2006-01-02T15:04:05.789000000");
     assertInvalid("15:04:05");
     assertInvalid("15:04:05.999000000");
-    assertInvalid("2006-01-02 10:04:05.789 -0500");
-    assertInvalid("2006-01-02 10:04:05.789000000 -0500");
   }
 
   private static void assertInvalid(String input) {
