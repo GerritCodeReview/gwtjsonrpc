@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8f37e1c2_09458962",
+        "filename": "src/main/java/com/google/gwtjsonrpc/common/JavaSqlTimestampHelper.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-02-24T16:27:48Z",
+      "side": 1,
+      "message": "Sigh, looks like GWT doesn\u0027t support java.util.TimeZone? Might be back to the drawing board on this one.",
+      "revId": "148f670eca485edfe8c417baea743c9476ee54b2",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
