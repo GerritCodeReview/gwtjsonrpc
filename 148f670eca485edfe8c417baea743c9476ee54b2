@@ -16,6 +16,24 @@
       "revId": "148f670eca485edfe8c417baea743c9476ee54b2",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf439932_eb4f5181",
+        "filename": "src/main/java/com/google/gwtjsonrpc/common/JavaSqlTimestampHelper.java",
+        "patchSetId": 3
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2014-02-24T16:54:00Z",
+      "side": 1,
+      "message": "Don\u0027t actually need TimeZone just to parse -XXYY. Done (in parent change).",
+      "parentUuid": "8f37e1c2_09458962",
+      "revId": "148f670eca485edfe8c417baea743c9476ee54b2",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
