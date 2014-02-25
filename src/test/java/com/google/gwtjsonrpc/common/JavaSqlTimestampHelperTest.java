@@ -33,7 +33,6 @@ public class JavaSqlTimestampHelperTest {
   private SimpleDateFormat format;
   private TimeZone systemTimeZone;
 
-  @SuppressWarnings("deprecation")
   @Before
   public void setUp() throws Exception {
     synchronized (TimeZone.class) {
