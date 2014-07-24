@@ -16,6 +16,7 @@ package com.google.gwtjsonrpc.rebind;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -207,6 +208,7 @@ class ProxyCreator {
     cf = new ClassSourceFileComposerFactory(pkgName, getProxySimpleName());
     cf.addImport(AbstractJsonProxy.class.getCanonicalName());
     cf.addImport(JsonSerializer.class.getCanonicalName());
+    cf.addImport(JsonUtils.class.getCanonicalName());
     cf.addImport(JavaScriptObject.class.getCanonicalName());
     cf.addImport(ResultDeserializer.class.getCanonicalName());
     cf.addImport(AsyncCallback.class.getCanonicalName());
@@ -404,10 +406,8 @@ class ProxyCreator {
         final String pName = params[i].getName();
         if (pType == JPrimitiveType.CHAR
             || SerializerCreator.isBoxedCharacter(pType)) {
-          w.println(reqData + ".append(\"\\\"\");");
-          w.println(reqData + ".append(" + JsonSerializer.class.getSimpleName()
-              + ".escapeChar(" + pName + "));");
-          w.println(reqData + ".append(\"\\\"\");");
+          w.println(reqData + ".append(" + JsonUtils.class.getSimpleName());
+          w.println(".escapeValue(String.valueOf(" + pName + ")));");
         } else if ((SerializerCreator.isJsonPrimitive(pType) || SerializerCreator
             .isBoxedPrimitive(pType))
             && !SerializerCreator.isJsonString(pType)) {
