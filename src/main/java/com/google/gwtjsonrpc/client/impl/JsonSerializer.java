@@ -14,8 +14,6 @@
 
 package com.google.gwtjsonrpc.client.impl;
 
-import com.google.gwt.core.client.JsonUtils;
-
 /**
  * Converter between JSON and Java object representations.
  * <p>
@@ -53,37 +51,6 @@ public abstract class JsonSerializer<T> {
    *         with the data copied over form the JSON representation.
    */
   public abstract T fromJson(Object o);
-
-  /**
-   * Utility function to convert a String to safe JSON text.
-   * <p>
-   * For example, if <code>val = "b\nb"</code> this method returns the value
-   * <code>"\"b\\nb\""</code>.
-   * <p>
-   * Typically called by {@link #printJson(StringBuilder, Object)}, or through
-   * {@link JavaLangString_JsonSerializer}.
-   * 
-   * @param val string text requiring escaping support. Must not be null.
-   * @return a JSON literal text value, surrounded with double quotes.
-   * @deprecated Use {@link JsonUtils#escapeValue(String)}
-   */
-  @Deprecated
-  public static final String escapeString(String val) {
-    return JsonUtils.escapeValue(val);
-  }
-
-  /**
-   * Escape a single character, without double quotes surrounding it.
-   * 
-   * @deprecated implementation depends on private method hack. Do not use.
-   */
-  @Deprecated
-  public static final String escapeChar(final char c) {
-    return escapeCharImpl(String.valueOf(c));
-  }
-
-  @Deprecated
-  private static final native String escapeCharImpl(String c) /*-{ return @com.google.gwt.core.client.JsonUtils::escapeChar(Ljava/lang/String;)(c); }-*/;
 
   /** Return the first character of a string, or '\0' if the string is empty. */
   public static final char toChar(final String val) {

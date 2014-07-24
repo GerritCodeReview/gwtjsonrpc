@@ -15,6 +15,7 @@
 package com.google.gwtjsonrpc.rebind;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.UnableToCompleteException;
@@ -506,10 +507,8 @@ class SerializerCreator {
       if (f.getType() == JPrimitiveType.CHAR || isBoxedCharacter(f.getType())) {
         w.println(docomma);
         w.println(doname);
-        w.println("sb.append(\"\\\"\");");
-        w.println("sb.append(" + JsonSerializer.class.getSimpleName()
-            + ".escapeChar(" + doget + "));");
-        w.println("sb.append(\"\\\"\");");
+        w.println("sb.append(" + JsonUtils.class.getSimpleName());
+        w.println(".escapeValue(String.valueOf(" + doget + "));");
       } else if (isJsonString(f.getType())) {
         w.println("if (" + doget + " != null) {");
         w.indent();
@@ -699,6 +698,7 @@ class SerializerCreator {
     cf = new ClassSourceFileComposerFactory(pkgName, getSerializerSimpleName());
     cf.addImport(JavaScriptObject.class.getCanonicalName());
     cf.addImport(JsonSerializer.class.getCanonicalName());
+    cf.addImport(JsonUtils.class.getCanonicalName());
     if (targetType.isEnum() != null) {
       cf.addImport(EnumSerializer.class.getCanonicalName());
       cf.setSuperclass(EnumSerializer.class.getSimpleName() + "<"
