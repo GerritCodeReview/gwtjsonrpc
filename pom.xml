@@ -21,7 +21,7 @@ limitations under the License.
   <groupId>gwtjsonrpc</groupId>
   <artifactId>gwtjsonrpc</artifactId>
   <packaging>jar</packaging>
-  <version>1.6-SNAPSHOT</version>
+  <version>1.6</version>
   <name>gwtjsonrpc</name>
   <description>JSON-RPC for Google Web Toolkit (GWT)</description>
   <url>https://gerrit.googlesource.com/gwtjsonrpc</url>
