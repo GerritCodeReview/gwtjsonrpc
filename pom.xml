@@ -253,7 +253,7 @@ limitations under the License.
   </licenses>
 
   <properties>
-    <gwtVersion>2.6.1</gwtVersion>
+    <gwtVersion>2.7.0</gwtVersion>
   </properties>
 
   <build>
