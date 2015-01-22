@@ -59,20 +59,20 @@ public class MapDeserializer implements JsonDeserializer<Map<Object, Object>>,
         r.put(e.getKey(), v);
       }
       return r;
-    } else {
-      if (!json.isJsonArray()) {
-        throw new JsonParseException("Expected array for map type");
-      }
-
-      final JsonArray p = (JsonArray) json;
-      final Map<Object, Object> r = createInstance(typeOfT);
-      for (int n = 0; n < p.size();) {
-        final Object k = context.deserialize(p.get(n++), kt);
-        final Object v = context.deserialize(p.get(n++), vt);
-        r.put(k, v);
-      }
-      return r;
     }
+
+    if (!json.isJsonArray()) {
+      throw new JsonParseException("Expected array for map type");
+    }
+
+    final JsonArray p = (JsonArray) json;
+    final Map<Object, Object> r = createInstance(typeOfT);
+    for (int n = 0; n < p.size();) {
+      final Object k = context.deserialize(p.get(n++), kt);
+      final Object v = context.deserialize(p.get(n++), vt);
+      r.put(k, v);
+    }
+    return r;
   }
 
   @Override
@@ -91,13 +91,13 @@ public class MapDeserializer implements JsonDeserializer<Map<Object, Object>>,
         r.add(e.getKey().toString(), context.serialize(e.getValue(), vt));
       }
       return r;
-    } else {
-      final JsonArray r = new JsonArray();
-      for (final Map.Entry<Object, Object> e : src.entrySet()) {
-        r.add(context.serialize(e.getKey(), kt));
-        r.add(context.serialize(e.getValue(), vt));
-      }
-      return r;
     }
+
+    final JsonArray r = new JsonArray();
+    for (final Map.Entry<Object, Object> e : src.entrySet()) {
+      r.add(context.serialize(e.getKey(), kt));
+      r.add(context.serialize(e.getValue(), vt));
+    }
+    return r;
   }
 }
