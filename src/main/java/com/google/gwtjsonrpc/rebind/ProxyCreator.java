@@ -77,23 +77,23 @@ class ProxyCreator {
       logger.log(TreeLogger.ERROR, null, e);
       throw new UnableToCompleteException();
     }
-    checkMethods(logger, context);
+    checkMethods(logger);
 
     final SourceWriter srcWriter = getSourceWriter(logger, context);
     if (srcWriter == null) {
       return getProxyQualifiedName();
     }
 
-    generateProxyConstructor(logger, srcWriter);
+    generateProxyConstructor(srcWriter);
     generateProxyCallCreator(logger, srcWriter);
-    generateProxyMethods(logger, srcWriter);
+    generateProxyMethods(srcWriter);
     srcWriter.commit(logger);
 
     return getProxyQualifiedName();
   }
 
-  private void checkMethods(final TreeLogger logger,
-      final GeneratorContext context) throws UnableToCompleteException {
+  private void checkMethods(final TreeLogger logger)
+      throws UnableToCompleteException {
     final Set<String> declaredNames = new HashSet<>();
     final JMethod[] methodList = svcInf.getOverridableMethods();
     for (final JMethod m : methodList) {
@@ -218,8 +218,7 @@ class ProxyCreator {
     return cf.createSourceWriter(ctx, pw);
   }
 
-  private void generateProxyConstructor(final TreeLogger logger,
-      final SourceWriter w) {
+  private void generateProxyConstructor(final SourceWriter w) {
     final RemoteServiceRelativePath relPath =
         svcInf.getAnnotation(RemoteServiceRelativePath.class);
     if (relPath != null) {
@@ -275,16 +274,14 @@ class ProxyCreator {
     throw new UnableToCompleteException();
   }
 
-  private void generateProxyMethods(final TreeLogger logger,
-      final SourceWriter srcWriter) {
+  private void generateProxyMethods(final SourceWriter srcWriter) {
     final JMethod[] methodList = svcInf.getOverridableMethods();
     for (final JMethod m : methodList) {
-      generateProxyMethod(logger, m, srcWriter);
+      generateProxyMethod(m, srcWriter);
     }
   }
 
-  private void generateProxyMethod(final TreeLogger logger,
-      final JMethod method, final SourceWriter w) {
+  private void generateProxyMethod(final JMethod method, final SourceWriter w) {
     final JParameter[] params = method.getParameters();
     final JParameter callback = params[params.length - 1];
     final JClassType resultType =
