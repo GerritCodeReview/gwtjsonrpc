@@ -715,12 +715,12 @@ class SerializerCreator {
   }
 
   private static boolean needsSuperSerializer(JClassType type) {
-    type = type.getSuperclass();
-    while (!Object.class.getName().equals(type.getQualifiedSourceName())) {
+    JClassType t = type.getSuperclass();
+    while (!Object.class.getName().equals(t.getQualifiedSourceName())) {
       if (sortFields(type).length > 0) {
         return true;
       }
-      type = type.getSuperclass();
+      t = type.getSuperclass();
     }
     return false;
   }
