@@ -640,7 +640,8 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
   }
 
   @SuppressWarnings("unchecked")
-  private static Class<? extends RemoteJsonService> findInterface(Class<?> c) {
+  private static Class<? extends RemoteJsonService> findInterface(Class<?> clazz) {
+    Class<?> c = clazz;
     while (c != null) {
       if (c.isInterface() && RemoteJsonService.class.isAssignableFrom(c)) {
         return (Class<RemoteJsonService>) c;
