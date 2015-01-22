@@ -77,7 +77,7 @@ public class ObjectMapSerializer<K, V> extends
 
     final JavaScriptObject jso = (JavaScriptObject) o;
     final int n = size(jso);
-    final HashMap<K, V> r = new HashMap<K, V>();
+    final HashMap<K, V> r = new HashMap<>();
     for (int i = 0; i < n;) {
       final K k = keySerializer.fromJson(get(jso, i++));
       final V v = valueSerializer.fromJson(get(jso, i++));

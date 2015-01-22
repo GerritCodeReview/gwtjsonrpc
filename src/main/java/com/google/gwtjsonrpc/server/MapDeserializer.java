@@ -34,7 +34,7 @@ public class MapDeserializer implements JsonDeserializer<Map<Object, Object>>,
     JsonSerializer<Map<Object, Object>>, InstanceCreator<Map<Object, Object>> {
   @Override
   public Map<Object, Object> createInstance(final Type type) {
-    return new HashMap<Object, Object>();
+    return new HashMap<>();
   }
 
   @Override
