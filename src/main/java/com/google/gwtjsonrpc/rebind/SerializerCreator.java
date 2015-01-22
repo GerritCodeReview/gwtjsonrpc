@@ -216,9 +216,9 @@ class SerializerCreator {
           // To work around this, we would need to generate serializers for
           // them, this can be considered a todo
           throw new UnableToCompleteException();
-        } else
-          // Rank 1 arrays work fine.
-          return;
+        }
+        // Rank 1 arrays work fine.
+        return;
       }
       checkCanSerialize(logger, type.isArray().getComponentType());
       return;
@@ -272,11 +272,12 @@ class SerializerCreator {
     if (t.isArray() != null) {
       final JType componentType = t.isArray().getComponentType();
       if (componentType.isPrimitive() != null
-          || isBoxedPrimitive(componentType))
+          || isBoxedPrimitive(componentType)) {
         return PrimitiveArraySerializer.class.getCanonicalName();
-      else
-        return ObjectArraySerializer.class.getCanonicalName() + "<"
-            + componentType.getQualifiedSourceName() + ">";
+      }
+
+      return ObjectArraySerializer.class.getCanonicalName() + "<"
+          + componentType.getQualifiedSourceName() + ">";
     }
 
     if (isStringMap(t)) {

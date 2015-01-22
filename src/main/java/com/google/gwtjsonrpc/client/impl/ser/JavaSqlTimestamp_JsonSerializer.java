@@ -46,9 +46,8 @@ public final class JavaSqlTimestamp_JsonSerializer extends
   protected static String padTwo(final int v) {
     if (v < 10) {
       return "0" + v;
-    } else {
-      return String.valueOf(v);
     }
+    return String.valueOf(v);
   }
 
   protected static String padThree(final int v) {

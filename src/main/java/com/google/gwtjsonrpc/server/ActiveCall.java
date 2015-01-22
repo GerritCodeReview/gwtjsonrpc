@@ -204,10 +204,9 @@ public class ActiveCall implements AsyncCallback<Object> {
   public final boolean requireXsrfValid() {
     if (isXsrfValid()) {
       return true;
-    } else {
-      onFailure(new Exception(JsonConstants.ERROR_INVALID_XSRF));
-      return false;
     }
+    onFailure(new Exception(JsonConstants.ERROR_INVALID_XSRF));
+    return false;
   }
 
   /**
