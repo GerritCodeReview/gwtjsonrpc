@@ -213,17 +213,18 @@ public class SignedToken {
     return toString(Base64.encodeBase64(buf));
   }
 
-  private static void encodeInt(final byte[] buf, final int o, int v) {
-    buf[o + 3] = (byte) v;
-    v >>>= 8;
+  private static void encodeInt(final byte[] buf, final int o, final int v) {
+    int _v = v;
+    buf[o + 3] = (byte) _v;
+    _v >>>= 8;
 
-    buf[o + 2] = (byte) v;
-    v >>>= 8;
+    buf[o + 2] = (byte) _v;
+    _v >>>= 8;
 
-    buf[o + 1] = (byte) v;
-    v >>>= 8;
+    buf[o + 1] = (byte) _v;
+    _v >>>= 8;
 
-    buf[o] = (byte) v;
+    buf[o] = (byte) _v;
   }
 
   private static int decodeInt(final byte[] buf, final int o) {
