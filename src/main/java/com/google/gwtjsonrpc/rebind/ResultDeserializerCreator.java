@@ -63,7 +63,7 @@ class ResultDeserializerCreator {
 
   ResultDeserializerCreator(GeneratorContext c, SerializerCreator sc) {
     context = c;
-    generatedDeserializers = new HashMap<String, String>();
+    generatedDeserializers = new HashMap<>();
     serializerCreator = sc;
   }
 

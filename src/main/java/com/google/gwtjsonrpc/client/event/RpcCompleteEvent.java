@@ -45,7 +45,7 @@ public class RpcCompleteEvent extends BaseRpcEvent<RpcCompleteHandler> {
    */
   public static Type<RpcCompleteHandler> getType() {
     if (TYPE == null) {
-      TYPE = new Type<RpcCompleteHandler>();
+      TYPE = new Type<>();
       INSTANCE = new RpcCompleteEvent();
     }
     return TYPE;

@@ -73,7 +73,7 @@ public class StringMapSerializer<V> extends
     }
 
     final JavaScriptObject jso = (JavaScriptObject) o;
-    final HashMap<String, V> r = new HashMap<String, V>();
+    final HashMap<String, V> r = new HashMap<>();
     copy(r, jso);
     return r;
   }

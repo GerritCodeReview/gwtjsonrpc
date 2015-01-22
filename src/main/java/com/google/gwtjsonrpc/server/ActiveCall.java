@@ -81,7 +81,7 @@ public class ActiveCall implements AsyncCallback<Object> {
    */
   public String getCookie(final String name) {
     if (cookies == null) {
-      cookies = new HashMap<String, String>();
+      cookies = new HashMap<>();
       final Cookie[] all = httpRequest.getCookies();
       if (all != null) {
         for (final Cookie c : all) {

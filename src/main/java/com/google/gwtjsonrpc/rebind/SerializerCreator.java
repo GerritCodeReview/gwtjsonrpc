@@ -60,8 +60,8 @@ class SerializerCreator {
   private static final HashMap<String, String> defaultSerializers;
   private static final HashMap<String, String> parameterizedSerializers;
   static {
-    defaultSerializers = new HashMap<String, String>();
-    parameterizedSerializers = new HashMap<String, String>();
+    defaultSerializers = new HashMap<>();
+    parameterizedSerializers = new HashMap<>();
 
     defaultSerializers.put(java.lang.String.class.getCanonicalName(),
         JavaLangString_JsonSerializer.class.getCanonicalName());
@@ -86,7 +86,7 @@ class SerializerCreator {
 
   SerializerCreator(final GeneratorContext c) {
     context = c;
-    generatedSerializers = new HashMap<String, String>();
+    generatedSerializers = new HashMap<>();
   }
 
   String create(final JClassType targetType, final TreeLogger logger)
@@ -741,7 +741,7 @@ class SerializerCreator {
   }
 
   private static JField[] sortFields(final JClassType targetType) {
-    final ArrayList<JField> r = new ArrayList<JField>();
+    final ArrayList<JField> r = new ArrayList<>();
     for (final JField f : targetType.getFields()) {
       if (!f.isStatic() && !f.isTransient() && !f.isFinal()) {
         r.add(f);

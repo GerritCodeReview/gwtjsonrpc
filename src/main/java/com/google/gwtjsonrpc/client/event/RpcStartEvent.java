@@ -45,7 +45,7 @@ public class RpcStartEvent extends BaseRpcEvent<RpcStartHandler> {
    */
   public static Type<RpcStartHandler> getType() {
     if (TYPE == null) {
-      TYPE = new Type<RpcStartHandler>();
+      TYPE = new Type<>();
       INSTANCE = new RpcStartEvent();
     }
     return TYPE;

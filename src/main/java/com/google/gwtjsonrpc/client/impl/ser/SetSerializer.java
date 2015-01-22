@@ -61,7 +61,7 @@ public class SetSerializer<T> extends JsonSerializer<java.util.Set<T>>
 
     final JavaScriptObject jso = (JavaScriptObject) o;
     final int n = size(jso);
-    final HashSet<T> r = new HashSet<T>(n);
+    final HashSet<T> r = new HashSet<>(n);
     for (int i = 0; i < n; i++) {
       r.add(serializer.fromJson(get(jso, i)));
     }

@@ -61,7 +61,7 @@ public class ListSerializer<T> extends JsonSerializer<java.util.List<T>>
 
     final JavaScriptObject jso = (JavaScriptObject) o;
     final int n = size(jso);
-    final ArrayList<T> r = new ArrayList<T>(n);
+    final ArrayList<T> r = new ArrayList<>(n);
     for (int i = 0; i < n; i++) {
       r.add(serializer.fromJson(get(jso, i)));
     }

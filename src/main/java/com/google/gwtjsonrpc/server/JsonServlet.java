@@ -89,7 +89,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
   private static final ThreadLocal<ActiveCall> perThreadCall;
 
   static {
-    perThreadCall = new ThreadLocal<ActiveCall>();
+    perThreadCall = new ThreadLocal<>();
   }
 
   /** Get the <code>ActiveCall</code> object for the current call. */
@@ -105,7 +105,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
         new InstanceCreator<java.util.Set<Object>>() {
           @Override
           public Set<Object> createInstance(final Type arg0) {
-            return new HashSet<Object>();
+            return new HashSet<>();
           }
         });
     gb.registerTypeAdapter(java.util.Map.class, new MapDeserializer());
@@ -401,7 +401,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       try {
         final GsonBuilder gb = createGsonBuilder();
         gb.registerTypeAdapter(ActiveCall.class, //
-            new CallDeserializer<CallType>(call, this));
+            new CallDeserializer<>(call, this));
         gb.create().fromJson(d, ActiveCall.class);
       } catch (JsonParseException err) {
         call.method = null;
@@ -514,7 +514,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       throws UnsupportedEncodingException, IOException {
     try {
       final GsonBuilder gb = createGsonBuilder();
-      gb.registerTypeAdapter(ActiveCall.class, new CallDeserializer<CallType>(
+      gb.registerTypeAdapter(ActiveCall.class, new CallDeserializer<>(
           call, this));
       gb.create().fromJson(readBody(call), ActiveCall.class);
     } catch (JsonParseException err) {
@@ -614,7 +614,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       return Collections.<String, MethodHandle> emptyMap();
     }
 
-    final Map<String, MethodHandle> r = new HashMap<String, MethodHandle>();
+    final Map<String, MethodHandle> r = new HashMap<>();
     for (final Method m : d.getMethods()) {
       if (!Modifier.isPublic(m.getModifiers())) {
         continue;

@@ -94,7 +94,7 @@ class ProxyCreator {
 
   private void checkMethods(final TreeLogger logger,
       final GeneratorContext context) throws UnableToCompleteException {
-    final Set<String> declaredNames = new HashSet<String>();
+    final Set<String> declaredNames = new HashSet<>();
     final JMethod[] methodList = svcInf.getOverridableMethods();
     for (final JMethod m : methodList) {
       if (!declaredNames.add(m.getName())) {
