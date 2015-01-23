@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4b440fe9_bd41df6b",
+        "filename": "src/main/java/com/google/gwtjsonrpc/rebind/SerializerCreator.java",
+        "patchSetId": 2
+      },
+      "lineNbr": 720,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2015-01-23T08:22:00Z",
+      "side": 1,
+      "message": "should be `t`",
+      "range": {
+        "startLine": 720,
+        "startChar": 21,
+        "endLine": 720,
+        "endChar": 25
+      },
+      "revId": "4323f10a2401f606913c433faa767c897e3654b1",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    }
+  ]
+}
