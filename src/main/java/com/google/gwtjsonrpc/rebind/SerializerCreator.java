@@ -720,7 +720,7 @@ class SerializerCreator {
       if (sortFields(t).length > 0) {
         return true;
       }
-      t = type.getSuperclass();
+      t = t.getSuperclass();
     }
     return false;
   }
