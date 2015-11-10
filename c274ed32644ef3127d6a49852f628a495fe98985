@@ -22,6 +22,29 @@
       "revId": "c274ed32644ef3127d6a49852f628a495fe98985",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16feeae5_5f658fed",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1017837
+      },
+      "writtenOn": "2015-11-10T20:10:34Z",
+      "side": 1,
+      "message": "This being hardcoded and apparently needs to be the same as in gerrit,\nwould it make sense to separate it out as ENTRY_POINT_PREFIX or similar?",
+      "range": {
+        "startLine": 86,
+        "startChar": 50,
+        "endLine": 86,
+        "endChar": 61
+      },
+      "revId": "c274ed32644ef3127d6a49852f628a495fe98985",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
