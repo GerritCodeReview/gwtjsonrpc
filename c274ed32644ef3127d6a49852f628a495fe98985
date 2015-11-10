@@ -45,6 +45,30 @@
       "revId": "c274ed32644ef3127d6a49852f628a495fe98985",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16feeae5_9f45574b",
+        "filename": "src/main/java/com/google/gwtjsonrpc/client/JsonUtil.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 86,
+      "author": {
+        "id": 1010008
+      },
+      "writtenOn": "2015-11-10T20:13:38Z",
+      "side": 1,
+      "message": "Not worth it, gerrit is the only user of gwtjsonrpc.",
+      "parentUuid": "16feeae5_5f658fed",
+      "range": {
+        "startLine": 86,
+        "startChar": 50,
+        "endLine": 86,
+        "endChar": 61
+      },
+      "revId": "c274ed32644ef3127d6a49852f628a495fe98985",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
