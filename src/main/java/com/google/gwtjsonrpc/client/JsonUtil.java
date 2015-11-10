@@ -83,8 +83,7 @@ public class JsonUtil {
       final String path) {
     assert GWT.isClient();
     assert imp instanceof ServiceDefTarget;
-    final String base = GWT.getModuleBaseURL();
-    ((ServiceDefTarget) imp).setServiceEntryPoint(base + path);
+    ((ServiceDefTarget) imp).setServiceEntryPoint("gwt_json/" + path);
     return imp;
   }
 
