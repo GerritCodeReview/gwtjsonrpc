@@ -26,6 +26,11 @@ limitations under the License.
   <description>JSON-RPC for Google Web Toolkit (GWT)</description>
   <url>https://gerrit.googlesource.com/gwtjsonrpc</url>
 
+  <scm>
+    <url>https://gerrit.googlesource.com/gwtjsonrpc</url>
+    <connection>https://gerrit.googlesource.com/gwtjsonrpc</connection>
+  </scm>
+
   <mailingLists>
     <mailingList>
       <name>repo-discuss mailing list</name>
