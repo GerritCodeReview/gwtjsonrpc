@@ -258,7 +258,7 @@ limitations under the License.
   </licenses>
 
   <properties>
-    <gwtVersion>2.7.0</gwtVersion>
+    <gwtVersion>2.8.0-rc2</gwtVersion>
   </properties>
   <profiles>
     <profile>
