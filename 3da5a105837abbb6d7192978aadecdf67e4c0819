@@ -46,6 +46,30 @@
       "revId": "3da5a105837abbb6d7192978aadecdf67e4c0819",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0b498a01_dee3859b",
+        "filename": "pom.xml",
+        "patchSetId": 1
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2016-09-13T10:44:29Z",
+      "side": 1,
+      "message": "Was this re-ordering correct?  On gerrit we have the GWT update before the change to build with JDK 8.",
+      "parentUuid": "683cc7c0_51415469",
+      "range": {
+        "startLine": 262,
+        "startChar": 4,
+        "endLine": 262,
+        "endChar": 36
+      },
+      "revId": "3da5a105837abbb6d7192978aadecdf67e4c0819",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
