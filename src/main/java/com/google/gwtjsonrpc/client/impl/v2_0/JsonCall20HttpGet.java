@@ -16,20 +16,22 @@ package com.google.gwtjsonrpc.client.impl.v2_0;
 
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.URL;
-import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwtjsonrpc.client.impl.AbstractJsonProxy;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
+import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwtjsonrpc.common.JsonConstants;
 
 /** JsonCall implementation for JsonRPC version 2.0 over HTTP POST */
 public class JsonCall20HttpGet<T> extends JsonCall20<T> {
   private String encodedRequestParams;
 
-  public JsonCall20HttpGet(AbstractJsonProxy abstractJsonProxy,
-      String methodName, String requestParams,
-      ResultDeserializer<T> resultDeserializer, AsyncCallback<T> callback) {
-    super(abstractJsonProxy, methodName, requestParams, resultDeserializer,
-        callback);
+  public JsonCall20HttpGet(
+      AbstractJsonProxy abstractJsonProxy,
+      String methodName,
+      String requestParams,
+      ResultDeserializer<T> resultDeserializer,
+      AsyncCallback<T> callback) {
+    super(abstractJsonProxy, methodName, requestParams, resultDeserializer, callback);
     encodedRequestParams = URL.encodeQueryString(encodeBase64(requestParams));
   }
 
@@ -55,8 +57,7 @@ public class JsonCall20HttpGet<T> extends JsonCall20<T> {
    *
    * @see http://ecmanaut.googlecode.com/svn/trunk/lib/base64.js
    */
-  private static native String encodeBase64(String data)
-  /*-{
+  private static native String encodeBase64(String data)/*-{
     var out = "", c1, c2, c3, e1, e2, e3, e4;
     for (var i = 0; i < data.length; ) {
       c1 = data.charCodeAt(i++);
@@ -73,5 +74,5 @@ public class JsonCall20HttpGet<T> extends JsonCall20<T> {
       out += tab.charAt(e1) + tab.charAt(e2) + tab.charAt(e3) + tab.charAt(e4);
     }
     return out;
-  }-*/;
+  }-*/ ;
 }

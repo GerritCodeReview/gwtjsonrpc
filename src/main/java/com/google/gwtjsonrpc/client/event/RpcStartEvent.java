@@ -24,9 +24,9 @@ public class RpcStartEvent extends BaseRpcEvent<RpcStartHandler> {
 
   /**
    * Fires a RpcStartEvent.
-   * <p>
-   * For internal use only.
-   * 
+   *
+   * <p>For internal use only.
+   *
    * @param eventData
    */
   @SuppressWarnings("rawtypes")
@@ -40,7 +40,7 @@ public class RpcStartEvent extends BaseRpcEvent<RpcStartHandler> {
 
   /**
    * Gets the type associated with this event.
-   * 
+   *
    * @return returns the event type
    */
   public static Type<RpcStartHandler> getType() {

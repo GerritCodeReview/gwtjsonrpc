@@ -26,30 +26,25 @@ import com.google.gwtjsonrpc.client.impl.ArrayResultDeserializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 import com.google.gwtjsonrpc.client.impl.ser.PrimitiveArrayResultDeserializers;
 import com.google.gwtjsonrpc.client.impl.ser.PrimitiveResultDeserializers;
-
 import java.io.PrintWriter;
 import java.util.HashMap;
 
 /**
- * Creator of ResultDeserializers. Actually, only object arrays have created
- * deserializers:
+ * Creator of ResultDeserializers. Actually, only object arrays have created deserializers:
+ *
  * <ul>
- * <li>Boxed primitives are handled by {@link PrimitiveResultDeserializers}
- * <li>Normal objects have their (generated) serializers extending
- * {@link com.google.gwtjsonrpc.client.ObjectSerializer}, that handle result
- * deserialisation as well.
- * <li>Arrays of (boxed) primitives are handled by
- * {@link PrimitiveArrayResultDeserializers}.
- * <li>And object arrays get a generated deserializer extending
- * {@link ArrayResultDeserializer}
+ *   <li>Boxed primitives are handled by {@link PrimitiveResultDeserializers}
+ *   <li>Normal objects have their (generated) serializers extending {@link
+ *       com.google.gwtjsonrpc.client.ObjectSerializer}, that handle result deserialisation as well.
+ *   <li>Arrays of (boxed) primitives are handled by {@link PrimitiveArrayResultDeserializers}.
+ *   <li>And object arrays get a generated deserializer extending {@link ArrayResultDeserializer}
  * </ul>
- * All object arrays that have a JSONSerializer for the array component can be
- * generated, but they will need to live in the same package as the serializer.
- * To do this, if the serializer lives in the
- * <code>com.google.gwtjsonrpc.client</code> package (where custom object
- * serializers live), the ResultDeserializer for it's array will be placed in
- * this package as well. Else it will be placed with the serializer in the
- * package the object lives.
+ *
+ * All object arrays that have a JSONSerializer for the array component can be generated, but they
+ * will need to live in the same package as the serializer. To do this, if the serializer lives in
+ * the <code>com.google.gwtjsonrpc.client</code> package (where custom object serializers live), the
+ * ResultDeserializer for it's array will be placed in this package as well. Else it will be placed
+ * with the serializer in the package the object lives.
  */
 class ResultDeserializerCreator {
   private static final String DSER_SUFFIX = "_ResultDeserializer";
@@ -71,11 +66,10 @@ class ResultDeserializerCreator {
     this.targetType = targetType;
     this.componentType = targetType.getComponentType();
 
-    if (componentType.isPrimitive() != null
-        || SerializerCreator.isBoxedPrimitive(componentType)) {
-      logger.log(TreeLogger.DEBUG,
-          "No need to create array deserializer for primitive array "
-              + targetType);
+    if (componentType.isPrimitive() != null || SerializerCreator.isBoxedPrimitive(componentType)) {
+      logger.log(
+          TreeLogger.DEBUG,
+          "No need to create array deserializer for primitive array " + targetType);
       return;
     }
 
@@ -83,8 +77,8 @@ class ResultDeserializerCreator {
       return;
     }
 
-    logger.log(TreeLogger.DEBUG, "Creating result deserializer for "
-        + targetType.getSimpleSourceName());
+    logger.log(
+        TreeLogger.DEBUG, "Creating result deserializer for " + targetType.getSimpleSourceName());
     final SourceWriter srcWriter = getSourceWriter(logger, context);
     if (srcWriter == null) {
       return;
@@ -145,8 +139,7 @@ class ResultDeserializerCreator {
 
   private String getDeserializerPackageName(JArrayType targetType) {
     // Place array deserializer in same package as the component deserializer
-    final String compSerializer =
-        serializerCreator.serializerFor(targetType.getComponentType());
+    final String compSerializer = serializerCreator.serializerFor(targetType.getComponentType());
     final int end = compSerializer.lastIndexOf('.');
     return end >= 0 ? compSerializer.substring(0, end) : "";
   }
@@ -155,8 +148,7 @@ class ResultDeserializerCreator {
     return ProxyCreator.synthesizeTopLevelClassName(targetType, DSER_SUFFIX)[1];
   }
 
-  private SourceWriter getSourceWriter(TreeLogger logger,
-      GeneratorContext context) {
+  private SourceWriter getSourceWriter(TreeLogger logger, GeneratorContext context) {
     String pkgName = getDeserializerPackageName(targetType);
     final String simpleName = getDeserializerSimpleName(targetType);
     final PrintWriter pw;
@@ -172,8 +164,11 @@ class ResultDeserializerCreator {
     cf.addImport(ResultDeserializer.class.getCanonicalName());
 
     cf.setSuperclass(ArrayResultDeserializer.class.getCanonicalName());
-    cf.addImplementedInterface(ResultDeserializer.class.getCanonicalName()
-        + "<" + targetType.getQualifiedSourceName() + ">");
+    cf.addImplementedInterface(
+        ResultDeserializer.class.getCanonicalName()
+            + "<"
+            + targetType.getQualifiedSourceName()
+            + ">");
 
     return cf.createSourceWriter(context, pw);
   }
@@ -182,10 +177,11 @@ class ResultDeserializerCreator {
     final JType componentType = targetType.getComponentType();
     // Custom primitive deserializers
     if (SerializerCreator.isBoxedPrimitive(componentType))
-      return PrimitiveArrayResultDeserializers.class.getCanonicalName() + "."
-          + componentType.getSimpleSourceName().toUpperCase() + "_INSTANCE";
-    final String name =
-        generatedDeserializers.get(targetType.getQualifiedSourceName());
+      return PrimitiveArrayResultDeserializers.class.getCanonicalName()
+          + "."
+          + componentType.getSimpleSourceName().toUpperCase()
+          + "_INSTANCE";
+    final String name = generatedDeserializers.get(targetType.getQualifiedSourceName());
 
     return name == null ? null : name + ".INSTANCE";
   }

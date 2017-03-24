@@ -18,13 +18,11 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 import com.google.gwtjsonrpc.common.JavaSqlTimestampHelper;
-
 import java.sql.Timestamp;
 
 /** Default serialization for a {@link java.sql.Timestamp}. */
-public final class JavaSqlTimestamp_JsonSerializer extends
-    JsonSerializer<java.sql.Timestamp> implements
-    ResultDeserializer<java.sql.Timestamp> {
+public final class JavaSqlTimestamp_JsonSerializer extends JsonSerializer<java.sql.Timestamp>
+    implements ResultDeserializer<java.sql.Timestamp> {
   public static final JavaSqlTimestamp_JsonSerializer INSTANCE =
       new JavaSqlTimestamp_JsonSerializer();
 
@@ -60,8 +58,7 @@ public final class JavaSqlTimestamp_JsonSerializer extends
     }
   }
 
-  private static native String toString(double utcMilli)
-  /*-{
+  private static native String toString(double utcMilli)/*-{
     var d = new Date(utcMilli);
     var p2 = @com.google.gwtjsonrpc.client.impl.ser.JavaSqlTimestamp_JsonSerializer::padTwo(I);
     var p3 = @com.google.gwtjsonrpc.client.impl.ser.JavaSqlTimestamp_JsonSerializer::padThree(I);
@@ -72,7 +69,7 @@ public final class JavaSqlTimestamp_JsonSerializer extends
     p2(d.getUTCMinutes()) + ":" +
     p2(d.getUTCSeconds()) + "." +
     p3(d.getUTCMilliseconds()) + "000000";
-  }-*/;
+  }-*/ ;
 
   public static java.sql.Timestamp parseTimestamp(final String s) {
     return JavaSqlTimestampHelper.parseTimestamp(s);

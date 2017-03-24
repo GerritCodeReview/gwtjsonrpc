@@ -21,36 +21,38 @@ import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 
-/**
- * Generates proxy implementations of {@link com.google.gwtjsonrpc.common.RemoteJsonService}.
- */
+/** Generates proxy implementations of {@link com.google.gwtjsonrpc.common.RemoteJsonService}. */
 public class RemoteJsonServiceProxyGenerator extends Generator {
   @Override
-  public String generate(final TreeLogger logger, final GeneratorContext ctx,
-      final String requestedClass) throws UnableToCompleteException {
+  public String generate(
+      final TreeLogger logger, final GeneratorContext ctx, final String requestedClass)
+      throws UnableToCompleteException {
 
     final TypeOracle typeOracle = ctx.getTypeOracle();
     assert (typeOracle != null);
 
     final JClassType remoteService = typeOracle.findType(requestedClass);
     if (remoteService == null) {
-      logger.log(TreeLogger.ERROR, "Unable to find metadata for type '"
-          + requestedClass + "'", null);
+      logger.log(
+          TreeLogger.ERROR, "Unable to find metadata for type '" + requestedClass + "'", null);
       throw new UnableToCompleteException();
     }
 
     if (remoteService.isInterface() == null) {
-      logger.log(TreeLogger.ERROR, remoteService.getQualifiedSourceName()
-          + " is not an interface", null);
+      logger.log(
+          TreeLogger.ERROR, remoteService.getQualifiedSourceName() + " is not an interface", null);
       throw new UnableToCompleteException();
     }
 
     ProxyCreator proxyCreator = new ProxyCreator(remoteService);
 
     TreeLogger proxyLogger =
-        logger.branch(TreeLogger.DEBUG,
+        logger.branch(
+            TreeLogger.DEBUG,
             "Generating client proxy for remote service interface '"
-                + remoteService.getQualifiedSourceName() + "'", null);
+                + remoteService.getQualifiedSourceName()
+                + "'",
+            null);
 
     return proxyCreator.create(proxyLogger, ctx);
   }

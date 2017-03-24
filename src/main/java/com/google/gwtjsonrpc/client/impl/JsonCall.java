@@ -19,10 +19,10 @@ import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
-import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwtjsonrpc.client.ServerUnavailableException;
 import com.google.gwtjsonrpc.client.event.RpcCompleteEvent;
 import com.google.gwtjsonrpc.client.event.RpcStartEvent;
+import com.google.gwtjsonrpc.common.AsyncCallback;
 
 public abstract class JsonCall<T> implements RequestCallback {
   protected static final JavaScriptObject jsonParser;
@@ -33,31 +33,29 @@ public abstract class JsonCall<T> implements RequestCallback {
 
   /**
    * Select the most efficient available JSON parser.
-   * 
-   * If we have a native JSON parser, present in modern browsers (FF 3.5 and
-   * IE8, at time of writing), it is returned. If no native parser is found, a
-   * parser function using <code>eval</code> is returned.
-   * 
-   * This is done dynamically, not with a GWT user.agent check, because FF3.5
-   * does not have a specific user.agent associated with it. Introducing a new
-   * property for the presence of an ES3.1 parser is not worth it, since the
-   * check is only done once anyway, and will result in significantly longer
-   * compile times.
-   * 
-   * As GWT will undoubtedly introduce support for the native JSON parser in the
-   * {@link com.google.gwt.json.client.JSONParser JSONParser} class, this code
-   * should be reevaluated to possibly use the GWT parser reference.
-   * 
+   *
+   * <p>If we have a native JSON parser, present in modern browsers (FF 3.5 and IE8, at time of
+   * writing), it is returned. If no native parser is found, a parser function using <code>eval
+   * </code> is returned.
+   *
+   * <p>This is done dynamically, not with a GWT user.agent check, because FF3.5 does not have a
+   * specific user.agent associated with it. Introducing a new property for the presence of an ES3.1
+   * parser is not worth it, since the check is only done once anyway, and will result in
+   * significantly longer compile times.
+   *
+   * <p>As GWT will undoubtedly introduce support for the native JSON parser in the {@link
+   * com.google.gwt.json.client.JSONParser JSONParser} class, this code should be reevaluated to
+   * possibly use the GWT parser reference.
+   *
    * @return a javascript function with the fastest available JSON parser
    * @see "http://wiki.ecmascript.org/doku.php?id=es3.1:json_support"
    */
-  private static native JavaScriptObject selectJsonParser()
-  /*-{
+  private static native JavaScriptObject selectJsonParser()/*-{
     if ($wnd.JSON && typeof $wnd.JSON.parse === 'function')
       return $wnd.JSON.parse;
     else
       return function(expr) { return eval('(' + expr + ')'); };
-  }-*/;
+  }-*/ ;
 
   protected final AbstractJsonProxy proxy;
   protected final String methodName;
@@ -66,8 +64,10 @@ public abstract class JsonCall<T> implements RequestCallback {
   protected final AsyncCallback<T> callback;
   protected int attempts;
 
-  protected JsonCall(final AbstractJsonProxy abstractJsonProxy,
-      final String methodName, final String requestParams,
+  protected JsonCall(
+      final AbstractJsonProxy abstractJsonProxy,
+      final String methodName,
+      final String requestParams,
       final ResultDeserializer<T> resultDeserializer,
       final AsyncCallback<T> callback) {
     this.proxy = abstractJsonProxy;

@@ -15,18 +15,18 @@
 package com.google.gwtjsonrpc.client.impl;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.RpcRequestBuilder;
 import com.google.gwtjsonrpc.client.JsonDefTarget;
 import com.google.gwtjsonrpc.client.JsonUtil;
 import com.google.gwtjsonrpc.client.XsrfManager;
+import com.google.gwtjsonrpc.common.AsyncCallback;
 
 /**
  * Base class for generated {@link RemoteJsonService} implementations.
- * <p>
- * At runtime <code>GWT.create(Foo.class)</code> returns a subclass of this
- * class, implementing the Foo and {@link JsonDefTarget} interfaces.
+ *
+ * <p>At runtime <code>GWT.create(Foo.class)</code> returns a subclass of this class, implementing
+ * the Foo and {@link JsonDefTarget} interfaces.
  */
 public abstract class AbstractJsonProxy implements JsonDefTarget {
   /** URL of the service implementation. */
@@ -67,16 +67,19 @@ public abstract class AbstractJsonProxy implements JsonDefTarget {
           "A RemoteJsonService does not use the RpcRequestBuilder, so this method is unsupported.");
     /**
      * From the gwt docs:
-     * 
-     * Calling this method with a null value will reset any custom behavior to
-     * the default implementation.
-     * 
-     * If builder == null, we just ignore this invocation.
+     *
+     * <p>Calling this method with a null value will reset any custom behavior to the default
+     * implementation.
+     *
+     * <p>If builder == null, we just ignore this invocation.
      */
   }
 
-  protected <T> void doInvoke(final String methodName, final String reqData,
-      final ResultDeserializer<T> ser, final AsyncCallback<T> cb)
+  protected <T> void doInvoke(
+      final String methodName,
+      final String reqData,
+      final ResultDeserializer<T> ser,
+      final AsyncCallback<T> cb)
       throws InvocationException {
     if (url == null) {
       throw new NoServiceEntryPointSpecifiedException();
@@ -84,13 +87,16 @@ public abstract class AbstractJsonProxy implements JsonDefTarget {
     newJsonCall(this, methodName, reqData, ser, cb).send();
   }
 
-  protected abstract <T> JsonCall<T> newJsonCall(AbstractJsonProxy proxy,
-      final String methodName, final String reqData,
-      final ResultDeserializer<T> ser, final AsyncCallback<T> cb);
+  protected abstract <T> JsonCall<T> newJsonCall(
+      AbstractJsonProxy proxy,
+      final String methodName,
+      final String reqData,
+      final ResultDeserializer<T> ser,
+      final AsyncCallback<T> cb);
 
   protected static native JavaScriptObject hostPageCacheGetOnce(String name)
-  /*-{ var r = $wnd[name];$wnd[name] = null;return r ? {result: r} : null; }-*/;
+      /*-{ var r = $wnd[name];$wnd[name] = null;return r ? {result: r} : null; }-*/ ;
 
   protected static native JavaScriptObject hostPageCacheGetMany(String name)
-  /*-{ return $wnd[name] ? {result : $wnd[name]} : null; }-*/;
+      /*-{ return $wnd[name] ? {result : $wnd[name]} : null; }-*/ ;
 }

@@ -17,28 +17,24 @@ package com.google.gwtjsonrpc.client.impl.ser;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Serialization for a {@link java.util.Map} using any Object key.
- * <p>
- * The JSON format is an array with even length, alternating key and value
- * elements. For example: <code>[k1, v1, k2, v2, k3, v3, ...]</code>. The keys
- * and values may be any Object type.
- * <p>
- * When deserialized from JSON the Map implementation is always a
- * {@link HashMap}. When serializing to JSON any Map is permitted.
+ *
+ * <p>The JSON format is an array with even length, alternating key and value elements. For example:
+ * <code>[k1, v1, k2, v2, k3, v3, ...]</code>. The keys and values may be any Object type.
+ *
+ * <p>When deserialized from JSON the Map implementation is always a {@link HashMap}. When
+ * serializing to JSON any Map is permitted.
  */
-public class ObjectMapSerializer<K, V> extends
-    JsonSerializer<java.util.Map<K, V>> implements
-    ResultDeserializer<java.util.Map<K, V>> {
+public class ObjectMapSerializer<K, V> extends JsonSerializer<java.util.Map<K, V>>
+    implements ResultDeserializer<java.util.Map<K, V>> {
   private final JsonSerializer<K> keySerializer;
   private final JsonSerializer<V> valueSerializer;
 
-  public ObjectMapSerializer(final JsonSerializer<K> k,
-      final JsonSerializer<V> v) {
+  public ObjectMapSerializer(final JsonSerializer<K> k, final JsonSerializer<V> v) {
     keySerializer = k;
     valueSerializer = v;
   }
@@ -60,8 +56,8 @@ public class ObjectMapSerializer<K, V> extends
     sb.append(']');
   }
 
-  private static <T> void encode(final StringBuilder sb,
-      final JsonSerializer<T> serializer, final T item) {
+  private static <T> void encode(
+      final StringBuilder sb, final JsonSerializer<T> serializer, final T item) {
     if (item != null) {
       serializer.printJson(sb, item);
     } else {
@@ -78,7 +74,7 @@ public class ObjectMapSerializer<K, V> extends
     final JavaScriptObject jso = (JavaScriptObject) o;
     final int n = size(jso);
     final HashMap<K, V> r = new HashMap<>();
-    for (int i = 0; i < n;) {
+    for (int i = 0; i < n; ) {
       final K k = keySerializer.fromJson(get(jso, i++));
       final V v = valueSerializer.fromJson(get(jso, i++));
       r.put(k, v);
@@ -92,7 +88,7 @@ public class ObjectMapSerializer<K, V> extends
     return result == null ? null : fromJson(result);
   }
 
-  private static final native int size(JavaScriptObject o)/*-{ return o.length; }-*/;
+  private static final native int size(JavaScriptObject o) /*-{ return o.length; }-*/;
 
-  private static final native Object get(JavaScriptObject o, int i)/*-{ return o[i]; }-*/;
+  private static final native Object get(JavaScriptObject o, int i) /*-{ return o[i]; }-*/;
 }

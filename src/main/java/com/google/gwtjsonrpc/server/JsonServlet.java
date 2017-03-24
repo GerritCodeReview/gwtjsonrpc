@@ -30,9 +30,6 @@ import com.google.gson.JsonSerializer;
 import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwtjsonrpc.common.JsonConstants;
 import com.google.gwtjsonrpc.common.RemoteJsonService;
-
-import org.apache.commons.codec.binary.Base64;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
@@ -53,38 +50,35 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.apache.commons.codec.binary.Base64;
 
 /**
  * Basic HTTP servlet to forward JSON based RPC requests onto services.
- * <p>
- * Implementors of a JSON-RPC service should extend this servlet and implement
- * any interface(s) that extend from {@link RemoteJsonService}. Clients may
- * invoke methods declared in any implemented interface.
- * <p>
- * <b>JSON-RPC 1.1</b><br>
- * Calling conventions match the JSON-RPC 1.1 working draft from 7 August 2006
- * (<a href="http://json-rpc.org/wd/JSON-RPC-1-1-WD-20060807.html">draft</a>).
- * Only positional parameters are supported.
- * <p>
- * <b>JSON-RPC 2.0</b><br>
+ *
+ * <p>Implementors of a JSON-RPC service should extend this servlet and implement any interface(s)
+ * that extend from {@link RemoteJsonService}. Clients may invoke methods declared in any
+ * implemented interface.
+ *
+ * <p><b>JSON-RPC 1.1</b><br>
+ * Calling conventions match the JSON-RPC 1.1 working draft from 7 August 2006 (<a
+ * href="http://json-rpc.org/wd/JSON-RPC-1-1-WD-20060807.html">draft</a>). Only positional
+ * parameters are supported.
+ *
+ * <p><b>JSON-RPC 2.0</b><br>
  * Calling conventions match the JSON-RPC 2.0 specification.
- * <p>
- * When supported by the browser/client, the "gzip" encoding is used to compress
- * the resulting JSON, reducing transfer time for the response data.
+ *
+ * <p>When supported by the browser/client, the "gzip" encoding is used to compress the resulting
+ * JSON, reducing transfer time for the response data.
  */
 @SuppressWarnings("serial")
-public abstract class JsonServlet<CallType extends ActiveCall> extends
-    HttpServlet {
+public abstract class JsonServlet<CallType extends ActiveCall> extends HttpServlet {
   /** Pattern that any safe JSON-in-script callback conforms to. */
-  public static final Pattern SAFE_CALLBACK =
-      Pattern.compile("^([A-Za-z0-9_$.]|\\[|\\])+$");
+  public static final Pattern SAFE_CALLBACK = Pattern.compile("^([A-Za-z0-9_$.]|\\[|\\])+$");
 
   private static final ThreadLocal<ActiveCall> perThreadCall;
 
@@ -101,7 +95,8 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
   /** Create a default GsonBuilder with some extra types defined. */
   public static GsonBuilder defaultGsonBuilder() {
     final GsonBuilder gb = new GsonBuilder();
-    gb.registerTypeAdapter(java.util.Set.class,
+    gb.registerTypeAdapter(
+        java.util.Set.class,
         new InstanceCreator<java.util.Set<Object>>() {
           @Override
           public Set<Object> createInstance(final Type arg0) {
@@ -110,8 +105,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
         });
     gb.registerTypeAdapter(java.util.Map.class, new MapDeserializer());
     gb.registerTypeAdapter(java.sql.Date.class, new SqlDateDeserializer());
-    gb.registerTypeAdapter(java.sql.Timestamp.class,
-        new SqlTimestampDeserializer());
+    gb.registerTypeAdapter(java.sql.Timestamp.class, new SqlTimestampDeserializer());
     return gb;
   }
 
@@ -147,8 +141,8 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
   /**
    * Get the object which provides the RemoteJsonService implementation.
    *
-   * @return by default <code>this</code>, but any object which implements a
-   *         RemoteJsonService interface.
+   * @return by default <code>this</code>, but any object which implements a RemoteJsonService
+   *     interface.
    * @throws Exception any error indicating the service is not configured.
    */
   protected Object createServiceHandle() throws Exception {
@@ -157,14 +151,12 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
 
   /**
    * Initialize the XSRF state for this service.
-   * <p>
-   * By default this method creates a unique XSRF key for this service. Service
-   * implementors may wish to override this method to use a pooled instance that
-   * relies upon a stable private key.
    *
-   * @return new XSRF implementation. Null if the caller has overridden all
-   *         relevant XSRF methods and is implementing their own XSRF protection
-   *         algorithm.
+   * <p>By default this method creates a unique XSRF key for this service. Service implementors may
+   * wish to override this method to use a pooled instance that relies upon a stable private key.
+   *
+   * @return new XSRF implementation. Null if the caller has overridden all relevant XSRF methods
+   *     and is implementing their own XSRF protection algorithm.
    * @throws XsrfException the XSRF utility could not be created.
    */
   protected SignedToken createXsrfSignedToken() throws XsrfException {
@@ -178,14 +170,14 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
 
   /**
    * Verify the XSRF token submitted is valid.
-   * <p>
-   * By default this method validates the token, and refreshes it with a new
-   * token for the currently authenticated user.
+   *
+   * <p>By default this method validates the token, and refreshes it with a new token for the
+   * currently authenticated user.
    *
    * @param call current RPC being processed.
    * @return true if the token was supplied and is valid; false otherwise.
-   * @throws XsrfException the token could not be validated due to an error that
-   *         the client cannot recover from.
+   * @throws XsrfException the token could not be validated due to an error that the client cannot
+   *     recover from.
    */
   protected boolean xsrfValidate(final CallType call) throws XsrfException {
     return call.xsrfValidate();
@@ -209,8 +201,8 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
    * @return the new call wrapping both.
    */
   @SuppressWarnings("unchecked")
-  protected CallType createActiveCall(final HttpServletRequest req,
-      final HttpServletResponse resp) {
+  protected CallType createActiveCall(
+      final HttpServletRequest req, final HttpServletResponse resp) {
     return (CallType) new ActiveCall(req, resp);
   }
 
@@ -225,10 +217,10 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
 
   /**
    * Invoked just before the service method is invoked.
-   * <p>
-   * Subclasses may override this method to perform additional checks, such as
-   * per-method application level security validation. An override of this
-   * method should take the following form:
+   *
+   * <p>Subclasses may override this method to perform additional checks, such as per-method
+   * application level security validation. An override of this method should take the following
+   * form:
    *
    * <pre>
    * protected void preInvoke(final CallType call) {
@@ -239,20 +231,19 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
    *   // your logic here
    * }
    * </pre>
-   * <p>
-   * If either the {@link ActiveCall#onFailure(Throwable)} or
-   * {@link ActiveCall#onInternalFailure(Throwable)} method is invoked with a
-   * non-null exception argument the method call itself will be bypassed and the
-   * error response will be returned to the client instead.
+   *
+   * <p>If either the {@link ActiveCall#onFailure(Throwable)} or {@link
+   * ActiveCall#onInternalFailure(Throwable)} method is invoked with a non-null exception argument
+   * the method call itself will be bypassed and the error response will be returned to the client
+   * instead.
    *
    * @param call the current call information.
    */
-  protected void preInvoke(final CallType call) {
-  }
+  protected void preInvoke(final CallType call) {}
 
   @Override
-  protected void service(final HttpServletRequest req,
-      final HttpServletResponse resp) throws IOException {
+  protected void service(final HttpServletRequest req, final HttpServletResponse resp)
+      throws IOException {
     try {
       final CallType call = createActiveCall(req, resp);
       call.xsrf = xsrf;
@@ -275,8 +266,11 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       }
 
       final String out = formatResult(call);
-      RPCServletUtils.writeResponse(getServletContext(), call.httpResponse,
-          out, call.callback == null
+      RPCServletUtils.writeResponse(
+          getServletContext(),
+          call.httpResponse,
+          out,
+          call.callback == null
               && out.length() > 256
               && RPCServletUtils.acceptsGzipEncoding(call.httpRequest));
     } finally {
@@ -359,8 +353,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       return;
     }
 
-    if (call.callback != null
-        && !SAFE_CALLBACK.matcher(call.callback).matches()) {
+    if (call.callback != null && !SAFE_CALLBACK.matcher(call.callback).matches()) {
       call.httpResponse.setStatus(SC_BAD_REQUEST);
       call.onFailure(new Exception("Unsafe name in 'callback' property"));
       return;
@@ -400,7 +393,8 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
 
       try {
         final GsonBuilder gb = createGsonBuilder();
-        gb.registerTypeAdapter(ActiveCall.class, //
+        gb.registerTypeAdapter(
+            ActiveCall.class, //
             new CallDeserializer<>(call, this));
         gb.create().fromJson(d, ActiveCall.class);
       } catch (JsonParseException err) {
@@ -409,7 +403,8 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
         throw err;
       }
 
-    } else { /* JSON-RPC 1.1 */
+    } else {
+        /* JSON-RPC 1.1 */
       final Gson gs = createGsonBuilder().create();
 
       call.method = lookupMethod(req.getParameter("method"));
@@ -425,8 +420,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
           r[i] = null;
         } else if (paramTypes[i] == String.class) {
           r[i] = v;
-        } else if (paramTypes[i] instanceof Class<?>
-            && ((Class<?>) paramTypes[i]).isPrimitive()) {
+        } else if (paramTypes[i] instanceof Class<?> && ((Class<?>) paramTypes[i]).isPrimitive()) {
           // Primitive type, use the JSON representation of that type.
           //
           r[i] = gs.fromJson(v, paramTypes[i]);
@@ -514,8 +508,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
       throws UnsupportedEncodingException, IOException {
     try {
       final GsonBuilder gb = createGsonBuilder();
-      gb.registerTypeAdapter(ActiveCall.class, new CallDeserializer<>(
-          call, this));
+      gb.registerTypeAdapter(ActiveCall.class, new CallDeserializer<>(call, this));
       gb.create().fromJson(readBody(call), ActiveCall.class);
     } catch (JsonParseException err) {
       call.method = null;
@@ -527,44 +520,46 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
   private String formatResult(final ActiveCall call)
       throws UnsupportedEncodingException, IOException {
     final GsonBuilder gb = createGsonBuilder();
-    gb.registerTypeAdapter(call.getClass(), new JsonSerializer<ActiveCall>() {
-      @Override
-      public JsonElement serialize(final ActiveCall src, final Type typeOfSrc,
-          final JsonSerializationContext context) {
-        if (call.callback != null) {
-          if (src.externalFailure != null) {
-            return new JsonNull();
-          }
-          return context.serialize(src.result);
-        }
+    gb.registerTypeAdapter(
+        call.getClass(),
+        new JsonSerializer<ActiveCall>() {
+          @Override
+          public JsonElement serialize(
+              final ActiveCall src, final Type typeOfSrc, final JsonSerializationContext context) {
+            if (call.callback != null) {
+              if (src.externalFailure != null) {
+                return new JsonNull();
+              }
+              return context.serialize(src.result);
+            }
 
-        final JsonObject r = new JsonObject();
-        r.add(src.versionName, src.versionValue);
-        if (src.id != null) {
-          r.add("id", src.id);
-        }
-        if (src.xsrfKeyOut != null) {
-          r.addProperty("xsrfKey", src.xsrfKeyOut);
-        }
-        if (src.externalFailure != null) {
-          final JsonObject error = new JsonObject();
-          if ("jsonrpc".equals(src.versionName)) {
-            final int code = to2_0ErrorCode(src);
+            final JsonObject r = new JsonObject();
+            r.add(src.versionName, src.versionValue);
+            if (src.id != null) {
+              r.add("id", src.id);
+            }
+            if (src.xsrfKeyOut != null) {
+              r.addProperty("xsrfKey", src.xsrfKeyOut);
+            }
+            if (src.externalFailure != null) {
+              final JsonObject error = new JsonObject();
+              if ("jsonrpc".equals(src.versionName)) {
+                final int code = to2_0ErrorCode(src);
 
-            error.addProperty("code", code);
-            error.addProperty("message", src.externalFailure.getMessage());
-          } else {
-            error.addProperty("name", "JSONRPCError");
-            error.addProperty("code", 999);
-            error.addProperty("message", src.externalFailure.getMessage());
+                error.addProperty("code", code);
+                error.addProperty("message", src.externalFailure.getMessage());
+              } else {
+                error.addProperty("name", "JSONRPCError");
+                error.addProperty("code", 999);
+                error.addProperty("message", src.externalFailure.getMessage());
+              }
+              r.add("error", error);
+            } else {
+              r.add("result", context.serialize(src.result));
+            }
+            return r;
           }
-          r.add("error", error);
-        } else {
-          r.add("result", context.serialize(src.result));
-        }
-        return r;
-      }
-    });
+        });
 
     final StringWriter o = new StringWriter();
     if (call.callback != null) {
@@ -583,8 +578,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     final Throwable e = src.externalFailure;
     final Throwable i = src.internalFailure;
 
-    if (e instanceof NoSuchRemoteMethodException
-        || i instanceof NoSuchRemoteMethodException) {
+    if (e instanceof NoSuchRemoteMethodException || i instanceof NoSuchRemoteMethodException) {
       return -32601 /* Method not found. */;
     }
     if (e instanceof JsonParseException || i instanceof JsonParseException) {
@@ -594,8 +588,8 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
     return -32603 /* Internal error. */;
   }
 
-  private static void textError(final ActiveCall call, final int status,
-      final String message) throws IOException {
+  private static void textError(final ActiveCall call, final int status, final String message)
+      throws IOException {
     final HttpServletResponse r = call.httpResponse;
     r.setStatus(status);
     r.setContentType("text/plain; charset=" + ENC);
@@ -611,7 +605,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends
   private static Map<String, MethodHandle> methods(final RemoteJsonService impl) {
     final Class<? extends RemoteJsonService> d = findInterface(impl.getClass());
     if (d == null) {
-      return Collections.<String, MethodHandle> emptyMap();
+      return Collections.<String, MethodHandle>emptyMap();
     }
 
     final Map<String, MethodHandle> r = new HashMap<>();

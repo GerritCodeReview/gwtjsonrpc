@@ -14,7 +14,6 @@
 
 package com.google.gwtjsonrpc.common;
 
-
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -22,17 +21,14 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation permitting a cross-site request without the XSRF token.
- * <p>
- * This annotation should only be placed on {@link RemoteJsonService} methods
- * which are read-only (change no server state), which expose no private
- * information about the browser's user, and which the server wants to export
- * for general query use by any mash-up sort of application.
- * <p>
- * <b>Methods tagged with this annotation should only be on publicly known data,
- * e.g. data which is more readily available through sources other than this
- * based JSON service method.</b>
+ *
+ * <p>This annotation should only be placed on {@link RemoteJsonService} methods which are read-only
+ * (change no server state), which expose no private information about the browser's user, and which
+ * the server wants to export for general query use by any mash-up sort of application.
+ *
+ * <p><b>Methods tagged with this annotation should only be on publicly known data, e.g. data which
+ * is more readily available through sources other than this based JSON service method.</b>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface AllowCrossSiteRequest {
-}
+public @interface AllowCrossSiteRequest {}

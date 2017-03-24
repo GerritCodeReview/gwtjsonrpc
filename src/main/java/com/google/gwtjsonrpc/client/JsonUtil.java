@@ -18,7 +18,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.shared.HandlerManager;
 import com.google.gwt.event.shared.HandlerRegistration;
-import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.ServiceDefTarget;
 import com.google.gwtjsonrpc.client.event.BaseRpcEvent;
@@ -27,37 +26,40 @@ import com.google.gwtjsonrpc.client.event.RpcCompleteHandler;
 import com.google.gwtjsonrpc.client.event.RpcStartEvent;
 import com.google.gwtjsonrpc.client.event.RpcStartHandler;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
+import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwtjsonrpc.common.RemoteJsonService;
 
 /** Client side utility functions. */
 public class JsonUtil {
   private static final HandlerManager globalHandlers = new HandlerManager(null);
 
-  private static XsrfManager xsrfManager = new XsrfManager() {
-    private String token;
+  private static XsrfManager xsrfManager =
+      new XsrfManager() {
+        private String token;
 
-    @Override
-    public String getToken(JsonDefTarget proxy) {
-      return token;
-    }
+        @Override
+        public String getToken(JsonDefTarget proxy) {
+          return token;
+        }
 
-    @Override
-    public void setToken(JsonDefTarget proxy, String token) {
-      this.token = token;
-    }
-  };
+        @Override
+        public void setToken(JsonDefTarget proxy, String token) {
+          this.token = token;
+        }
+      };
 
-  private static final XsrfManager defaultXsrfManager = new XsrfManager() {
-    @Override
-    public String getToken(JsonDefTarget proxy) {
-      return xsrfManager.getToken(proxy);
-    }
+  private static final XsrfManager defaultXsrfManager =
+      new XsrfManager() {
+        @Override
+        public String getToken(JsonDefTarget proxy) {
+          return xsrfManager.getToken(proxy);
+        }
 
-    @Override
-    public void setToken(JsonDefTarget proxy, String token) {
-      xsrfManager.setToken(proxy, token);
-    }
-  };
+        @Override
+        public void setToken(JsonDefTarget proxy, String token) {
+          xsrfManager.setToken(proxy, token);
+        }
+      };
 
   /** A proxy {@link XsrfManager} that always points to the current default. */
   public static XsrfManager getDefaultXsrfManager() {
@@ -79,8 +81,7 @@ public class JsonUtil {
    * @return always <code>imp</code>.
    * @see com.google.gwt.user.client.rpc.RemoteServiceRelativePath
    */
-  public static <T extends RemoteJsonService> T bind(final T imp,
-      final String path) {
+  public static <T extends RemoteJsonService> T bind(final T imp, final String path) {
     assert GWT.isClient();
     assert imp instanceof ServiceDefTarget;
     final String base = GWT.getModuleBaseURL();
@@ -102,8 +103,10 @@ public class JsonUtil {
     globalHandlers.fireEvent(event);
   }
 
-  public static <T> void invoke(final ResultDeserializer<T> resultDeserializer,
-      final AsyncCallback<T> callback, final JavaScriptObject rpcResult) {
+  public static <T> void invoke(
+      final ResultDeserializer<T> resultDeserializer,
+      final AsyncCallback<T> callback,
+      final JavaScriptObject rpcResult) {
     final T result;
     try {
       result = resultDeserializer.fromResult(rpcResult);
@@ -114,6 +117,5 @@ public class JsonUtil {
     callback.onSuccess(result);
   }
 
-  private JsonUtil() {
-  }
+  private JsonUtil() {}
 }

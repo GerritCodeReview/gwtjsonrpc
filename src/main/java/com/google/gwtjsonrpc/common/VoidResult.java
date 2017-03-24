@@ -18,6 +18,5 @@ package com.google.gwtjsonrpc.common;
 public class VoidResult {
   public static final VoidResult INSTANCE = new VoidResult();
 
-  protected VoidResult() {
-  }
+  protected VoidResult() {}
 }

@@ -17,14 +17,13 @@ package com.google.gwtjsonrpc.client.impl.ser;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
-
 import java.util.HashSet;
 
 /**
  * Serialization for a {@link java.util.Set}.
- * <p>
- * When deserialized from JSON the Set implementation is always a
- * {@link HashSet}. When serializing to JSON any Set is permitted.
+ *
+ * <p>When deserialized from JSON the Set implementation is always a {@link HashSet}. When
+ * serializing to JSON any Set is permitted.
  */
 public class SetSerializer<T> extends JsonSerializer<java.util.Set<T>>
     implements ResultDeserializer<java.util.Set<T>> {
@@ -74,7 +73,7 @@ public class SetSerializer<T> extends JsonSerializer<java.util.Set<T>>
     return result == null ? null : fromJson(result);
   }
 
-  private static final native int size(JavaScriptObject o)/*-{ return o.length; }-*/;
+  private static final native int size(JavaScriptObject o) /*-{ return o.length; }-*/;
 
-  private static final native Object get(JavaScriptObject o, int i)/*-{ return o[i]; }-*/;
+  private static final native Object get(JavaScriptObject o, int i) /*-{ return o[i]; }-*/;
 }

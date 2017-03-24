@@ -24,9 +24,9 @@ public class RpcCompleteEvent extends BaseRpcEvent<RpcCompleteHandler> {
 
   /**
    * Fires a RpcCompleteEvent.
-   * <p>
-   * For internal use only.
-   * 
+   *
+   * <p>For internal use only.
+   *
    * @param eventData
    */
   @SuppressWarnings("rawtypes")
@@ -40,7 +40,7 @@ public class RpcCompleteEvent extends BaseRpcEvent<RpcCompleteHandler> {
 
   /**
    * Gets the type associated with this event.
-   * 
+   *
    * @return returns the event type
    */
   public static Type<RpcCompleteHandler> getType() {

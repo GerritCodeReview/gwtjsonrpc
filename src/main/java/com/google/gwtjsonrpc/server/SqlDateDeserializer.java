@@ -22,14 +22,14 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-
 import java.lang.reflect.Type;
 
-public class SqlDateDeserializer implements JsonDeserializer<java.sql.Date>,
-    JsonSerializer<java.sql.Date> {
+public class SqlDateDeserializer
+    implements JsonDeserializer<java.sql.Date>, JsonSerializer<java.sql.Date> {
   @Override
-  public java.sql.Date deserialize(final JsonElement json, final Type typeOfT,
-      final JsonDeserializationContext context) throws JsonParseException {
+  public java.sql.Date deserialize(
+      final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
+      throws JsonParseException {
     if (json.isJsonNull()) {
       return null;
     }
@@ -48,8 +48,8 @@ public class SqlDateDeserializer implements JsonDeserializer<java.sql.Date>,
   }
 
   @Override
-  public JsonElement serialize(final java.sql.Date src, final Type typeOfSrc,
-      final JsonSerializationContext context) {
+  public JsonElement serialize(
+      final java.sql.Date src, final Type typeOfSrc, final JsonSerializationContext context) {
     if (src == null) {
       return new JsonNull();
     }

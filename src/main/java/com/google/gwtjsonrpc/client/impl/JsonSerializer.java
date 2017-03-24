@@ -16,13 +16,13 @@ package com.google.gwtjsonrpc.client.impl;
 
 /**
  * Converter between JSON and Java object representations.
- * <p>
- * Implementors must provide bidirectional conversion, typically using the GWT
- * JavaScriptObject and native JavaScript magic to read the JSON data structure.
- * <p>
- * Most implementations are generated automatically at compile-time by the
- * <code>RemoteJsonServiceProxyGenerator</code>.
- * 
+ *
+ * <p>Implementors must provide bidirectional conversion, typically using the GWT JavaScriptObject
+ * and native JavaScript magic to read the JSON data structure.
+ *
+ * <p>Most implementations are generated automatically at compile-time by the <code>
+ * RemoteJsonServiceProxyGenerator</code>.
+ *
  * @param <T> type of Java class this type works on.
  */
 public abstract class JsonSerializer<T> {
@@ -31,24 +31,22 @@ public abstract class JsonSerializer<T> {
 
   /**
    * Convert a Java object to JSON text.
-   * <p>
-   * Implementations should recursively call any nested object or collection at
-   * the appropriate time to append the nested item's JSON text.
-   * 
-   * @param sb the output string buffer the JSON text should be appended onto
-   *        the end of.
+   *
+   * <p>Implementations should recursively call any nested object or collection at the appropriate
+   * time to append the nested item's JSON text.
+   *
+   * @param sb the output string buffer the JSON text should be appended onto the end of.
    * @param o the Java instance being converted. Never null.
    */
   public abstract void printJson(StringBuilder sb, T o);
 
   /**
    * Convert from JSON (stored as a JavaScriptObject) into a new Java instance.
-   * 
-   * @param o the JSON object instance; typically this should be downcast to
-   *        JavaScriptObject. May be null, in which case null should be returned
-   *        instead of an instance.
-   * @return null if <code>o</code> was null; otherwise the new object instance
-   *         with the data copied over form the JSON representation.
+   *
+   * @param o the JSON object instance; typically this should be downcast to JavaScriptObject. May
+   *     be null, in which case null should be returned instead of an instance.
+   * @return null if <code>o</code> was null; otherwise the new object instance with the data copied
+   *     over form the JSON representation.
    */
   public abstract T fromJson(Object o);
 

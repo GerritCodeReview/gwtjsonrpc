@@ -19,44 +19,37 @@ import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
 public class PrimitiveResultDeserializers {
-  static native boolean booleanResult(JavaScriptObject responseObject)
-  /*-{
+  static native boolean booleanResult(JavaScriptObject responseObject)/*-{
     return responseObject.result;
-  }-*/;
+  }-*/ ;
 
-  static native byte byteResult(JavaScriptObject responseObject)
-  /*-{
+  static native byte byteResult(JavaScriptObject responseObject)/*-{
     return responseObject.result;
-  }-*/;
+  }-*/ ;
 
-  static native String stringResult(JavaScriptObject responseObject)
-  /*-{
+  static native String stringResult(JavaScriptObject responseObject)/*-{
     return responseObject.result;
-  }-*/;
+  }-*/ ;
 
   static char charResult(JavaScriptObject responseObject) {
     return JsonSerializer.toChar(stringResult(responseObject));
   }
 
-  static native double doubleResult(JavaScriptObject responseObject)
-  /*-{
+  static native double doubleResult(JavaScriptObject responseObject)/*-{
     return responseObject.result;
-  }-*/;
+  }-*/ ;
 
-  static native float floatResult(JavaScriptObject responseObject)
-  /*-{
+  static native float floatResult(JavaScriptObject responseObject)/*-{
     return responseObject.result;
-  }-*/;
+  }-*/ ;
 
-  static native int intResult(JavaScriptObject responseObject)
-  /*-{
+  static native int intResult(JavaScriptObject responseObject)/*-{
     return responseObject.result;
-  }-*/;
+  }-*/ ;
 
-  static native short shortResult(JavaScriptObject responseObject)
-  /*-{
+  static native short shortResult(JavaScriptObject responseObject)/*-{
     return responseObject.result;
-  }-*/;
+  }-*/ ;
 
   public static final ResultDeserializer<Boolean> BOOLEAN_INSTANCE =
       new ResultDeserializer<Boolean>() {

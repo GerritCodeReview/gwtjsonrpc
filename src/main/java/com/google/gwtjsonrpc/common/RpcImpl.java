@@ -18,50 +18,38 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Target;
 
 /**
- * Specify the json rpc protocol version and transport mechanism to be used for
- * a service.
- * <p>
- * Default is version 1.1 over HTTP POST.
- * <p>
- * <b>Note: if you use the generated (servlet), only version 1.1 over HTTP POST
- * is supported</b>.
+ * Specify the json rpc protocol version and transport mechanism to be used for a service.
+ *
+ * <p>Default is version 1.1 over HTTP POST.
+ *
+ * <p><b>Note: if you use the generated (servlet), only version 1.1 over HTTP POST is supported</b>.
  */
 @Target(ElementType.TYPE)
 public @interface RpcImpl {
-  /**
-   * JSON-RPC protocol versions.
-   */
+  /** JSON-RPC protocol versions. */
   public enum Version {
     /**
      * Version 1.1.
      *
-     * @see <a
-     *      href="http://groups.google.com/group/json-rpc/web/json-rpc-1-1-wd">Spec</a>
+     * @see <a href="http://groups.google.com/group/json-rpc/web/json-rpc-1-1-wd">Spec</a>
      */
     V1_1,
     /**
      * Version 2.0.
      *
-     * @see <a
-     *      href="http://groups.google.com/group/json-rpc/web/json-rpc-1-2-proposal">Spec</a>
+     * @see <a href="http://groups.google.com/group/json-rpc/web/json-rpc-1-2-proposal">Spec</a>
      */
     V2_0
   }
-  /**
-   * Supported transport mechanisms.
-   */
+  /** Supported transport mechanisms. */
   public enum Transport {
-    HTTP_POST, HTTP_GET
+    HTTP_POST,
+    HTTP_GET
   }
 
-  /**
-   * Specify the JSON-RPC version. Default is version 1.1.
-   */
+  /** Specify the JSON-RPC version. Default is version 1.1. */
   Version version() default Version.V1_1;
 
-  /**
-   * Specify the transport protocol used to make the RPC call. Default is HTTP
-   * POST.
-   */
+  /** Specify the transport protocol used to make the RPC call. Default is HTTP POST. */
   Transport transport() default Transport.HTTP_POST;
 }

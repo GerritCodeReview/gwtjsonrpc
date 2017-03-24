@@ -18,22 +18,20 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
-
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Serialization for a {@link java.util.Map} using only String keys.
- * <p>
- * The JSON representation is a JSON object, the map keys become the property
- * names of the JSON object and the map values are the property values.
- * <p>
- * When deserialized from JSON the Map implementation is always a
- * {@link HashMap}. When serializing to JSON any Map is permitted.
+ *
+ * <p>The JSON representation is a JSON object, the map keys become the property names of the JSON
+ * object and the map values are the property values.
+ *
+ * <p>When deserialized from JSON the Map implementation is always a {@link HashMap}. When
+ * serializing to JSON any Map is permitted.
  */
-public class StringMapSerializer<V> extends
-    JsonSerializer<java.util.Map<String, V>> implements
-    ResultDeserializer<java.util.Map<String, V>> {
+public class StringMapSerializer<V> extends JsonSerializer<java.util.Map<String, V>>
+    implements ResultDeserializer<java.util.Map<String, V>> {
   private final JsonSerializer<V> valueSerializer;
 
   public StringMapSerializer(final JsonSerializer<V> v) {
@@ -57,8 +55,8 @@ public class StringMapSerializer<V> extends
     sb.append('}');
   }
 
-  private static <T> void encode(final StringBuilder sb,
-      final JsonSerializer<T> serializer, final T item) {
+  private static <T> void encode(
+      final StringBuilder sb, final JsonSerializer<T> serializer, final T item) {
     if (item != null) {
       serializer.printJson(sb, item);
     } else {
@@ -84,12 +82,11 @@ public class StringMapSerializer<V> extends
     return result == null ? null : fromJson(result);
   }
 
-  private native void copy(Map<String, V> r, JavaScriptObject jsObject)
-  /*-{
+  private native void copy(Map<String, V> r, JavaScriptObject jsObject)/*-{
     for (var key in jsObject) {
       this.@com.google.gwtjsonrpc.client.impl.ser.StringMapSerializer::copyOne(Ljava/util/Map;Ljava/lang/String;Ljava/lang/Object;)(r, key, jsObject[key]);
     }
-  }-*/;
+  }-*/ ;
 
   void copyOne(final Map<String, V> r, final String k, final Object o) {
     r.put(k, valueSerializer.fromJson(o));

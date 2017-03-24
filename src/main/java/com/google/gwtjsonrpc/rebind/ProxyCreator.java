@@ -19,8 +19,8 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
-import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.TreeLogger.Type;
+import com.google.gwt.core.ext.UnableToCompleteException;
 import com.google.gwt.core.ext.typeinfo.JArrayType;
 import com.google.gwt.core.ext.typeinfo.JClassType;
 import com.google.gwt.core.ext.typeinfo.JMethod;
@@ -32,7 +32,6 @@ import com.google.gwt.core.ext.typeinfo.JType;
 import com.google.gwt.core.ext.typeinfo.NotFoundException;
 import com.google.gwt.core.ext.typeinfo.TypeOracle;
 import com.google.gwt.dev.generator.NameFactory;
-import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
@@ -44,11 +43,11 @@ import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 import com.google.gwtjsonrpc.client.impl.v1_1.JsonCall11HttpPost;
 import com.google.gwtjsonrpc.client.impl.v2_0.JsonCall20HttpGet;
 import com.google.gwtjsonrpc.client.impl.v2_0.JsonCall20HttpPost;
+import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwtjsonrpc.common.HostPageCache;
 import com.google.gwtjsonrpc.common.RpcImpl;
 import com.google.gwtjsonrpc.common.RpcImpl.Transport;
 import com.google.gwtjsonrpc.common.RpcImpl.Version;
-
 import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.Set;
@@ -68,8 +67,7 @@ class ProxyCreator {
   String create(final TreeLogger logger, final GeneratorContext context)
       throws UnableToCompleteException {
     serializerCreator = new SerializerCreator(context);
-    deserializerCreator =
-        new ResultDeserializerCreator(context, serializerCreator);
+    deserializerCreator = new ResultDeserializerCreator(context, serializerCreator);
     final TypeOracle typeOracle = context.getTypeOracle();
     try {
       asyncCallbackClass = typeOracle.getType(AsyncCallback.class.getName());
@@ -92,8 +90,7 @@ class ProxyCreator {
     return getProxyQualifiedName();
   }
 
-  private void checkMethods(final TreeLogger logger)
-      throws UnableToCompleteException {
+  private void checkMethods(final TreeLogger logger) throws UnableToCompleteException {
     final Set<String> declaredNames = new HashSet<>();
     final JMethod[] methodList = svcInf.getOverridableMethods();
     for (final JMethod m : methodList) {
@@ -102,89 +99,106 @@ class ProxyCreator {
       }
 
       if (m.getReturnType() != JPrimitiveType.VOID && !returnsCallbackHandle(m)) {
-        invalid(logger, "Method " + m.getName() + " must return void or "
-            + CallbackHandle.class);
+        invalid(logger, "Method " + m.getName() + " must return void or " + CallbackHandle.class);
       }
 
       final JParameter[] params = m.getParameters();
       if (params.length == 0) {
-        invalid(logger, "Method " + m.getName() + " requires "
-            + AsyncCallback.class.getName() + " as last parameter");
+        invalid(
+            logger,
+            "Method "
+                + m.getName()
+                + " requires "
+                + AsyncCallback.class.getName()
+                + " as last parameter");
       }
 
       final JParameter callback = params[params.length - 1];
-      if (!callback.getType().getErasedType().getQualifiedSourceName().equals(
-          asyncCallbackClass.getQualifiedSourceName())) {
-        invalid(logger, "Method " + m.getName() + " requires "
-            + AsyncCallback.class.getName() + " as last parameter");
+      if (!callback
+          .getType()
+          .getErasedType()
+          .getQualifiedSourceName()
+          .equals(asyncCallbackClass.getQualifiedSourceName())) {
+        invalid(
+            logger,
+            "Method "
+                + m.getName()
+                + " requires "
+                + AsyncCallback.class.getName()
+                + " as last parameter");
       }
       if (callback.getType().isParameterized() == null) {
-        invalid(logger, "Callback " + callback.getName()
-            + " must have a type parameter");
+        invalid(logger, "Callback " + callback.getName() + " must have a type parameter");
       }
 
-      final JClassType resultType =
-          callback.getType().isParameterized().getTypeArgs()[0];
+      final JClassType resultType = callback.getType().isParameterized().getTypeArgs()[0];
 
       if (returnsCallbackHandle(m)) {
         if (params.length != 1) {
-          invalid(logger, "Method " + m.getName()
-              + " must not accept parameters");
+          invalid(logger, "Method " + m.getName() + " must not accept parameters");
         }
 
         final JClassType rt = m.getReturnType().isClass();
         if (rt.isParameterized() == null) {
-          invalid(logger, "CallbackHandle return value of " + m.getName()
-              + " must have a type parameter");
+          invalid(
+              logger,
+              "CallbackHandle return value of " + m.getName() + " must have a type parameter");
         }
-        if (!resultType.getQualifiedSourceName().equals(
-            rt.isParameterized().getTypeArgs()[0].getQualifiedSourceName())) {
-          invalid(logger, "CallbackHandle return value of " + m.getName()
-              + " must match type with AsyncCallback parameter");
+        if (!resultType
+            .getQualifiedSourceName()
+            .equals(rt.isParameterized().getTypeArgs()[0].getQualifiedSourceName())) {
+          invalid(
+              logger,
+              "CallbackHandle return value of "
+                  + m.getName()
+                  + " must match type with AsyncCallback parameter");
         }
       }
 
       if (m.getAnnotation(HostPageCache.class) != null) {
         if (m.getReturnType() != JPrimitiveType.VOID) {
-          invalid(logger, "Method " + m.getName()
-              + " must return void if using " + HostPageCache.class.getName());
+          invalid(
+              logger,
+              "Method "
+                  + m.getName()
+                  + " must return void if using "
+                  + HostPageCache.class.getName());
         }
         if (params.length != 1) {
-          invalid(logger, "Method " + m.getName()
-              + " must not accept parameters");
+          invalid(logger, "Method " + m.getName() + " must not accept parameters");
         }
       }
 
       for (int i = 0; i < params.length - 1; i++) {
         final JParameter p = params[i];
         final TreeLogger branch =
-            logger.branch(TreeLogger.DEBUG, m.getName() + ", parameter "
-                + p.getName());
+            logger.branch(TreeLogger.DEBUG, m.getName() + ", parameter " + p.getName());
         serializerCreator.checkCanSerialize(branch, p.getType());
-        if (p.getType().isPrimitive() == null
-            && !SerializerCreator.isBoxedPrimitive(p.getType())) {
+        if (p.getType().isPrimitive() == null && !SerializerCreator.isBoxedPrimitive(p.getType())) {
           serializerCreator.create((JClassType) p.getType(), branch);
         }
       }
 
       final TreeLogger branch =
-          logger.branch(TreeLogger.DEBUG, m.getName() + ", result "
-              + resultType.getQualifiedSourceName());
+          logger.branch(
+              TreeLogger.DEBUG, m.getName() + ", result " + resultType.getQualifiedSourceName());
       serializerCreator.checkCanSerialize(branch, resultType);
       if (resultType.isArray() != null) {
         // Arrays need a special deserializer
         deserializerCreator.create(branch, resultType.isArray());
       } else if (resultType.isPrimitive() == null
           && !SerializerCreator.isBoxedPrimitive(resultType))
-      // Non primitives get deserialized by their normal serializer
+        // Non primitives get deserialized by their normal serializer
         serializerCreator.create(resultType, branch);
       // (Boxed)Primitives are left, they are handled specially
     }
   }
 
   private boolean returnsCallbackHandle(final JMethod m) {
-    return m.getReturnType().getErasedType().getQualifiedSourceName().equals(
-        CallbackHandle.class.getName());
+    return m.getReturnType()
+        .getErasedType()
+        .getQualifiedSourceName()
+        .equals(CallbackHandle.class.getName());
   }
 
   private void invalid(final TreeLogger logger, final String what)
@@ -193,8 +207,7 @@ class ProxyCreator {
     throw new UnableToCompleteException();
   }
 
-  private SourceWriter getSourceWriter(final TreeLogger logger,
-      final GeneratorContext ctx) {
+  private SourceWriter getSourceWriter(final TreeLogger logger, final GeneratorContext ctx) {
     final JPackage servicePkg = svcInf.getPackage();
     final String pkgName = servicePkg == null ? "" : servicePkg.getName();
     final PrintWriter pw;
@@ -219,21 +232,19 @@ class ProxyCreator {
   }
 
   private void generateProxyConstructor(final SourceWriter w) {
-    final RemoteServiceRelativePath relPath =
-        svcInf.getAnnotation(RemoteServiceRelativePath.class);
+    final RemoteServiceRelativePath relPath = svcInf.getAnnotation(RemoteServiceRelativePath.class);
     if (relPath != null) {
       w.println();
       w.println("public " + getProxySimpleName() + "() {");
       w.indent();
-      w.println("setServiceEntryPoint(GWT.getModuleBaseURL() + \""
-          + relPath.value() + "\");");
+      w.println("setServiceEntryPoint(GWT.getModuleBaseURL() + \"" + relPath.value() + "\");");
       w.outdent();
       w.println("}");
     }
   }
 
-  private void generateProxyCallCreator(final TreeLogger logger,
-      final SourceWriter w) throws UnableToCompleteException {
+  private void generateProxyCallCreator(final TreeLogger logger, final SourceWriter w)
+      throws UnableToCompleteException {
     String callName = getJsonCallClassName(logger);
     w.println();
     w.println("@Override");
@@ -252,25 +263,23 @@ class ProxyCreator {
     w.println("}");
   }
 
-  private String getJsonCallClassName(final TreeLogger logger)
-      throws UnableToCompleteException {
+  private String getJsonCallClassName(final TreeLogger logger) throws UnableToCompleteException {
     RpcImpl impl = svcInf.getAnnotation(RpcImpl.class);
     if (impl == null) {
       return JsonCall11HttpPost.class.getCanonicalName();
-    } else if (impl.version() == Version.V1_1
-        && impl.transport() == Transport.HTTP_POST) {
+    } else if (impl.version() == Version.V1_1 && impl.transport() == Transport.HTTP_POST) {
       return JsonCall11HttpPost.class.getCanonicalName();
-    } else if (impl.version() == Version.V2_0
-        && impl.transport() == Transport.HTTP_POST) {
+    } else if (impl.version() == Version.V2_0 && impl.transport() == Transport.HTTP_POST) {
       return JsonCall20HttpPost.class.getCanonicalName();
-    } else if (impl.version() == Version.V2_0
-        && impl.transport() == Transport.HTTP_GET) {
+    } else if (impl.version() == Version.V2_0 && impl.transport() == Transport.HTTP_GET) {
       return JsonCall20HttpGet.class.getCanonicalName();
     }
 
-    logger.log(Type.ERROR, "Unsupported JSON-RPC version and transport "
-        + "combination: Supported are 1.1 over HTTP POST and "
-        + "2.0 over HTTP POST and GET");
+    logger.log(
+        Type.ERROR,
+        "Unsupported JSON-RPC version and transport "
+            + "combination: Supported are 1.1 over HTTP POST and "
+            + "2.0 over HTTP POST and GET");
     throw new UnableToCompleteException();
   }
 
@@ -284,8 +293,7 @@ class ProxyCreator {
   private void generateProxyMethod(final JMethod method, final SourceWriter w) {
     final JParameter[] params = method.getParameters();
     final JParameter callback = params[params.length - 1];
-    final JClassType resultType =
-        callback.getType().isParameterized().getTypeArgs()[0];
+    final JClassType resultType = callback.getType().isParameterized().getTypeArgs()[0];
     final String[] serializerFields = new String[params.length];
     final HostPageCache hpc = method.getAnnotation(HostPageCache.class);
 
@@ -295,10 +303,8 @@ class ProxyCreator {
       if (SerializerCreator.needsTypeParameter(pType)) {
         serializerFields[i] = "serializer_" + instanceField++;
         w.print("private static final ");
-        if (pType.isArray() != null)
-          w.print(serializerCreator.serializerFor(pType));
-        else
-          w.print(JsonSerializer.class.getName());
+        if (pType.isArray() != null) w.print(serializerCreator.serializerFor(pType));
+        else w.print(JsonSerializer.class.getName());
         w.print(" ");
         w.print(serializerFields[i]);
         w.print(" = ");
@@ -401,12 +407,11 @@ class ProxyCreator {
 
         final JType pType = params[i].getType();
         final String pName = params[i].getName();
-        if (pType == JPrimitiveType.CHAR
-            || SerializerCreator.isBoxedCharacter(pType)) {
+        if (pType == JPrimitiveType.CHAR || SerializerCreator.isBoxedCharacter(pType)) {
           w.println(reqData + ".append(" + JsonUtils.class.getSimpleName());
           w.println(".escapeValue(String.valueOf(" + pName + ")));");
-        } else if ((SerializerCreator.isJsonPrimitive(pType) || SerializerCreator
-            .isBoxedPrimitive(pType))
+        } else if ((SerializerCreator.isJsonPrimitive(pType)
+                || SerializerCreator.isBoxedPrimitive(pType))
             && !SerializerCreator.isJsonString(pType)) {
           w.println(reqData + ".append(" + pName + ");");
         } else {
@@ -421,8 +426,7 @@ class ProxyCreator {
           w.outdent();
           w.println("} else {");
           w.indent();
-          w.println(reqData + ".append(" + JsonSerializer.class.getName()
-              + ".JS_NULL);");
+          w.println(reqData + ".append(" + JsonSerializer.class.getName() + ".JS_NULL);");
           w.outdent();
           w.println("}");
         }

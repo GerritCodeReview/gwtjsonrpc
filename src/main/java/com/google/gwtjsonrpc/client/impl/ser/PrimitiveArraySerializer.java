@@ -19,8 +19,7 @@ import com.google.gwt.core.client.JsonUtils;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 
 public class PrimitiveArraySerializer {
-  public static final PrimitiveArraySerializer INSTANCE =
-      new PrimitiveArraySerializer();
+  public static final PrimitiveArraySerializer INSTANCE = new PrimitiveArraySerializer();
 
   private void printJsonWithToString(final StringBuilder sb, final Object[] o) {
     sb.append('[');
@@ -50,8 +49,7 @@ public class PrimitiveArraySerializer {
       }
       if (o[i] != null) {
         sb.append(JsonUtils.escapeValue(String.valueOf(o[i])));
-      } else
-        sb.append(JsonSerializer.JS_NULL);
+      } else sb.append(JsonSerializer.JS_NULL);
     }
     sb.append(']');
   }
@@ -152,25 +150,25 @@ public class PrimitiveArraySerializer {
 
   // DeSerialisation native getters
   private static final native boolean getBoolean(JavaScriptObject jso, int pos)
-  /*-{ return jso[pos]; }-*/;
+      /*-{ return jso[pos]; }-*/ ;
 
   private static final native byte getByte(JavaScriptObject jso, int pos)
-  /*-{ return jso[pos]; }-*/;
+      /*-{ return jso[pos]; }-*/ ;
 
   private static final native String getString(JavaScriptObject jso, int pos)
-  /*-{ return jso[pos]; }-*/;
+      /*-{ return jso[pos]; }-*/ ;
 
   private static final native double getDouble(JavaScriptObject jso, int pos)
-  /*-{ return jso[pos]; }-*/;
+      /*-{ return jso[pos]; }-*/ ;
 
   private static final native float getFloat(JavaScriptObject jso, int pos)
-  /*-{ return jso[pos]; }-*/;
+      /*-{ return jso[pos]; }-*/ ;
 
   private static final native int getInteger(JavaScriptObject jso, int pos)
-  /*-{ return jso[pos]; }-*/;
+      /*-{ return jso[pos]; }-*/ ;
 
   private static final native short getShort(JavaScriptObject jso, int pos)
-  /*-{ return jso[pos]; }-*/;
+      /*-{ return jso[pos]; }-*/ ;
 
   // DeSerialisation of boxed primitive arrays
   public void fromJson(final JavaScriptObject jso, final Boolean[] r) {

@@ -22,12 +22,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.text.SimpleDateFormat;
-import java.util.TimeZone;
 
 public class JavaSqlTimestampHelperTest {
   private SimpleDateFormat format;
@@ -49,26 +48,20 @@ public class JavaSqlTimestampHelperTest {
 
   @Test
   public void parseFullTimestamp() {
-    assertEquals("2006-01-02 15:04:05.789 -0500",
-        reformat("2006-01-02 20:04:05.789000000"));
-    assertEquals("2006-01-02 15:04:05.000 -0500",
-        reformat("2006-01-02 20:04:05"));
+    assertEquals("2006-01-02 15:04:05.789 -0500", reformat("2006-01-02 20:04:05.789000000"));
+    assertEquals("2006-01-02 15:04:05.000 -0500", reformat("2006-01-02 20:04:05"));
   }
 
   @Test
   public void parseDateOnly() {
-    assertEquals("2006-01-01 19:00:00.000 -0500",
-        reformat("2006-01-02"));
+    assertEquals("2006-01-01 19:00:00.000 -0500", reformat("2006-01-02"));
   }
 
   @Test
   public void parseTimeZone() {
-    assertEquals("2006-01-02 11:04:05.789 -0500",
-        reformat("2006-01-02 15:04:05.789 -0100"));
-    assertEquals("2006-01-02 10:04:05.789 -0500",
-        reformat("2006-01-02 15:04:05.789 -0000"));
-    assertEquals("2006-01-02 09:04:05.789 -0500",
-        reformat("2006-01-02 15:04:05.789 +0100"));
+    assertEquals("2006-01-02 11:04:05.789 -0500", reformat("2006-01-02 15:04:05.789 -0100"));
+    assertEquals("2006-01-02 10:04:05.789 -0500", reformat("2006-01-02 15:04:05.789 -0000"));
+    assertEquals("2006-01-02 09:04:05.789 -0500", reformat("2006-01-02 15:04:05.789 +0100"));
   }
 
   @Test

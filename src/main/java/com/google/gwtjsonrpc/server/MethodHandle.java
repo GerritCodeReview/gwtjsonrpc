@@ -16,15 +16,12 @@ package com.google.gwtjsonrpc.server;
 
 import com.google.gwtjsonrpc.common.AllowCrossSiteRequest;
 import com.google.gwtjsonrpc.common.RemoteJsonService;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
-/**
- * Pairing of a specific {@link RemoteJsonService} implementation and method.
- */
+/** Pairing of a specific {@link RemoteJsonService} implementation and method. */
 public class MethodHandle {
   private final RemoteJsonService imp;
   private final Method method;
@@ -33,11 +30,11 @@ public class MethodHandle {
 
   /**
    * Create a new handle for a specific service implementation and method.
-   * 
+   *
    * @param imp instance of the service all calls will be made on.
-   * @param method Java method to invoke on <code>imp</code>. The last parameter
-   *        of the method must accept an {@link com.google.gwtjsonrpc.common.AsyncCallback}
-   *        and the method must return void.
+   * @param method Java method to invoke on <code>imp</code>. The last parameter of the method must
+   *     accept an {@link com.google.gwtjsonrpc.common.AsyncCallback} and the method must return
+   *     void.
    */
   MethodHandle(final RemoteJsonService imp, final Method method) {
     this.imp = imp;
@@ -49,9 +46,7 @@ public class MethodHandle {
     System.arraycopy(args, 0, parameterTypes, 0, parameterTypes.length);
   }
 
-  /**
-   * @return unique name of the method within the service.
-   */
+  /** @return unique name of the method within the service. */
   public String getName() {
     return method.getName();
   }
@@ -61,9 +56,7 @@ public class MethodHandle {
     return method.getAnnotation(t);
   }
 
-  /**
-   * @return true if this method requires positional arguments.
-   */
+  /** @return true if this method requires positional arguments. */
   public Type[] getParamTypes() {
     return parameterTypes;
   }
@@ -75,13 +68,11 @@ public class MethodHandle {
 
   /**
    * Invoke this method with the specified arguments, updating the callback.
-   * 
-   * @param arguments arguments to the method. May be the empty array if no
-   *        parameters are declared beyond the AsyncCallback, but must not be
-   *        null.
-   * @param callback the callback the implementation will invoke onSuccess or
-   *        onFailure on as it performs its work. Only the last onSuccess or
-   *        onFailure invocation matters.
+   *
+   * @param arguments arguments to the method. May be the empty array if no parameters are declared
+   *     beyond the AsyncCallback, but must not be null.
+   * @param callback the callback the implementation will invoke onSuccess or onFailure on as it
+   *     performs its work. Only the last onSuccess or onFailure invocation matters.
    */
   public void invoke(final Object[] arguments, final ActiveCall callback) {
     try {

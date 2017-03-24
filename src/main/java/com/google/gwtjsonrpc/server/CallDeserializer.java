@@ -21,11 +21,10 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-
 import java.lang.reflect.Type;
 
-final class CallDeserializer<CallType extends ActiveCall> implements
-    JsonDeserializer<CallType>, InstanceCreator<CallType> {
+final class CallDeserializer<CallType extends ActiveCall>
+    implements JsonDeserializer<CallType>, InstanceCreator<CallType> {
   private final CallType req;
   private final JsonServlet<? extends ActiveCall> server;
 
@@ -40,9 +39,9 @@ final class CallDeserializer<CallType extends ActiveCall> implements
   }
 
   @Override
-  public CallType deserialize(final JsonElement json, final Type typeOfT,
-      final JsonDeserializationContext context) throws JsonParseException,
-      NoSuchRemoteMethodException {
+  public CallType deserialize(
+      final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
+      throws JsonParseException, NoSuchRemoteMethodException {
     if (!json.isJsonObject()) {
       throw new JsonParseException("Expected object");
     }
@@ -108,8 +107,8 @@ final class CallDeserializer<CallType extends ActiveCall> implements
 
       final JsonArray paramsArray = params.getAsJsonArray();
       if (paramsArray.size() != paramTypes.length) {
-        throw new JsonParseException("Expected " + paramTypes.length
-            + " parameter values in params array");
+        throw new JsonParseException(
+            "Expected " + paramTypes.length + " parameter values in params array");
       }
 
       final Object[] r = new Object[paramTypes.length];
@@ -131,7 +130,6 @@ final class CallDeserializer<CallType extends ActiveCall> implements
   }
 
   private static boolean isString(final JsonElement e) {
-    return e != null && e.isJsonPrimitive()
-        && e.getAsJsonPrimitive().isString();
+    return e != null && e.isJsonPrimitive() && e.getAsJsonPrimitive().isString();
   }
 }

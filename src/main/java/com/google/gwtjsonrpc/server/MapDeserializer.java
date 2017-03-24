@@ -24,22 +24,23 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapDeserializer implements JsonDeserializer<Map<Object, Object>>,
-    JsonSerializer<Map<Object, Object>>, InstanceCreator<Map<Object, Object>> {
+public class MapDeserializer
+    implements JsonDeserializer<Map<Object, Object>>,
+        JsonSerializer<Map<Object, Object>>,
+        InstanceCreator<Map<Object, Object>> {
   @Override
   public Map<Object, Object> createInstance(final Type type) {
     return new HashMap<>();
   }
 
   @Override
-  public Map<Object, Object> deserialize(final JsonElement json,
-      final Type typeOfT, final JsonDeserializationContext context)
+  public Map<Object, Object> deserialize(
+      final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
       throws JsonParseException {
     final Type kt = ((ParameterizedType) typeOfT).getActualTypeArguments()[0];
     final Type vt = ((ParameterizedType) typeOfT).getActualTypeArguments()[1];
@@ -67,7 +68,7 @@ public class MapDeserializer implements JsonDeserializer<Map<Object, Object>>,
 
     final JsonArray p = (JsonArray) json;
     final Map<Object, Object> r = createInstance(typeOfT);
-    for (int n = 0; n < p.size();) {
+    for (int n = 0; n < p.size(); ) {
       final Object k = context.deserialize(p.get(n++), kt);
       final Object v = context.deserialize(p.get(n++), vt);
       r.put(k, v);
@@ -76,8 +77,8 @@ public class MapDeserializer implements JsonDeserializer<Map<Object, Object>>,
   }
 
   @Override
-  public JsonElement serialize(final Map<Object, Object> src,
-      final Type typeOfSrc, final JsonSerializationContext context) {
+  public JsonElement serialize(
+      final Map<Object, Object> src, final Type typeOfSrc, final JsonSerializationContext context) {
     final Type kt = ((ParameterizedType) typeOfSrc).getActualTypeArguments()[0];
     final Type vt = ((ParameterizedType) typeOfSrc).getActualTypeArguments()[1];
 

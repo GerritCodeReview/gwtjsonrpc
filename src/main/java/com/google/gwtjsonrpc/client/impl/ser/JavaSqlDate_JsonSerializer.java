@@ -17,14 +17,12 @@ package com.google.gwtjsonrpc.client.impl.ser;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
-
 import java.sql.Date;
 
 /** Default serialization for a {@link java.sql.Date}. */
-public final class JavaSqlDate_JsonSerializer extends
-    JsonSerializer<java.sql.Date> implements ResultDeserializer<java.sql.Date> {
-  public static final JavaSqlDate_JsonSerializer INSTANCE =
-      new JavaSqlDate_JsonSerializer();
+public final class JavaSqlDate_JsonSerializer extends JsonSerializer<java.sql.Date>
+    implements ResultDeserializer<java.sql.Date> {
+  public static final JavaSqlDate_JsonSerializer INSTANCE = new JavaSqlDate_JsonSerializer();
 
   @Override
   public java.sql.Date fromJson(final Object o) {
@@ -41,14 +39,13 @@ public final class JavaSqlDate_JsonSerializer extends
     sb.append('"');
   }
 
-  private static native String toString(double utcMilli)
-  /*-{
+  private static native String toString(double utcMilli)/*-{
     var d = new Date(utcMilli);
     var p2 = @com.google.gwtjsonrpc.client.impl.ser.JavaSqlTimestamp_JsonSerializer::padTwo(I);
     return d.getUTCFullYear() + "-" +
     p2(1 + d.getUTCMonth()) + "-" +
     p2(d.getUTCDate());
-  }-*/;
+  }-*/ ;
 
   @SuppressWarnings("deprecation")
   protected static java.sql.Date parseDate(final String s) {

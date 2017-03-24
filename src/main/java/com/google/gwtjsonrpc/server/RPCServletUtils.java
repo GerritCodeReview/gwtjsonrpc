@@ -17,7 +17,6 @@ package com.google.gwtjsonrpc.server;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,8 +28,9 @@ public class RPCServletUtils {
     return accepts != null && accepts.indexOf("gzip") != -1;
   }
 
-  public static void writeResponse(ServletContext ctx, HttpServletResponse res,
-      String responseContent, boolean encodeWithGzip) throws IOException {
+  public static void writeResponse(
+      ServletContext ctx, HttpServletResponse res, String responseContent, boolean encodeWithGzip)
+      throws IOException {
     byte[] data = responseContent.getBytes("UTF-8");
     if (encodeWithGzip) {
       ByteArrayOutputStream buf = new ByteArrayOutputStream(data.length);
@@ -57,6 +57,5 @@ public class RPCServletUtils {
     res.getOutputStream().write(data);
   }
 
-  private RPCServletUtils() {
-  }
+  private RPCServletUtils() {}
 }

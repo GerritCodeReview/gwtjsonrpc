@@ -19,20 +19,18 @@ import java.lang.annotation.Target;
 
 /**
  * Declare an RPC call as caching its return value in the host page.
- * <p>
- * This is typically useful to allow the server to insert a JSON object into the
- * host page as the host page is sent to the client, permitting some of the
- * initial RPCs required by the module's <code>onModuleLoad()</code> function to
- * complete immediately, without waiting for a round-trip to the server.
- * <p>
- * By default <code>once = true</code>, causing the host page JSON object to be
- * deleted from the window during its first access. This allows subsequent RPC
- * calls to round-trip to the server.
- * <p>
- * If the host page variable is not defined by the server the call degrades into
- * a standard RPC. In some applications this may make it easier to debug in
- * hosted mode, where the static HTML is loaded by default, rather than through
- * a servlet which generates the hosted page on the fly.
+ *
+ * <p>This is typically useful to allow the server to insert a JSON object into the host page as the
+ * host page is sent to the client, permitting some of the initial RPCs required by the module's
+ * <code>onModuleLoad()</code> function to complete immediately, without waiting for a round-trip to
+ * the server.
+ *
+ * <p>By default <code>once = true</code>, causing the host page JSON object to be deleted from the
+ * window during its first access. This allows subsequent RPC calls to round-trip to the server.
+ *
+ * <p>If the host page variable is not defined by the server the call degrades into a standard RPC.
+ * In some applications this may make it easier to debug in hosted mode, where the static HTML is
+ * loaded by default, rather than through a servlet which generates the hosted page on the fly.
  */
 @Target(ElementType.METHOD)
 public @interface HostPageCache {

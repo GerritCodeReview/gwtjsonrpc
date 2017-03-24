@@ -21,12 +21,11 @@ import java.util.Date;
 public class JavaSqlTimestampHelper {
   /**
    * Parse a string into a timestamp.
-   * <p>
-   * Note that {@link Timestamp}s have no timezone, so the result is relative to
-   * the UTC epoch.
-   * <p>
-   * Supports the format {@code yyyy-MM-dd[ HH:mm:ss[.SSS][ Z]]} where
-   * {@code Z} is a 4-digit offset with sign, e.g. {@code -0500}.
+   *
+   * <p>Note that {@link Timestamp}s have no timezone, so the result is relative to the UTC epoch.
+   *
+   * <p>Supports the format {@code yyyy-MM-dd[ HH:mm:ss[.SSS][ Z]]} where {@code Z} is a 4-digit
+   * offset with sign, e.g. {@code -0500}.
    *
    * @param s input string.
    * @return resulting timestamp.
@@ -34,8 +33,7 @@ public class JavaSqlTimestampHelper {
   public static Timestamp parseTimestamp(String s) {
     String[] components = s.split(" ");
     if (components.length < 1 || components.length > 3) {
-      throw new IllegalArgumentException(
-          "Expected date and optional time: " + s);
+      throw new IllegalArgumentException("Expected date and optional time: " + s);
     }
     String date = components[0];
     String time = components.length >= 2 ? components[1] : null;
@@ -93,9 +91,8 @@ public class JavaSqlTimestampHelper {
    * Check whether an input string has a time portion.
    *
    * @param s input string.
-   * @return if {@code s} is a valid input to {@link #parseTimestamp(String)},
-   *     whether it contains an explicitly-specified time. Otherwise,
-   *     undefined.
+   * @return if {@code s} is a valid input to {@link #parseTimestamp(String)}, whether it contains
+   *     an explicitly-specified time. Otherwise, undefined.
    */
   public static boolean hasTime(String s) {
     return s.indexOf(' ') > 0;
@@ -105,9 +102,8 @@ public class JavaSqlTimestampHelper {
    * Check whether an input string has a timezone portion.
    *
    * @param s input string.
-   * @return if {@code s} is a valid input to {@link #parseTimestamp(String)},
-   *     whether it contains an explicitly-specified timezone. Otherwise,
-   *     undefined.
+   * @return if {@code s} is a valid input to {@link #parseTimestamp(String)}, whether it contains
+   *     an explicitly-specified timezone. Otherwise, undefined.
    */
   public static boolean hasTimeZone(String s) {
     return s.indexOf(' ') != s.lastIndexOf(' ');
@@ -122,12 +118,13 @@ public class JavaSqlTimestampHelper {
         throw new IllegalArgumentException("Invalid time zone: " + s);
       }
     }
-    int off = (s.charAt(0) == '-' ? -1 : 1) * 60 * 1000 * (
-        (60 * Integer.parseInt(s.substring(1, 3)))
-        + Integer.parseInt(s.substring(3, 5)));
+    int off =
+        (s.charAt(0) == '-' ? -1 : 1)
+            * 60
+            * 1000
+            * ((60 * Integer.parseInt(s.substring(1, 3))) + Integer.parseInt(s.substring(3, 5)));
     return off;
   }
 
-  private JavaSqlTimestampHelper() {
-  }
+  private JavaSqlTimestampHelper() {}
 }

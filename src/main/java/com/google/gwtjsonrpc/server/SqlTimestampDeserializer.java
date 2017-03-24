@@ -23,18 +23,17 @@ import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.google.gwtjsonrpc.common.JavaSqlTimestampHelper;
-
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
 
-public class SqlTimestampDeserializer implements
-    JsonDeserializer<java.sql.Timestamp>, JsonSerializer<java.sql.Timestamp> {
+public class SqlTimestampDeserializer
+    implements JsonDeserializer<java.sql.Timestamp>, JsonSerializer<java.sql.Timestamp> {
   private static final TimeZone UTC = TimeZone.getTimeZone("UTC");
 
   @Override
-  public java.sql.Timestamp deserialize(final JsonElement json,
-      final Type typeOfT, final JsonDeserializationContext context)
+  public java.sql.Timestamp deserialize(
+      final JsonElement json, final Type typeOfT, final JsonDeserializationContext context)
       throws JsonParseException {
     if (json.isJsonNull()) {
       return null;
@@ -51,8 +50,8 @@ public class SqlTimestampDeserializer implements
   }
 
   @Override
-  public JsonElement serialize(final java.sql.Timestamp src,
-      final Type typeOfSrc, final JsonSerializationContext context) {
+  public JsonElement serialize(
+      final java.sql.Timestamp src, final Type typeOfSrc, final JsonSerializationContext context) {
     if (src == null) {
       return new JsonNull();
     }

@@ -17,11 +17,10 @@ package com.google.gwtjsonrpc.client;
 import com.google.gwt.json.client.JSONValue;
 
 /**
- * Exception given to
- * {@link com.google.gwtjsonrpc.common.AsyncCallback#onFailure(Throwable)}.
- * <p>
- * This exception is used if the remote JSON server has returned a well-formed
- * JSON error response.
+ * Exception given to {@link com.google.gwtjsonrpc.common.AsyncCallback#onFailure(Throwable)}.
+ *
+ * <p>This exception is used if the remote JSON server has returned a well-formed JSON error
+ * response.
  */
 public class RemoteJsonException extends Exception {
   private static final long serialVersionUID = 1L;
@@ -31,11 +30,10 @@ public class RemoteJsonException extends Exception {
   /**
    * Construct a new exception representing a well formed JSON error response.
    *
-   * @param message A String value that provides a short description of the
-   *        error
+   * @param message A String value that provides a short description of the error
    * @param code A number that indicates the actual error that occurred
-   * @param data A JSON value instance that carries custom and
-   *        application-specific error information
+   * @param data A JSON value instance that carries custom and application-specific error
+   *     information
    */
   public RemoteJsonException(final String message, int code, JSONValue data) {
     super(message);
@@ -46,8 +44,7 @@ public class RemoteJsonException extends Exception {
   /**
    * Creates a new RemoteJsonException with code 999 and no data.
    *
-   * @param message A String value that provides a short description of the
-   *        error
+   * @param message A String value that provides a short description of the error
    */
   public RemoteJsonException(final String message) {
     this(message, 999, null);
@@ -55,8 +52,8 @@ public class RemoteJsonException extends Exception {
 
   /**
    * Gets the error code.
-   * <p>
-   * Note that the JSON-RPC 1.1 draf does not define error codes yet.
+   *
+   * <p>Note that the JSON-RPC 1.1 draf does not define error codes yet.
    *
    * @return A number that indicates the actual error that occurred.
    */

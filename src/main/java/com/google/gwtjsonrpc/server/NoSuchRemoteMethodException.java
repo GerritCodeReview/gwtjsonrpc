@@ -16,5 +16,4 @@ package com.google.gwtjsonrpc.server;
 
 /** Indicates the requested method is not known. */
 @SuppressWarnings("serial")
-class NoSuchRemoteMethodException extends RuntimeException {
-}
+class NoSuchRemoteMethodException extends RuntimeException {}

@@ -18,7 +18,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwt.user.client.rpc.InvocationException;
 import com.google.gwt.user.client.rpc.StatusCodeException;
 import com.google.gwtjsonrpc.client.JsonUtil;
@@ -27,6 +26,7 @@ import com.google.gwtjsonrpc.client.event.RpcCompleteEvent;
 import com.google.gwtjsonrpc.client.impl.AbstractJsonProxy;
 import com.google.gwtjsonrpc.client.impl.JsonCall;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
+import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwtjsonrpc.common.JsonConstants;
 
 /** Base JsonCall implementation for JsonRPC version 2.0 */
@@ -35,11 +35,13 @@ abstract class JsonCall20<T> extends JsonCall<T> {
 
   protected int requestId;
 
-  JsonCall20(AbstractJsonProxy abstractJsonProxy, String methodName,
-      String requestParams, ResultDeserializer<T> resultDeserializer,
+  JsonCall20(
+      AbstractJsonProxy abstractJsonProxy,
+      String methodName,
+      String requestParams,
+      ResultDeserializer<T> resultDeserializer,
       AsyncCallback<T> callback) {
-    super(abstractJsonProxy, methodName, requestParams, resultDeserializer,
-        callback);
+    super(abstractJsonProxy, methodName, requestParams, resultDeserializer, callback);
   }
 
   @Override
@@ -75,8 +77,9 @@ abstract class JsonCall20<T> extends JsonCall<T> {
           }
         } else {
           RpcCompleteEvent.fire(this);
-          callback.onFailure(new RemoteJsonException(errmsg, r.error().code(),
-              new JSONObject(r.error()).get("data")));
+          callback.onFailure(
+              new RemoteJsonException(
+                  errmsg, r.error().code(), new JSONObject(r.error()).get("data")));
         }
         return;
       }
@@ -117,28 +120,23 @@ abstract class JsonCall20<T> extends JsonCall<T> {
    * @return the parsed data
    * @see #jsonParser
    */
-  private static final native RpcResult parse(JavaScriptObject parserFunction,
-      String json)
-  /*-{
+  private static final native RpcResult parse(JavaScriptObject parserFunction, String json)/*-{
     return parserFunction(json);
-  }-*/;
-
+  }-*/ ;
 
   private static class RpcResult extends JavaScriptObject {
-    protected RpcResult() {
-    }
+    protected RpcResult() {}
 
-    final native RpcError error()/*-{ return this.error; }-*/;
+    final native RpcError error() /*-{ return this.error; }-*/;
 
-    final native String xsrfKey()/*-{ return this.xsrfKey; }-*/;
+    final native String xsrfKey() /*-{ return this.xsrfKey; }-*/;
   }
 
   private static class RpcError extends JavaScriptObject {
-    protected RpcError() {
-    }
+    protected RpcError() {}
 
-    final native String message()/*-{ return this.message; }-*/;
+    final native String message() /*-{ return this.message; }-*/;
 
-    final native int code()/*-{ return this.code; }-*/;
+    final native int code() /*-{ return this.code; }-*/;
   }
 }

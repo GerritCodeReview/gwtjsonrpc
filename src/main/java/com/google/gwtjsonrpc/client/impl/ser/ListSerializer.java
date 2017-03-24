@@ -17,14 +17,13 @@ package com.google.gwtjsonrpc.client.impl.ser;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
-
 import java.util.ArrayList;
 
 /**
  * Serialization for a {@link java.util.List}.
- * <p>
- * When deserialized from JSON the List implementation is always an
- * {@link ArrayList}. When serializing to JSON any List is permitted.
+ *
+ * <p>When deserialized from JSON the List implementation is always an {@link ArrayList}. When
+ * serializing to JSON any List is permitted.
  */
 public class ListSerializer<T> extends JsonSerializer<java.util.List<T>>
     implements ResultDeserializer<java.util.List<T>> {
@@ -74,7 +73,7 @@ public class ListSerializer<T> extends JsonSerializer<java.util.List<T>>
     return result == null ? null : fromJson(result);
   }
 
-  private static final native int size(JavaScriptObject o)/*-{ return o.length; }-*/;
+  private static final native int size(JavaScriptObject o) /*-{ return o.length; }-*/;
 
-  private static final native Object get(JavaScriptObject o, int i)/*-{ return o[i]; }-*/;
+  private static final native Object get(JavaScriptObject o, int i) /*-{ return o[i]; }-*/;
 }

@@ -14,7 +14,6 @@
 
 package com.google.gwtjsonrpc.server;
 
-
 final class ServletCookieAccess {
   /**
    * Get the value of a cookie.
@@ -23,15 +22,15 @@ final class ServletCookieAccess {
    * @return the cookie's value; or null.
    */
   static String get(final String name) {
-      return JsonServlet.<ActiveCall> getCurrentCall().getCookie(name);
+    return JsonServlet.<ActiveCall>getCurrentCall().getCookie(name);
   }
 
   /**
    * Get the text of a signed token which is stored in a cookie.
-   * <p>
-   * <b>Warning: This method does not validate the token.</b>
-   * <p>
-   * To validate the cookie hasn't been forged, use SignedToken.getCookieText.
+   *
+   * <p><b>Warning: This method does not validate the token.</b>
+   *
+   * <p>To validate the cookie hasn't been forged, use SignedToken.getCookieText.
    *
    * @param cookieName the name of the cookie to get the text from.
    * @return the signed text; null if the cookie is not set.
@@ -45,6 +44,5 @@ final class ServletCookieAccess {
     return s >= 0 ? v.substring(s + 1) : null;
   }
 
-  private ServletCookieAccess() {
-  }
+  private ServletCookieAccess() {}
 }

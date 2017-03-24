@@ -21,11 +21,9 @@ import com.google.gwtjsonrpc.common.VoidResult;
 
 public class VoidResult_JsonSerializer extends JsonSerializer<VoidResult>
     implements ResultDeserializer<VoidResult> {
-  public static final VoidResult_JsonSerializer INSTANCE =
-      new VoidResult_JsonSerializer();
+  public static final VoidResult_JsonSerializer INSTANCE = new VoidResult_JsonSerializer();
 
-  private VoidResult_JsonSerializer() {
-  }
+  private VoidResult_JsonSerializer() {}
 
   @Override
   public void printJson(final StringBuilder sb, final VoidResult o) {

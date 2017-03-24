@@ -20,11 +20,9 @@ import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
 
 /** Default serialization for a String. */
-public final class JavaLangString_JsonSerializer extends
-    JsonSerializer<java.lang.String> implements
-    ResultDeserializer<java.lang.String> {
-  public static final JavaLangString_JsonSerializer INSTANCE =
-      new JavaLangString_JsonSerializer();
+public final class JavaLangString_JsonSerializer extends JsonSerializer<java.lang.String>
+    implements ResultDeserializer<java.lang.String> {
+  public static final JavaLangString_JsonSerializer INSTANCE = new JavaLangString_JsonSerializer();
 
   @Override
   public java.lang.String fromJson(final Object o) {

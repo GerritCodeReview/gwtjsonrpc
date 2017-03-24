@@ -16,18 +16,20 @@ package com.google.gwtjsonrpc.client.impl.v2_0;
 
 import com.google.gwt.core.client.JsonUtils;
 import com.google.gwt.http.client.RequestBuilder;
-import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwtjsonrpc.client.impl.AbstractJsonProxy;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
+import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwtjsonrpc.common.JsonConstants;
 
 /** JsonCall implementation for JsonRPC version 2.0 over HTTP POST */
 public class JsonCall20HttpPost<T> extends JsonCall20<T> {
-  public JsonCall20HttpPost(AbstractJsonProxy abstractJsonProxy,
-      String methodName, String requestParams,
-      ResultDeserializer<T> resultDeserializer, AsyncCallback<T> callback) {
-    super(abstractJsonProxy, methodName, requestParams, resultDeserializer,
-        callback);
+  public JsonCall20HttpPost(
+      AbstractJsonProxy abstractJsonProxy,
+      String methodName,
+      String requestParams,
+      ResultDeserializer<T> resultDeserializer,
+      AsyncCallback<T> callback) {
+    super(abstractJsonProxy, methodName, requestParams, resultDeserializer, callback);
   }
 
   @Override

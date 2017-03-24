@@ -17,10 +17,8 @@ package com.google.gwtjsonrpc.server;
 import com.google.gson.JsonElement;
 import com.google.gwtjsonrpc.common.AsyncCallback;
 import com.google.gwtjsonrpc.common.JsonConstants;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -117,8 +115,8 @@ public class ActiveCall implements AsyncCallback<Object> {
 
   /**
    * Set the value of a cookie.
-   * <p>
-   * The cookie is scope to the context path used by this web application.
+   *
+   * <p>The cookie is scope to the context path used by this web application.
    *
    * @param name name of the cookie.
    * @param value the value of the cookie.
@@ -133,16 +131,15 @@ public class ActiveCall implements AsyncCallback<Object> {
 
   /**
    * Set the value of a cookie to a signed token.
-   * <p>
-   * The cookie value is actually set to the signed token which both includes
-   * (and protects via an HMAC signature) <code>value</code>.s
+   *
+   * <p>The cookie value is actually set to the signed token which both includes (and protects via
+   * an HMAC signature) <code>value</code>.s
    *
    * @param name name of the cookie.
    * @param value the data value of the cookie.
    * @param sig a signature to protect the cookie value.
    */
-  public void setCookie(final String name, final String value,
-      final SignedToken sig) {
+  public void setCookie(final String name, final String value, final SignedToken sig) {
     try {
       setCookie(name, sig.newToken(value), sig.getMaxAge());
     } catch (XsrfException e) {
@@ -151,10 +148,10 @@ public class ActiveCall implements AsyncCallback<Object> {
 
   /**
    * Get the user specific token to protect per-user XSRF keys.
-   * <p>
-   * By default this method uses <code>getRemoteUser()</code>. Services may
-   * override this method to acquire a different property of the request, such
-   * as data from an HTTP cookie or an extended HTTP header.
+   *
+   * <p>By default this method uses <code>getRemoteUser()</code>. Services may override this method
+   * to acquire a different property of the request, such as data from an HTTP cookie or an extended
+   * HTTP header.
    *
    * @return the user identity; null if the user is anonymous.
    */
@@ -174,8 +171,7 @@ public class ActiveCall implements AsyncCallback<Object> {
   /**
    * Get the actual parameter values to be supplied to the method.
    *
-   * @return the parameter array; never null but may be 0-length if the method
-   *         takes no parameters.
+   * @return the parameter array; never null but may be 0-length if the method takes no parameters.
    */
   public Object[] getParams() {
     return params;
@@ -211,13 +207,13 @@ public class ActiveCall implements AsyncCallback<Object> {
 
   /**
    * Verify the XSRF token submitted is valid.
-   * <p>
-   * By default this method validates the token, and refreshes it with a new
-   * token for the currently authenticated user.
+   *
+   * <p>By default this method validates the token, and refreshes it with a new token for the
+   * currently authenticated user.
    *
    * @return true if the token was supplied and is valid; false otherwise.
-   * @throws XsrfException the token could not be validated due to an error that
-   *         the client cannot recover from.
+   * @throws XsrfException the token could not be validated due to an error that the client cannot
+   *     recover from.
    */
   public boolean xsrfValidate() throws XsrfException {
     final String username = getUser();
@@ -237,9 +233,8 @@ public class ActiveCall implements AsyncCallback<Object> {
   }
 
   /**
-   * @return true if this call has something to send to the client; false if the
-   *         call still needs to be computed further in order to come up with a
-   *         success return value or a failure
+   * @return true if this call has something to send to the client; false if the call still needs to
+   *     be computed further in order to come up with a success return value or a failure
    */
   public final boolean isComplete() {
     return result != null || externalFailure != null || internalFailure != null;

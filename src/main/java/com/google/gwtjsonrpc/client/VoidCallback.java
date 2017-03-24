@@ -22,12 +22,10 @@ import com.google.gwtjsonrpc.common.VoidResult;
 public class VoidCallback implements AsyncCallback<VoidResult> {
   public static final VoidCallback INSTANCE = new VoidCallback();
 
-  protected VoidCallback() {
-  }
+  protected VoidCallback() {}
 
   @Override
-  public void onSuccess(final VoidResult result) {
-  }
+  public void onSuccess(final VoidResult result) {}
 
   @Override
   public void onFailure(final Throwable caught) {

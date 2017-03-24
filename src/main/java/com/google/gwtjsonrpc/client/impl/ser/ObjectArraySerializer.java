@@ -19,8 +19,8 @@ import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 
 /**
  * Default serialization for any Object[] sort of type.
- * <p>
- * Primitive array types (like <code>int[]</code>) are not supported.
+ *
+ * <p>Primitive array types (like <code>int[]</code>) are not supported.
  */
 public class ObjectArraySerializer<T> {
   private final JsonSerializer<T> serializer;
@@ -51,7 +51,7 @@ public class ObjectArraySerializer<T> {
     }
   }
 
-  public static native int size(JavaScriptObject o)/*-{ return o.length; }-*/;
+  public static native int size(JavaScriptObject o) /*-{ return o.length; }-*/;
 
-  private static final native Object get(JavaScriptObject o, int i)/*-{ return o[i]; }-*/;
+  private static final native Object get(JavaScriptObject o, int i) /*-{ return o[i]; }-*/;
 }

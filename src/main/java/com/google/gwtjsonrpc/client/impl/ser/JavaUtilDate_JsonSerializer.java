@@ -17,15 +17,12 @@ package com.google.gwtjsonrpc.client.impl.ser;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwtjsonrpc.client.impl.JsonSerializer;
 import com.google.gwtjsonrpc.client.impl.ResultDeserializer;
-
 import java.util.Date;
 
 /** Default serialization for a {@link java.util.Date}. */
-public final class JavaUtilDate_JsonSerializer extends
-    JsonSerializer<java.util.Date> implements
-    ResultDeserializer<java.util.Date> {
-  public static final JavaUtilDate_JsonSerializer INSTANCE =
-      new JavaUtilDate_JsonSerializer();
+public final class JavaUtilDate_JsonSerializer extends JsonSerializer<java.util.Date>
+    implements ResultDeserializer<java.util.Date> {
+  public static final JavaUtilDate_JsonSerializer INSTANCE = new JavaUtilDate_JsonSerializer();
 
   @Override
   public java.util.Date fromJson(final Object o) {
