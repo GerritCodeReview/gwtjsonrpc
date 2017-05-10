@@ -26,6 +26,10 @@ limitations under the License.
   <description>JSON-RPC for Google Web Toolkit (GWT)</description>
   <url>https://gerrit.googlesource.com/gwtjsonrpc</url>
 
+  <prerequisites>
+    <maven>3.0</maven>
+  </prerequisites>
+
   <scm>
     <url>https://gerrit.googlesource.com/gwtjsonrpc</url>
     <connection>https://gerrit.googlesource.com/gwtjsonrpc</connection>
