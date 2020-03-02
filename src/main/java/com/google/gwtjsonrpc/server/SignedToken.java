@@ -14,6 +14,7 @@
 
 package com.google.gwtjsonrpc.server;
 
+import com.google.gwtjsonrpc.common.CheckTokenException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -45,7 +46,7 @@ public class SignedToken {
   public static String generateRandomKey() {
     final byte[] r = new byte[26];
     new SecureRandom().nextBytes(r);
-    return encodeBase64(r);
+    return encodeBase64(r, true);
   }
 
   private final int maxAge;
@@ -72,7 +73,7 @@ public class SignedToken {
    */
   public SignedToken(final int age, final String keyBase64) throws XsrfException {
     maxAge = age > 5 ? age / 5 : age;
-    key = new SecretKeySpec(decodeBase64(keyBase64), MAC_ALG);
+    key = new SecretKeySpec(decodeBase64(keyBase64, true), MAC_ALG);
     rng = new SecureRandom();
     tokenLength = 2 * INT_SZ + newMac().getMacLength();
   }
@@ -92,8 +93,8 @@ public class SignedToken {
     final String val = ServletCookieAccess.get(cookieName);
     boolean ok;
     try {
-      ok = checkToken(val, null) != null;
-    } catch (XsrfException e) {
+      ok = checkToken(val, null, true) != null;
+    } catch (XsrfException | CheckTokenException e) {
       ok = false;
     }
     return ok ? ServletCookieAccess.getTokenText(cookieName) : null;
@@ -105,63 +106,70 @@ public class SignedToken {
    * @param text the text string to sign. Typically this should be some user-specific string, to
    *     prevent replay attacks. The text must be safe to appear in whatever context the token
    *     itself will appear, as the text is included on the end of the token.
+   * @param isUrlSafe the flag of url safe mode when BASE64 is encoding and decoding
    * @return the signed token. The text passed in <code>text</code> will appear after the first ','
    *     in the returned token string.
    * @throws XsrfException the JVM doesn't support the necessary algorithms.
    */
-  public String newToken(final String text) throws XsrfException {
+  public String newToken(final String text, final boolean isUrlSafe) throws XsrfException {
     final int q = rng.nextInt();
     final byte[] buf = new byte[tokenLength];
     encodeInt(buf, 0, q);
     encodeInt(buf, INT_SZ, now() ^ q);
     computeToken(buf, text);
-    return encodeBase64(buf) + '$' + text;
+    return encodeBase64(buf, isUrlSafe) + '$' + text;
   }
 
   /**
    * Validate a returned token.
    *
    * @param tokenString a token string previously created by this class.
-   * @param text text that must have been used during {@link #newToken(String)} in order for the
-   *     token to be valid. If null the text will be taken from the token string itself.
-   * @return true if the token is valid; false if the token is null, the empty string, has expired,
-   *     does not match the text supplied, or is a forged token.
+   * @param text text that must have been used during {@link #newToken(String, boolean)} in order
+   *     for the token to be valid. If null the text will be taken from the token string itself.
+   * @param isUrlSafe the flag of url safe mode when BASE64 is encoding and decoding
+   * @return the token which is valid;
    * @throws XsrfException the JVM doesn't support the necessary algorithms to generate a token.
    *     XSRF services are simply not available.
+   * @throws CheckTokenException throws when token is null, the empty string, has expired, does not
+   *     match the text supplied, or is a forged token.
    */
-  public ValidToken checkToken(final String tokenString, final String text) throws XsrfException {
+  public ValidToken checkToken(final String tokenString, final String text, final boolean isUrlSafe)
+      throws XsrfException, CheckTokenException {
+
     if (tokenString == null || tokenString.length() == 0) {
-      return null;
+      throw new CheckTokenException("Invalid Token! Input token is blank!");
     }
 
     final int s = tokenString.indexOf('$');
     if (s <= 0) {
-      return null;
+      throw new CheckTokenException(
+          "Invalid Token! Input token string does not contain character '$' !");
     }
 
     final String recvText = tokenString.substring(s + 1);
     final byte[] in;
     try {
-      in = decodeBase64(tokenString.substring(0, s));
+      in = decodeBase64(tokenString.substring(0, s), isUrlSafe);
     } catch (RuntimeException e) {
-      return null;
+      throw new CheckTokenException("Invalid Token! Decode BASE64 fails!", e);
     }
+
     if (in.length != tokenLength) {
-      return null;
+      throw new CheckTokenException("Invalid Token! Token length not match!");
     }
 
     final int q = decodeInt(in, 0);
     final int c = decodeInt(in, INT_SZ) ^ q;
     final int n = now();
     if (maxAge > 0 && Math.abs(c - n) > maxAge) {
-      return null;
+      throw new CheckTokenException("Invalid Token! Token is expired!");
     }
 
     final byte[] gen = new byte[tokenLength];
     System.arraycopy(in, 0, gen, 0, 2 * INT_SZ);
     computeToken(gen, text != null ? text : recvText);
     if (!Arrays.equals(gen, in)) {
-      return null;
+      throw new CheckTokenException("Invalid Token! Token text not match!");
     }
 
     return new ValidToken(maxAge > 0 && c + (maxAge >> 1) <= n, recvText);
@@ -194,12 +202,12 @@ public class SignedToken {
     return (int) (System.currentTimeMillis() / 5000L);
   }
 
-  private static byte[] decodeBase64(final String s) {
-    return Base64.decodeBase64(toBytes(s));
+  private static byte[] decodeBase64(final String s, final boolean isUrlSafe) {
+    return new Base64(0, null, isUrlSafe).decode(toBytes(s));
   }
 
-  private static String encodeBase64(final byte[] buf) {
-    return toString(Base64.encodeBase64(buf));
+  private static String encodeBase64(final byte[] buf, final boolean isUrlsafe) {
+    return toString(new Base64(0, null, isUrlsafe).encode(buf));
   }
 
   private static void encodeInt(final byte[] buf, final int o, final int v) {
