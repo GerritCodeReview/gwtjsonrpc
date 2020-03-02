@@ -14,7 +14,7 @@
 
 package com.google.gwtjsonrpc.server;
 
-/** A validated token from {@link SignedToken#checkToken(String, String)} */
+/** A validated token from {@link SignedToken#checkToken(String, String, boolean)} */
 public class ValidToken {
   private final boolean refresh;
   private final String data;
