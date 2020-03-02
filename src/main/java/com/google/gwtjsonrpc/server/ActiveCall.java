@@ -16,6 +16,7 @@ package com.google.gwtjsonrpc.server;
 
 import com.google.gson.JsonElement;
 import com.google.gwtjsonrpc.common.AsyncCallback;
+import com.google.gwtjsonrpc.common.CheckTokenException;
 import com.google.gwtjsonrpc.common.JsonConstants;
 import java.util.HashMap;
 import java.util.Map;
@@ -96,13 +97,10 @@ public class ActiveCall implements AsyncCallback<Object> {
    * @param name the name of the cookie.
    * @return the cookie's value; or null.
    */
-  public ValidToken getCookie(final String name, final SignedToken sig) {
+  public ValidToken getCookie(final String name, final SignedToken sig)
+      throws XsrfException, CheckTokenException {
     final String tokstr = getCookie(name);
-    try {
-      return sig.checkToken(tokstr, null);
-    } catch (XsrfException e) {
-      return null;
-    }
+    return sig.checkToken(tokstr, null, true);
   }
 
   /** Remove a cookie from the browser cookie store. */
@@ -141,7 +139,7 @@ public class ActiveCall implements AsyncCallback<Object> {
    */
   public void setCookie(final String name, final String value, final SignedToken sig) {
     try {
-      setCookie(name, sig.newToken(value), sig.getMaxAge());
+      setCookie(name, sig.newToken(value, true), sig.getMaxAge());
     } catch (XsrfException e) {
     }
   }
@@ -225,11 +223,17 @@ public class ActiveCall implements AsyncCallback<Object> {
       b.append("anonymous");
     }
     final String userpath = b.toString();
-    final ValidToken t = xsrf.checkToken(getXsrfKeyIn(), userpath);
-    if (t == null || t.needsRefresh()) {
-      setXsrfKeyOut(xsrf.newToken(userpath));
+    final ValidToken t;
+
+    try {
+      t = xsrf.checkToken(getXsrfKeyIn(), userpath, true);
+    } catch (CheckTokenException e) {
+      return false;
     }
-    return t != null;
+    if (t.needsRefresh()) {
+      setXsrfKeyOut(xsrf.newToken(userpath, true));
+    }
+    return true;
   }
 
   /**
