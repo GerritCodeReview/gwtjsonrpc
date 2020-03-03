@@ -1,0 +1,279 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4ef6453e_e6484052",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-03T08:46:35Z",
+      "side": 1,
+      "message": "Please add a reference to a bug here. If there isn\u0027t one, please create one at https://bugs.chromium.org/p/gerrit/issues/list",
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb2cb739_c42adee9",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-03T08:46:35Z",
+      "side": 1,
+      "message": "nit: please format the file with google-java-format",
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b99c11db_b63fb6cb",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-03T08:46:35Z",
+      "side": 1,
+      "message": "nit: please also add a @deprecated tag in the javadoc\n\nalthough having said that, as far as I know gerrit is the only consumer of this library so we might be able to just change the API without deprecating.",
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "827d5142_6d2483a1",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-03T08:46:35Z",
+      "side": 1,
+      "message": "Unrelated to this change, but this is wrong. It doesn\u0027t return true/false but a new token or null.  Since the text is also copied below, I think it should be fixed here.",
+      "range": {
+        "startLine": 149,
+        "startChar": 13,
+        "endLine": 150,
+        "endChar": 64
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0a8f63c_aeceea12",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-03T08:46:35Z",
+      "side": 1,
+      "message": "Remove this?",
+      "range": {
+        "startLine": 198,
+        "startChar": 92,
+        "endLine": 198,
+        "endChar": 100
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22398173_8920ad07",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-03T08:46:35Z",
+      "side": 1,
+      "message": "See above. The method is not returning a boolean.",
+      "range": {
+        "startLine": 200,
+        "startChar": 13,
+        "endLine": 201,
+        "endChar": 41
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "749cd697_a07dc488",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-03T08:46:35Z",
+      "side": 1,
+      "message": "nit: final is not needed",
+      "range": {
+        "startLine": 205,
+        "startChar": 31,
+        "endLine": 205,
+        "endChar": 36
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "284df0c3_61734e21",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-03T08:46:35Z",
+      "side": 1,
+      "message": "Missing copyright and license header",
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5755be35_9754a02f",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-03T08:46:35Z",
+      "side": 1,
+      "message": "These variables can be initialised at lines 9 and 10, and they can be static final",
+      "range": {
+        "startLine": 14,
+        "startChar": 4,
+        "endLine": 15,
+        "endChar": 28
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "73b38fc0_beb1a80f",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-03T08:46:35Z",
+      "side": 1,
+      "message": "This could be a class variable that gets initialised in the setUp method",
+      "range": {
+        "startLine": 21,
+        "startChar": 6,
+        "endLine": 21,
+        "endChar": 56
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c5d2625e_9c522a26",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-03T08:46:35Z",
+      "side": 1,
+      "message": "import this as static",
+      "range": {
+        "startLine": 25,
+        "startChar": 6,
+        "endLine": 25,
+        "endChar": 26
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53274fa7_f712fcc8",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-03T08:46:35Z",
+      "side": 1,
+      "message": "Generally it\u0027s better not to catch the exception.  Just declare the method as \"throws Exception\" and let the test fail when/if the exception is thrown.",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 29,
+        "endChar": 5
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e122320_4afa8d43",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-03T08:46:35Z",
+      "side": 1,
+      "message": "nit: method name should not start with capital letter",
+      "range": {
+        "startLine": 33,
+        "startChar": 14,
+        "endLine": 33,
+        "endChar": 15
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}
