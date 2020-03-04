@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0e64837f_a1a77844",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1089199
+      },
+      "writtenOn": "2020-03-04T05:06:13Z",
+      "side": 1,
+      "message": "Done in PATCH 2",
+      "parentUuid": "4ef6453e_e6484052",
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "eb2cb739_c42adee9",
         "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
         "patchSetId": 1
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "1142ed4e_e3a6e50f",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1089199
+      },
+      "writtenOn": "2020-03-04T05:06:13Z",
+      "side": 1,
+      "message": "Done in PATCH 2",
+      "parentUuid": "eb2cb739_c42adee9",
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b99c11db_b63fb6cb",
         "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
         "patchSetId": 1
@@ -50,6 +86,24 @@
       "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6b6666f8_dec43340",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1089199
+      },
+      "writtenOn": "2020-03-04T05:06:13Z",
+      "side": 1,
+      "message": "If gerrit is the only consumer, I will change API directlly in PATCH 2",
+      "parentUuid": "b99c11db_b63fb6cb",
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     },
     {
       "key": {
@@ -76,6 +130,30 @@
     },
     {
       "key": {
+        "uuid": "bd6ae063_dd4f6691",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1089199
+      },
+      "writtenOn": "2020-03-04T05:06:13Z",
+      "side": 1,
+      "message": "I have the same question with the code here and agree with your suggestion.\n\nThe return ValidToken Object is used to check whether the token is needed to refresh and to achieve the token data(context). So I think return a boolean value is not enough, I think a thoughtful way is make check throw an exception(not runtime) to satifies this problem.\n\nI will let it done in PATCH 2 and I will also add some unit tests for it.",
+      "parentUuid": "827d5142_6d2483a1",
+      "range": {
+        "startLine": 149,
+        "startChar": 13,
+        "endLine": 150,
+        "endChar": 64
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e0a8f63c_aeceea12",
         "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
         "patchSetId": 1
@@ -96,6 +174,30 @@
       "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b84cdd71_81f1ee02",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1089199
+      },
+      "writtenOn": "2020-03-04T05:06:13Z",
+      "side": 1,
+      "message": "The old API removed in PATCH 2",
+      "parentUuid": "e0a8f63c_aeceea12",
+      "range": {
+        "startLine": 198,
+        "startChar": 92,
+        "endLine": 198,
+        "endChar": 100
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     },
     {
       "key": {
@@ -122,6 +224,30 @@
     },
     {
       "key": {
+        "uuid": "3296ab73_3fa40633",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1089199
+      },
+      "writtenOn": "2020-03-04T05:06:13Z",
+      "side": 1,
+      "message": "Same solution described above.",
+      "parentUuid": "22398173_8920ad07",
+      "range": {
+        "startLine": 200,
+        "startChar": 13,
+        "endLine": 201,
+        "endChar": 41
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "749cd697_a07dc488",
         "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
         "patchSetId": 1
@@ -145,6 +271,30 @@
     },
     {
       "key": {
+        "uuid": "eda2b9a8_6ce091a8",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1089199
+      },
+      "writtenOn": "2020-03-04T05:06:13Z",
+      "side": 1,
+      "message": "Although String type is an immutable type, but final will keep `tokenString` reference can not be point to another String value in the method.\n\nSo,I think maybe it\u0027s OK here?",
+      "parentUuid": "749cd697_a07dc488",
+      "range": {
+        "startLine": 205,
+        "startChar": 31,
+        "endLine": 205,
+        "endChar": 36
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "284df0c3_61734e21",
         "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
         "patchSetId": 1
@@ -159,6 +309,24 @@
       "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "141c3d19_afb971cf",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1089199
+      },
+      "writtenOn": "2020-03-04T05:06:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "284df0c3_61734e21",
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     },
     {
       "key": {
@@ -185,6 +353,30 @@
     },
     {
       "key": {
+        "uuid": "157f4377_27b03ebf",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1089199
+      },
+      "writtenOn": "2020-03-04T05:06:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5755be35_9754a02f",
+      "range": {
+        "startLine": 14,
+        "startChar": 4,
+        "endLine": 15,
+        "endChar": 28
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "73b38fc0_beb1a80f",
         "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
         "patchSetId": 1
@@ -205,6 +397,30 @@
       "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0da457a1_b5f073ac",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1089199
+      },
+      "writtenOn": "2020-03-04T05:06:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "73b38fc0_beb1a80f",
+      "range": {
+        "startLine": 21,
+        "startChar": 6,
+        "endLine": 21,
+        "endChar": 56
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     },
     {
       "key": {
@@ -231,6 +447,30 @@
     },
     {
       "key": {
+        "uuid": "7ac1e835_247952a7",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1089199
+      },
+      "writtenOn": "2020-03-04T05:06:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c5d2625e_9c522a26",
+      "range": {
+        "startLine": 25,
+        "startChar": 6,
+        "endLine": 25,
+        "endChar": 26
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "53274fa7_f712fcc8",
         "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
         "patchSetId": 1
@@ -254,6 +494,30 @@
     },
     {
       "key": {
+        "uuid": "69b776b7_bd336d5b",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1089199
+      },
+      "writtenOn": "2020-03-04T05:06:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53274fa7_f712fcc8",
+      "range": {
+        "startLine": 26,
+        "startChar": 4,
+        "endLine": 29,
+        "endChar": 5
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e122320_4afa8d43",
         "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
         "patchSetId": 1
@@ -274,6 +538,30 @@
       "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6dc1c947_927915b2",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1089199
+      },
+      "writtenOn": "2020-03-04T05:06:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e122320_4afa8d43",
+      "range": {
+        "startLine": 33,
+        "startChar": 14,
+        "endLine": 33,
+        "endChar": 15
+      },
+      "revId": "4f69bf92f8b4e28291e42626690935b324ee1908",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
