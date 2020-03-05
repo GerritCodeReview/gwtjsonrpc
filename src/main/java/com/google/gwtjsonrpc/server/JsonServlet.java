@@ -528,7 +528,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends HttpServl
               final ActiveCall src, final Type typeOfSrc, final JsonSerializationContext context) {
             if (call.callback != null) {
               if (src.externalFailure != null) {
-                return new JsonNull();
+                return JsonNull.INSTANCE;
               }
               return context.serialize(src.result);
             }

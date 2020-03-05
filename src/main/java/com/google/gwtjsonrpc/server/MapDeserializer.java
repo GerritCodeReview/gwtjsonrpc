@@ -83,7 +83,7 @@ public class MapDeserializer
     final Type vt = ((ParameterizedType) typeOfSrc).getActualTypeArguments()[1];
 
     if (src == null) {
-      return new JsonNull();
+      return JsonNull.INSTANCE;
     }
 
     if (kt == String.class) {

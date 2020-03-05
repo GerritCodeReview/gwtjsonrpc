@@ -51,7 +51,7 @@ public class SqlDateDeserializer
   public JsonElement serialize(
       final java.sql.Date src, final Type typeOfSrc, final JsonSerializationContext context) {
     if (src == null) {
-      return new JsonNull();
+      return JsonNull.INSTANCE;
     }
     return new JsonPrimitive(src.toString());
   }
