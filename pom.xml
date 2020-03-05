@@ -303,6 +303,10 @@ limitations under the License.
         <configuration>
           <compilerId>javac-with-errorprone</compilerId>
           <forceJavacCompilerUse>true</forceJavacCompilerUse>
+          <showWarnings>true</showWarnings>
+          <compilerArgs>
+            <arg>-Xlint:deprecation</arg>
+          </compilerArgs>
           <source>${java.version}</source>
           <target>${java.version}</target>
           <encoding>UTF-8</encoding>
