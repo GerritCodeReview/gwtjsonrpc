@@ -1,0 +1,274 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5dfc9eb6_50e853fd",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-05T05:40:29Z",
+      "side": 1,
+      "message": "Make this in the form:\n\n Bug: Issue 12424",
+      "range": {
+        "startLine": 23,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 57
+      },
+      "revId": "06b2bcf1e52a7ccd118fe162e5fc3f603eb2c6ec",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64efee58_eb6c70c0",
+        "filename": "pom.xml",
+        "patchSetId": 5
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-05T05:40:29Z",
+      "side": 1,
+      "message": "This shouldn\u0027t be changed; 1.12 was not released yet.",
+      "revId": "06b2bcf1e52a7ccd118fe162e5fc3f603eb2c6ec",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f269644_a152c7d2",
+        "filename": "src/main/java/com/google/gwtjsonrpc/common/CheckTokenException.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-05T05:40:29Z",
+      "side": 1,
+      "message": "2020",
+      "range": {
+        "startLine": 1,
+        "startChar": 13,
+        "endLine": 1,
+        "endChar": 17
+      },
+      "revId": "06b2bcf1e52a7ccd118fe162e5fc3f603eb2c6ec",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd767226_24a1e8dc",
+        "filename": "src/main/java/com/google/gwtjsonrpc/common/CheckTokenException.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-05T05:40:29Z",
+      "side": 1,
+      "message": "Javadoc doesn\u0027t match the class.  Seems to have been copied from NoSuchRemoteMethodException",
+      "range": {
+        "startLine": 17,
+        "startChar": 4,
+        "endLine": 17,
+        "endChar": 48
+      },
+      "revId": "06b2bcf1e52a7ccd118fe162e5fc3f603eb2c6ec",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "227cf1ec_368dc17a",
+        "filename": "src/main/java/com/google/gwtjsonrpc/common/CheckTokenException.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-05T05:40:29Z",
+      "side": 1,
+      "message": "Add a default serialId instead of suppressing the warning",
+      "range": {
+        "startLine": 18,
+        "startChar": 0,
+        "endLine": 18,
+        "endChar": 27
+      },
+      "revId": "06b2bcf1e52a7ccd118fe162e5fc3f603eb2c6ec",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d33d181_ebf8d71e",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-05T05:40:29Z",
+      "side": 1,
+      "message": "remove this",
+      "range": {
+        "startLine": 129,
+        "startChar": 9,
+        "endLine": 129,
+        "endChar": 17
+      },
+      "revId": "06b2bcf1e52a7ccd118fe162e5fc3f603eb2c6ec",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6e047f9_677486ee",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-05T05:40:29Z",
+      "side": 1,
+      "message": "2020",
+      "range": {
+        "startLine": 1,
+        "startChar": 17,
+        "endLine": 1,
+        "endChar": 21
+      },
+      "revId": "06b2bcf1e52a7ccd118fe162e5fc3f603eb2c6ec",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d0f883e_1fa03ae1",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-05T05:40:29Z",
+      "side": 1,
+      "message": "detailed javadoc is not needed for tests",
+      "range": {
+        "startLine": 40,
+        "startChar": 3,
+        "endLine": 42,
+        "endChar": 32
+      },
+      "revId": "06b2bcf1e52a7ccd118fe162e5fc3f603eb2c6ec",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0a7e0dd4_6e830128",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-05T05:40:29Z",
+      "side": 1,
+      "message": "unused",
+      "range": {
+        "startLine": 60,
+        "startChar": 4,
+        "endLine": 60,
+        "endChar": 52
+      },
+      "revId": "06b2bcf1e52a7ccd118fe162e5fc3f603eb2c6ec",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e1db7445_9340ece0",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 72,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-05T05:40:29Z",
+      "side": 1,
+      "message": "unused",
+      "range": {
+        "startLine": 72,
+        "startChar": 4,
+        "endLine": 72,
+        "endChar": 52
+      },
+      "revId": "06b2bcf1e52a7ccd118fe162e5fc3f603eb2c6ec",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aa37a47d_9f4d3643",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-05T05:40:29Z",
+      "side": 1,
+      "message": "unused",
+      "range": {
+        "startLine": 111,
+        "startChar": 4,
+        "endLine": 111,
+        "endChar": 52
+      },
+      "revId": "06b2bcf1e52a7ccd118fe162e5fc3f603eb2c6ec",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d28dfff4_f09dcc7a",
+        "filename": "src/test/java/com/google/gwtjsonrpc/server/SignedTokenTest.java",
+        "patchSetId": 5
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-03-05T05:40:29Z",
+      "side": 1,
+      "message": "this is not thrown.\n\nactually, we should just declare \"Exception\" on the tests.",
+      "range": {
+        "startLine": 123,
+        "startChar": 49,
+        "endLine": 123,
+        "endChar": 69
+      },
+      "revId": "06b2bcf1e52a7ccd118fe162e5fc3f603eb2c6ec",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}
