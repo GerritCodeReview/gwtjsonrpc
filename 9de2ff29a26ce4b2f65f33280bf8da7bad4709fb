@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b9167fce_af5359ca",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-04-19T05:36:09Z",
+      "side": 1,
+      "message": "The javadoc in ValidToken needs to be adjusted to this changed sugnature",
+      "revId": "9de2ff29a26ce4b2f65f33280bf8da7bad4709fb",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}
