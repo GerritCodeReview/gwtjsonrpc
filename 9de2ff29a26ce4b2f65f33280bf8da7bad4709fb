@@ -34,6 +34,24 @@
       "revId": "9de2ff29a26ce4b2f65f33280bf8da7bad4709fb",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2c6634c4_77a3ffe1",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-04-19T06:01:51Z",
+      "side": 1,
+      "message": "Actually, I\u0027m not sure if we even need this parameter. I\u0027ll see if it works without, and if it does I\u0027ll upload a new PS.",
+      "parentUuid": "1088bd4a_456f7cd4",
+      "revId": "9de2ff29a26ce4b2f65f33280bf8da7bad4709fb",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
