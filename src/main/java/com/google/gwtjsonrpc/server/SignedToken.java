@@ -135,13 +135,12 @@ public class SignedToken {
       throws XsrfException, CheckTokenException {
 
     if (tokenString == null || tokenString.length() == 0) {
-      throw new CheckTokenException("Invalid Token! Input token is blank!");
+      throw new CheckTokenException("Empty token");
     }
 
     final int s = tokenString.indexOf('$');
     if (s <= 0) {
-      throw new CheckTokenException(
-          "Invalid Token! Input token string does not contain character '$' !");
+      throw new CheckTokenException("Token does not contain character '$'");
     }
 
     final String recvText = tokenString.substring(s + 1);
@@ -149,25 +148,25 @@ public class SignedToken {
     try {
       in = decodeBase64(tokenString.substring(0, s));
     } catch (RuntimeException e) {
-      throw new CheckTokenException("Invalid Token! Decode BASE64 fails!", e);
+      throw new CheckTokenException("Base64 decoding failed", e);
     }
 
     if (in.length != tokenLength) {
-      throw new CheckTokenException("Invalid Token! Token length not match!");
+      throw new CheckTokenException("Token length mismatch");
     }
 
     final int q = decodeInt(in, 0);
     final int c = decodeInt(in, INT_SZ) ^ q;
     final int n = now();
     if (maxAge > 0 && Math.abs(c - n) > maxAge) {
-      throw new CheckTokenException("Invalid Token! Token is expired!");
+      throw new CheckTokenException("Token is expired");
     }
 
     final byte[] gen = new byte[tokenLength];
     System.arraycopy(in, 0, gen, 0, 2 * INT_SZ);
     computeToken(gen, text != null ? text : recvText);
     if (!Arrays.equals(gen, in)) {
-      throw new CheckTokenException("Invalid Token! Token text not match!");
+      throw new CheckTokenException("Token text mismatch");
     }
 
     return new ValidToken(maxAge > 0 && c + (maxAge >> 1) <= n, recvText);
