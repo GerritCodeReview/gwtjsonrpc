@@ -58,7 +58,7 @@ public final class JavaSqlTimestamp_JsonSerializer extends JsonSerializer<java.s
     }
   }
 
-  private static native String toString(double utcMilli)/*-{
+  private static native String toString(double utcMilli) /*-{
     var d = new Date(utcMilli);
     var p2 = @com.google.gwtjsonrpc.client.impl.ser.JavaSqlTimestamp_JsonSerializer::padTwo(I);
     var p3 = @com.google.gwtjsonrpc.client.impl.ser.JavaSqlTimestamp_JsonSerializer::padThree(I);
@@ -69,7 +69,7 @@ public final class JavaSqlTimestamp_JsonSerializer extends JsonSerializer<java.s
     p2(d.getUTCMinutes()) + ":" +
     p2(d.getUTCSeconds()) + "." +
     p3(d.getUTCMilliseconds()) + "000000";
-  }-*/ ;
+  }-*/;
 
   public static java.sql.Timestamp parseTimestamp(final String s) {
     return JavaSqlTimestampHelper.parseTimestamp(s);

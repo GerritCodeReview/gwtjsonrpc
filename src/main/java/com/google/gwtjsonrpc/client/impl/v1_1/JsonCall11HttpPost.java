@@ -142,9 +142,9 @@ public class JsonCall11HttpPost<T> extends JsonCall<T> {
    * @return the parsed data
    * @see #jsonParser
    */
-  private static final native RpcResult parse(JavaScriptObject parserFunction, String json)/*-{
+  private static final native RpcResult parse(JavaScriptObject parserFunction, String json) /*-{
     return parserFunction(json);
-  }-*/ ;
+  }-*/;
 
   private static class RpcResult extends JavaScriptObject {
     protected RpcResult() {}

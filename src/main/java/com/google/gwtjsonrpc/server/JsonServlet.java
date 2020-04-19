@@ -404,7 +404,7 @@ public abstract class JsonServlet<CallType extends ActiveCall> extends HttpServl
       }
 
     } else {
-        /* JSON-RPC 1.1 */
+      /* JSON-RPC 1.1 */
       final Gson gs = createGsonBuilder().create();
 
       call.method = lookupMethod(req.getParameter("method"));
