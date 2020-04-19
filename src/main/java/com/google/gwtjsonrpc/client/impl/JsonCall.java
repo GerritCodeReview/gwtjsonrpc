@@ -50,12 +50,12 @@ public abstract class JsonCall<T> implements RequestCallback {
    * @return a javascript function with the fastest available JSON parser
    * @see "http://wiki.ecmascript.org/doku.php?id=es3.1:json_support"
    */
-  private static native JavaScriptObject selectJsonParser()/*-{
+  private static native JavaScriptObject selectJsonParser() /*-{
     if ($wnd.JSON && typeof $wnd.JSON.parse === 'function')
       return $wnd.JSON.parse;
     else
       return function(expr) { return eval('(' + expr + ')'); };
-  }-*/ ;
+  }-*/;
 
   protected final AbstractJsonProxy proxy;
   protected final String methodName;

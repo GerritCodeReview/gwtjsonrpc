@@ -82,11 +82,11 @@ public class StringMapSerializer<V> extends JsonSerializer<java.util.Map<String,
     return result == null ? null : fromJson(result);
   }
 
-  private native void copy(Map<String, V> r, JavaScriptObject jsObject)/*-{
+  private native void copy(Map<String, V> r, JavaScriptObject jsObject) /*-{
     for (var key in jsObject) {
       this.@com.google.gwtjsonrpc.client.impl.ser.StringMapSerializer::copyOne(Ljava/util/Map;Ljava/lang/String;Ljava/lang/Object;)(r, key, jsObject[key]);
     }
-  }-*/ ;
+  }-*/;
 
   void copyOne(final Map<String, V> r, final String k, final Object o) {
     r.put(k, valueSerializer.fromJson(o));

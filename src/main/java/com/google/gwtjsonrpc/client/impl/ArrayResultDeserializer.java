@@ -21,11 +21,11 @@ import com.google.gwt.core.client.JavaScriptObject;
  * deserializers.
  */
 public abstract class ArrayResultDeserializer {
-  protected static native JavaScriptObject getResult(JavaScriptObject responseObject)/*-{
+  protected static native JavaScriptObject getResult(JavaScriptObject responseObject) /*-{
     return responseObject.result;
-  }-*/ ;
+  }-*/;
 
-  protected static native int getResultSize(JavaScriptObject responseObject)/*-{
+  protected static native int getResultSize(JavaScriptObject responseObject) /*-{
     return responseObject.result.length;
-  }-*/ ;
+  }-*/;
 }

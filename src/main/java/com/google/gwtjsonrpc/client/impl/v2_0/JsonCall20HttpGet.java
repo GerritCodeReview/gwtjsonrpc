@@ -57,7 +57,7 @@ public class JsonCall20HttpGet<T> extends JsonCall20<T> {
    *
    * @see http://ecmanaut.googlecode.com/svn/trunk/lib/base64.js
    */
-  private static native String encodeBase64(String data)/*-{
+  private static native String encodeBase64(String data) /*-{
     var out = "", c1, c2, c3, e1, e2, e3, e4;
     for (var i = 0; i < data.length; ) {
       c1 = data.charCodeAt(i++);
@@ -74,5 +74,5 @@ public class JsonCall20HttpGet<T> extends JsonCall20<T> {
       out += tab.charAt(e1) + tab.charAt(e2) + tab.charAt(e3) + tab.charAt(e4);
     }
     return out;
-  }-*/ ;
+  }-*/;
 }

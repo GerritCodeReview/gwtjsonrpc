@@ -39,13 +39,13 @@ public final class JavaSqlDate_JsonSerializer extends JsonSerializer<java.sql.Da
     sb.append('"');
   }
 
-  private static native String toString(double utcMilli)/*-{
+  private static native String toString(double utcMilli) /*-{
     var d = new Date(utcMilli);
     var p2 = @com.google.gwtjsonrpc.client.impl.ser.JavaSqlTimestamp_JsonSerializer::padTwo(I);
     return d.getUTCFullYear() + "-" +
     p2(1 + d.getUTCMonth()) + "-" +
     p2(d.getUTCDate());
-  }-*/ ;
+  }-*/;
 
   @SuppressWarnings("deprecation")
   protected static java.sql.Date parseDate(final String s) {
