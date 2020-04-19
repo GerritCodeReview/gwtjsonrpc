@@ -100,7 +100,7 @@ public class ActiveCall implements AsyncCallback<Object> {
   public ValidToken getCookie(final String name, final SignedToken sig)
       throws XsrfException, CheckTokenException {
     final String tokstr = getCookie(name);
-    return sig.checkToken(tokstr, null, true);
+    return sig.checkToken(tokstr, null);
   }
 
   /** Remove a cookie from the browser cookie store. */
@@ -139,7 +139,7 @@ public class ActiveCall implements AsyncCallback<Object> {
    */
   public void setCookie(final String name, final String value, final SignedToken sig) {
     try {
-      setCookie(name, sig.newToken(value, true), sig.getMaxAge());
+      setCookie(name, sig.newToken(value), sig.getMaxAge());
     } catch (XsrfException e) {
     }
   }
@@ -226,12 +226,12 @@ public class ActiveCall implements AsyncCallback<Object> {
     final ValidToken t;
 
     try {
-      t = xsrf.checkToken(getXsrfKeyIn(), userpath, true);
+      t = xsrf.checkToken(getXsrfKeyIn(), userpath);
     } catch (CheckTokenException e) {
       return false;
     }
     if (t.needsRefresh()) {
-      setXsrfKeyOut(xsrf.newToken(userpath, true));
+      setXsrfKeyOut(xsrf.newToken(userpath));
     }
     return true;
   }
