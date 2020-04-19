@@ -52,6 +52,24 @@
       "revId": "9de2ff29a26ce4b2f65f33280bf8da7bad4709fb",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "daca7ece_9e885c87",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 7
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-04-19T11:52:11Z",
+      "side": 1,
+      "message": "I\u0027ve removed it in a follow-up change [1] rather than a new PS",
+      "parentUuid": "2c6634c4_77a3ffe1",
+      "revId": "9de2ff29a26ce4b2f65f33280bf8da7bad4709fb",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
     }
   ]
 }
