@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bcb8768_561c57b6",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1011323
+      },
+      "writtenOn": "2020-04-22T19:19:44Z",
+      "side": 0,
+      "message": "It seems that this change is changing two different things:\n\n* 1. switching to url safe encoding\n* 2. changing return value of this method by doing some checking and refactoring.\n\nI don\u0027t see any explanation why it is done in the commit message, and why it is needed in this change. Can we do one single thing per change?",
+      "range": {
+        "startLine": 127,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 64
+      },
+      "revId": "e5687545400c5fd4bf976c757f6fea3013644f6b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
+    }
+  ]
+}
