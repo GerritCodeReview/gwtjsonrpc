@@ -22,6 +22,30 @@
       "revId": "e5687545400c5fd4bf976c757f6fea3013644f6b",
       "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "341430b7_81299768",
+        "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
+        "patchSetId": 9
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-04-22T23:40:15Z",
+      "side": 0,
+      "message": "Note that this is cleaned up in a separate change later in the series. I did it as a separate change to preserve attribution.",
+      "parentUuid": "8bcb8768_561c57b6",
+      "range": {
+        "startLine": 127,
+        "startChar": 0,
+        "endLine": 128,
+        "endChar": 64
+      },
+      "revId": "e5687545400c5fd4bf976c757f6fea3013644f6b",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": true
     }
   ]
 }
