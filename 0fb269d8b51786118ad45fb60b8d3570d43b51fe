@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d27cff5c_aabb12ef",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 9
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1011123
+      },
+      "writtenOn": "2020-04-23T00:44:40Z",
+      "side": 1,
+      "message": "I\u0027ve simplified the whole commit message.",
+      "parentUuid": "5d143cbe_b3ad3ad4",
+      "range": {
+        "startLine": 16,
+        "startChar": 53,
+        "endLine": 16,
+        "endChar": 68
+      },
+      "revId": "0fb269d8b51786118ad45fb60b8d3570d43b51fe",
+      "serverId": "173816e5-2b9a-37c3-8a2e-48639d4f1153",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3ccc579c_a69a6b3c",
         "filename": "src/main/java/com/google/gwtjsonrpc/server/SignedToken.java",
         "patchSetId": 9
